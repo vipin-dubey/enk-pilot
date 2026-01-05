@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Upload, Camera, FileText, Loader2, Check, X, Search, Filter, Edit2, Save, ChevronDown, ChevronRight } from 'lucide-react'
+import { Upload, Camera, FileText, Loader2, Check, X, Search, Filter, Edit2, Save, ChevronDown, ChevronRight, Eye } from 'lucide-react'
 import { createClient } from '@/utils/supabase/client'
 import { createWorker } from 'tesseract.js'
 import { extractVendor, detectCategory, ALL_STORES } from '@/lib/norwegian-stores'
@@ -80,6 +80,21 @@ export function ReceiptTriage() {
     setEditCategory(receipt.category || 'Other')
     setEditAmount(receipt.amount?.toString() || '')
     setEditDate(receipt.receipt_date || formatDateForDB(new Date(receipt.created_at)))
+  }
+
+  const handleViewReceipt = async (receipt: any) => {
+    try {
+      const { data } = await supabase.storage
+        .from('receipts')
+        .createSignedUrl(receipt.storage_path, 3600) // 1 hour expiry
+      
+      if (data?.signedUrl) {
+        window.open(data.signedUrl, '_blank')
+      }
+    } catch (error) {
+      console.error('Error viewing receipt:', error)
+      alert('Failed to load receipt image')
+    }
   }
 
   const handleSaveEdit = async () => {
@@ -443,7 +458,17 @@ export function ReceiptTriage() {
                                             variant="ghost"
                                             size="sm"
                                             className="opacity-0 group-hover:opacity-100 transition-opacity h-6 w-6 p-0"
+                                            onClick={() => handleViewReceipt(r)}
+                                            title="View receipt image"
+                                          >
+                                            <Eye className="h-3 w-3" />
+                                          </Button>
+                                          <Button
+                                            variant="ghost"
+                                            size="sm"
+                                            className="opacity-0 group-hover:opacity-100 transition-opacity h-6 w-6 p-0"
                                             onClick={() => handleEditReceipt(r)}
+                                            title="Edit receipt"
                                           >
                                             <Edit2 className="h-3 w-3" />
                                           </Button>
