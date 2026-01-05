@@ -5,6 +5,7 @@ import { redirect } from 'next/navigation'
 import { SafeToSpendCalculator } from '@/components/dashboard/safe-to-spend'
 import { DeadlineTracker } from '@/components/dashboard/deadline-tracker'
 import { ReceiptTriage } from '@/components/dashboard/receipt-triage'
+import { ReceiptAnalytics } from '@/components/dashboard/receipt-analytics'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -89,7 +90,8 @@ export default async function DashboardPage() {
             <DeadlineTracker />
           </TabsContent>
           
-          <TabsContent value="receipts" className="space-y-4">
+          <TabsContent value="receipts" className="space-y-6">
+            <ReceiptAnalytics />
             <ReceiptTriage />
           </TabsContent>
         </Tabs>

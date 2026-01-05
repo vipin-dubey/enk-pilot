@@ -22,10 +22,12 @@
     "clsx": "^2.1.1",
     "lucide-react": "^0.562.0",
     "next": "16.1.1",
+    "papaparse": "^5.5.3",
     "pdfjs-dist": "^5.4.530",
     "posthog-js": "^1.313.0",
     "react": "19.2.3",
     "react-dom": "19.2.3",
+    "recharts": "^3.6.0",
     "stripe": "^20.1.0",
     "tailwind-merge": "^3.4.0",
     "tesseract.js": "^7.0.0"

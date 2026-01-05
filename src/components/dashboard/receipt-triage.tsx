@@ -289,7 +289,7 @@ export function ReceiptTriage() {
 
   return (
     <div className="grid gap-6">
-      <Card>
+      <Card id="receipt-upload">
         <CardHeader>
           <CardTitle>Receipt Upload</CardTitle>
           <CardDescription>Snap or upload a photo of your receipt for instant OCR processing.</CardDescription>
