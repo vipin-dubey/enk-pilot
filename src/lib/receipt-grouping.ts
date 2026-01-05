@@ -99,7 +99,7 @@ export function groupReceiptsByDate(receipts: any[]): GroupedReceipts {
 
     const year = date.getFullYear().toString()
     const monthNum = date.getMonth()
-    const month = date.toLocaleDateString('en-US', { month: 'long' })
+    const month = date.toLocaleDateString('en-US', { month: 'long' }).toLowerCase()
 
     if (!grouped[year]) grouped[year] = {}
     if (!grouped[year][month]) grouped[year][month] = []

@@ -14,10 +14,17 @@ import { extractVendor, detectCategory, ALL_STORES } from '@/lib/norwegian-store
 import { extractReceiptDate, groupReceiptsByDate, getSortedYears, getSortedMonths, formatDateForDB } from '@/lib/receipt-grouping'
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
 import { CategoryBadge } from '@/components/ui/category-badge'
+import { useTranslations, useLocale } from 'next-intl'
 
-const CATEGORIES = ['All', 'Office', 'Travel', 'Food', 'Equipment', 'Marketing', 'Other']
+const CATEGORIES = ['All', 'Office', 'Travel', 'Food', 'Equipment', 'Marketing', 'IT', 'Software', 'Other']
 
 export function ReceiptTriage() {
+  const t = useTranslations('receipts')
+  const tEdit = useTranslations('receiptEdit')
+  const tCategories = useTranslations('categories')
+  const tCommon = useTranslations('common')
+  const tMonths = useTranslations('months')
+  const locale = useLocale()
   const [isProcessing, setIsProcessing] = useState(false)
   const [receipts, setReceipts] = useState<any[]>([])
   const [filteredReceipts, setFilteredReceipts] = useState<any[]>([])
@@ -73,6 +80,20 @@ export function ReceiptTriage() {
 
     setFilteredReceipts(filtered)
   }, [receipts, searchQuery, categoryFilter])
+
+  // Initialize expanded years
+  useEffect(() => {
+    if (receipts.length > 0 && expandedYears.length === 0) {
+      const grouped = groupReceiptsByDate(receipts)
+      const years = getSortedYears(grouped)
+      const currentYear = new Date().getFullYear().toString()
+      if (years.includes(currentYear)) {
+        setExpandedYears([currentYear])
+      } else if (years.length > 0) {
+        setExpandedYears([years[0]])
+      }
+    }
+  }, [receipts, expandedYears.length])
 
   const handleEditReceipt = (receipt: any) => {
     setEditingReceipt(receipt)
@@ -318,8 +339,8 @@ export function ReceiptTriage() {
     <div className="grid gap-6">
       <Card id="receipt-upload">
         <CardHeader>
-          <CardTitle>Receipt Upload</CardTitle>
-          <CardDescription>Snap or upload a photo of your receipt for instant OCR processing.</CardDescription>
+          <CardTitle>{t('title')}</CardTitle>
+          <CardDescription>{t('description')}</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="flex flex-col items-center justify-center border-2 border-dashed rounded-xl p-12 border-slate-200 bg-slate-50/50 hover:bg-slate-50 transition-colors cursor-pointer relative">
@@ -338,15 +359,15 @@ export function ReceiptTriage() {
               )}
             </div>
             <p className="font-medium">
-              {isProcessing ? 'Reading Receipt...' : 'Drop your receipt here'}
+              {isProcessing ? t('processing') : t('dragDrop')}
             </p>
             <p className="text-sm text-slate-500 mb-6">PNG, JPG, HEIC up to 10MB</p>
             <div className="flex gap-2">
               <Button variant="outline" size="sm" className="gap-2 pointer-events-none">
-                <Camera className="h-4 w-4" /> Use Camera
+                <Camera className="h-4 w-4" /> {t('camera')}
               </Button>
               <Button size="sm" className="gap-2 pointer-events-none">
-                <FileText className="h-4 w-4" /> Choose File
+                <FileText className="h-4 w-4" /> {t('chooseFile')}
               </Button>
             </div>
           </div>
@@ -357,11 +378,11 @@ export function ReceiptTriage() {
         <CardHeader>
           <div className="flex items-center justify-between">
             <div>
-              <CardTitle>Recent Receipts</CardTitle>
-              <CardDescription>Your recently processed receipts.</CardDescription>
+              <CardTitle>{t('recentTitle')}</CardTitle>
+              <CardDescription>{t('recentDescription')}</CardDescription>
             </div>
             <div className="text-sm text-slate-500">
-              {filteredReceipts.length} of {receipts.length} receipts
+              {t('receiptsCount', { count: filteredReceipts.length })}
             </div>
           </div>
         </CardHeader>
@@ -371,7 +392,7 @@ export function ReceiptTriage() {
             <div className="flex-1 relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
               <Input
-                placeholder="Search by vendor or amount..."
+                placeholder={t('searchPlaceholder')}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="pl-10"
@@ -380,12 +401,12 @@ export function ReceiptTriage() {
             <Select value={categoryFilter} onValueChange={setCategoryFilter}>
               <SelectTrigger className="w-[180px]">
                 <Filter className="h-4 w-4 mr-2" />
-                <SelectValue placeholder="Category" />
+                <SelectValue placeholder={tEdit('category')} />
               </SelectTrigger>
               <SelectContent>
                 {CATEGORIES.map((cat) => (
                   <SelectItem key={cat} value={cat}>
-                    {cat}
+                    {tCategories(cat.toLowerCase() as any)}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -395,17 +416,11 @@ export function ReceiptTriage() {
           {/* Grouped Receipts List */}
           {filteredReceipts.length === 0 ? (
             <div className="text-center py-12 text-slate-400">
-              <p>{receipts.length === 0 ? 'No receipts uploaded yet.' : 'No receipts match your filters.'}</p>
+              <p>{receipts.length === 0 ? t('noReceipts') : t('noMatch')}</p>
             </div>
           ) : (() => {
             const grouped = groupReceiptsByDate(filteredReceipts)
             const years = getSortedYears(grouped)
-            const currentYear = new Date().getFullYear().toString()
-            
-            // Initialize expanded years with current year
-            if (expandedYears.length === 0 && years.includes(currentYear)) {
-              setExpandedYears([currentYear])
-            }
 
             return (
               <div className="space-y-4">
@@ -434,7 +449,7 @@ export function ReceiptTriage() {
                             <ChevronRight className="h-5 w-5 text-slate-500" />
                           )}
                           <span className="font-semibold text-lg">{year}</span>
-                          <span className="text-sm text-slate-500">({totalReceipts} receipts)</span>
+                          <span className="text-sm text-slate-500">({t('receiptsCount', { count: totalReceipts })})</span>
                         </div>
                       </button>
 
@@ -445,7 +460,7 @@ export function ReceiptTriage() {
                             return (
                               <div key={month} className="border-b last:border-b-0">
                                 <div className="bg-slate-50 px-4 py-2 font-medium text-sm text-slate-700">
-                                  {month} ({monthReceipts.length})
+                                  {tMonths(month.toLowerCase() as any)} ({t('receiptsCount', { count: monthReceipts.length })})
                                 </div>
                                 <div className="divide-y">
                                   {monthReceipts.map((r: any) => (
@@ -459,7 +474,7 @@ export function ReceiptTriage() {
                                             size="sm"
                                             className="opacity-0 group-hover:opacity-100 transition-opacity h-6 w-6 p-0"
                                             onClick={() => handleViewReceipt(r)}
-                                            title="View receipt image"
+                                            title={t('viewReceipt')}
                                           >
                                             <Eye className="h-3 w-3" />
                                           </Button>
@@ -468,13 +483,13 @@ export function ReceiptTriage() {
                                             size="sm"
                                             className="opacity-0 group-hover:opacity-100 transition-opacity h-6 w-6 p-0"
                                             onClick={() => handleEditReceipt(r)}
-                                            title="Edit receipt"
+                                            title={t('editReceipt')}
                                           >
                                             <Edit2 className="h-3 w-3" />
                                           </Button>
                                         </div>
                                         <p className="text-xs text-slate-500">
-                                          {new Date(r.receipt_date || r.created_at).toLocaleDateString('en-US', {
+                                          {new Date(r.receipt_date || r.created_at).toLocaleDateString(locale === 'nb' ? 'nb-NO' : 'en-US', {
                                             year: 'numeric',
                                             month: 'long',
                                             day: 'numeric'
@@ -482,9 +497,9 @@ export function ReceiptTriage() {
                                         </p>
                                       </div>
                                       <div className="text-right">
-                                        <p className="font-bold text-lg">{r.amount?.toLocaleString('nb-NO')} NOK</p>
+                                        <p className="font-bold text-lg">{r.amount?.toLocaleString(locale === 'nb' ? 'nb-NO' : 'en-US')} NOK</p>
                                         <p className="text-[10px] text-green-600 flex items-center gap-1 justify-end">
-                                          <Check className="h-3 w-3" /> Processed
+                                          <Check className="h-3 w-3" /> {t('processed')}
                                         </p>
                                       </div>
                                     </div>
@@ -508,19 +523,19 @@ export function ReceiptTriage() {
       <Dialog open={!!editingReceipt} onOpenChange={(open: boolean) => !open && setEditingReceipt(null)}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Edit Receipt</DialogTitle>
+            <DialogTitle>{tEdit('title')}</DialogTitle>
             <DialogDescription>
-              Update the vendor name, amount, date, and category for this receipt. You can choose from suggested categories or create your own.
+              {tEdit('description')}
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-4">
             <div className="space-y-2">
-              <Label htmlFor="edit-vendor">Vendor Name</Label>
+              <Label htmlFor="edit-vendor">{tEdit('vendorName')}</Label>
               <Input
                 id="edit-vendor"
                 value={editVendor}
                 onChange={(e) => setEditVendor(e.target.value)}
-                placeholder="Enter vendor name"
+                placeholder={tEdit('vendorPlaceholder')}
                 list="vendor-suggestions"
               />
               <datalist id="vendor-suggestions">
@@ -528,21 +543,21 @@ export function ReceiptTriage() {
                   <option key={store} value={store} />
                 ))}
               </datalist>
-              <p className="text-xs text-slate-500">Choose from suggestions or type your own</p>
+              <p className="text-xs text-slate-500">{tEdit('vendorHint')}</p>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="edit-amount">Amount (NOK)</Label>
+              <Label htmlFor="edit-amount">{tEdit('amount')}</Label>
               <Input
                 id="edit-amount"
                 type="number"
                 step="0.01"
                 value={editAmount}
                 onChange={(e) => setEditAmount(e.target.value)}
-                placeholder="Enter amount"
+                placeholder={tEdit('amountPlaceholder')}
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="edit-date">Receipt Date</Label>
+              <Label htmlFor="edit-date">{tEdit('receiptDate')}</Label>
               <Input
                 id="edit-date"
                 type="date"
@@ -551,12 +566,12 @@ export function ReceiptTriage() {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="edit-category">Category</Label>
+              <Label htmlFor="edit-category">{tEdit('category')}</Label>
               <Input
                 id="edit-category"
                 value={editCategory}
                 onChange={(e) => setEditCategory(e.target.value)}
-                placeholder="Select or type a category"
+                placeholder={tEdit('categoryPlaceholder')}
                 list="category-suggestions"
               />
               <datalist id="category-suggestions">
@@ -564,23 +579,23 @@ export function ReceiptTriage() {
                   <option key={cat} value={cat} />
                 ))}
               </datalist>
-              <p className="text-xs text-slate-500">Choose from suggestions or type your own</p>
+              <p className="text-xs text-slate-500">{tEdit('categoryHint')}</p>
             </div>
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setEditingReceipt(null)} disabled={isSaving}>
-              Cancel
+              {tCommon('cancel')}
             </Button>
             <Button onClick={handleSaveEdit} disabled={isSaving}>
               {isSaving ? (
                 <>
                   <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                  Saving...
+                  {tEdit('saving')}
                 </>
               ) : (
                 <>
                   <Save className="h-4 w-4 mr-2" />
-                  Save Changes
+                  {tCommon('save')}
                 </>
               )}
             </Button>

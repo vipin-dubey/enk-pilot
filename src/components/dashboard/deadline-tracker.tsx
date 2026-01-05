@@ -8,10 +8,15 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Calendar, CheckCircle2, AlertCircle, Clock, Filter } from 'lucide-react'
 import { createClient } from '@/utils/supabase/client'
 import { getUpcomingDeadlines, formatDeadlineDate, type Deadline } from '@/lib/deadlines'
+import { useTranslations, useLocale } from 'next-intl'
 
 type DeadlineFilter = 'all' | 'mva' | 'forskuddsskatt'
 
 export function DeadlineTracker() {
+  const t = useTranslations('deadlines')
+  const tMonths = useTranslations('months')
+  const tCommon = useTranslations('common')
+  const locale = useLocale()
   const [deadlines, setDeadlines] = useState<Deadline[]>([])
   const [filter, setFilter] = useState<DeadlineFilter>('all')
   const [isLoading, setIsLoading] = useState(true)
@@ -96,7 +101,7 @@ export function DeadlineTracker() {
       return (
         <Badge className="bg-green-100 text-green-700 border-green-200">
           <CheckCircle2 className="h-3 w-3 mr-1" />
-          Paid
+          {t('paid')}
         </Badge>
       )
     }
@@ -104,7 +109,7 @@ export function DeadlineTracker() {
       return (
         <Badge className="bg-red-100 text-red-700 border-red-200">
           <AlertCircle className="h-3 w-3 mr-1" />
-          Overdue
+          {t('overdue')}
         </Badge>
       )
     }
@@ -112,14 +117,14 @@ export function DeadlineTracker() {
       return (
         <Badge className="bg-yellow-100 text-yellow-700 border-yellow-200">
           <Clock className="h-3 w-3 mr-1" />
-          Upcoming
+          {t('upcoming')}
         </Badge>
       )
     }
     return (
       <Badge variant="outline" className="text-slate-500">
         <Calendar className="h-3 w-3 mr-1" />
-        Future
+        {t('future')}
       </Badge>
     )
   }
@@ -129,8 +134,8 @@ export function DeadlineTracker() {
       <CardHeader>
         <div className="flex items-center justify-between">
           <div>
-            <CardTitle>Tax Deadlines</CardTitle>
-            <CardDescription>Track your MVA and Forskuddsskatt payment deadlines</CardDescription>
+            <CardTitle>{t('title')}</CardTitle>
+            <CardDescription>{t('description')}</CardDescription>
           </div>
           <Select value={filter} onValueChange={(v) => setFilter(v as DeadlineFilter)}>
             <SelectTrigger className="w-[180px]">
@@ -138,18 +143,18 @@ export function DeadlineTracker() {
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All Deadlines</SelectItem>
-              <SelectItem value="mva">MVA Only</SelectItem>
-              <SelectItem value="forskuddsskatt">Forskuddsskatt Only</SelectItem>
+              <SelectItem value="all">{t('allDeadlines')}</SelectItem>
+              <SelectItem value="mva">{t('mvaOnly')}</SelectItem>
+              <SelectItem value="forskuddsskatt">{t('forskuddsskattOnly')}</SelectItem>
             </SelectContent>
           </Select>
         </div>
       </CardHeader>
       <CardContent>
         {isLoading ? (
-          <div className="text-center py-8 text-slate-400">Loading deadlines...</div>
+          <div className="text-center py-8 text-slate-400">{tCommon('loading')}</div>
         ) : filteredDeadlines.length === 0 ? (
-          <div className="text-center py-8 text-slate-400">No deadlines found</div>
+          <div className="text-center py-8 text-slate-400">{t('noDeadlines', { defaultValue: 'No deadlines found' })}</div>
         ) : (
           <div className="space-y-2">
             {filteredDeadlines.map((deadline) => (
@@ -167,10 +172,10 @@ export function DeadlineTracker() {
                   />
                   <div className="flex-1">
                     <p className={`font-medium ${deadline.isPaid ? 'line-through text-slate-500' : ''}`}>
-                      {deadline.label}
+                      {deadline.type === 'mva' ? 'MVA' : 'Forskuddsskatt'} - {tMonths(deadline.date.toLocaleDateString('en-US', { month: 'long' }).toLowerCase())} {deadline.date.getFullYear()}
                     </p>
                     <p className="text-xs text-slate-500">
-                      {deadline.date.toLocaleDateString('nb-NO', {
+                      {deadline.date.toLocaleDateString(locale === 'nb' ? 'nb-NO' : 'en-US', {
                         year: 'numeric',
                         month: 'long',
                         day: 'numeric'

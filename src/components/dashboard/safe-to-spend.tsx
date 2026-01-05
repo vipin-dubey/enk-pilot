@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Separator } from '@/components/ui/separator'
 import { TaxPdfSync } from './tax-pdf-sync'
+import { useTranslations, useLocale } from 'next-intl'
 
 interface CalculatorProps {
   taxRate?: number
@@ -13,6 +14,8 @@ interface CalculatorProps {
 }
 
 export function SafeToSpendCalculator({ taxRate: initialTaxRate = 35, isMvaRegistered = false }: CalculatorProps) {
+  const t = useTranslations('calculator')
+  const locale = useLocale()
   const [grossInput, setGrossInput] = useState<string>('')
   const [taxRate, setTaxRate] = useState<number>(initialTaxRate)
 
@@ -45,11 +48,11 @@ export function SafeToSpendCalculator({ taxRate: initialTaxRate = 35, isMvaRegis
           <div className="grid gap-6 md:grid-cols-2 items-start">
             <div className="space-y-4 bg-white border rounded-xl p-6 shadow-sm h-full">
               <div className="space-y-1 mb-2">
-                <h3 className="text-lg font-bold font-outfit">Income Entry</h3>
-                <p className="text-xs text-slate-500">Enter your gross income for this period.</p>
+                <h3 className="text-lg font-bold font-outfit">{t('incomeEntry')}</h3>
+                <p className="text-xs text-slate-500">{t('grossIncomeDescription')}</p>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="gross-income" className="text-slate-600 font-semibold">Gross Income (NOK)</Label>
+                <Label htmlFor="gross-income" className="text-slate-600 font-semibold">{t('grossIncomeLabel')}</Label>
                 <Input
                   id="gross-income"
                   type="number"
@@ -58,7 +61,7 @@ export function SafeToSpendCalculator({ taxRate: initialTaxRate = 35, isMvaRegis
                   onChange={(e) => setGrossInput(e.target.value)}
                   className="text-3xl h-16 font-outfit"
                 />
-                <p className="text-[10px] text-slate-400 uppercase tracking-wider font-bold">Calculation based on 2024 tax rules</p>
+                <p className="text-[10px] text-slate-400 uppercase tracking-wider font-bold">{t('taxRulesHint')}</p>
               </div>
             </div>
             <div className="bg-white border rounded-xl p-6 shadow-sm h-full flex flex-col">
@@ -73,42 +76,42 @@ export function SafeToSpendCalculator({ taxRate: initialTaxRate = 35, isMvaRegis
 
       <Card className="border-l-4 border-l-orange-500">
         <CardHeader className="pb-2">
-          <CardDescription>MVA Reserve</CardDescription>
+          <CardDescription>{t('mvaReserve')}</CardDescription>
           <CardTitle className="text-2xl">
-            {calculations.mvaReserved.toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })}
+            {calculations.mvaReserved.toLocaleString(locale === 'nb' ? 'nb-NO' : 'en-US', { style: 'currency', currency: 'NOK' })}
           </CardTitle>
         </CardHeader>
         <CardContent>
           <p className="text-xs text-slate-500">
-            {isMvaRegistered ? '20% of gross income' : 'Not MVA registered'}
+            {isMvaRegistered ? t('mvaDescription', { percent: 20 }) : t('mvaNotRegistered')}
           </p>
         </CardContent>
       </Card>
 
       <Card className="border-l-4 border-l-blue-500">
         <CardHeader className="pb-2">
-          <CardDescription>Tax Reserve</CardDescription>
+          <CardDescription>{t('taxReserve')}</CardDescription>
           <CardTitle className="text-2xl">
-            {calculations.taxReserved.toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })}
+            {calculations.taxReserved.toLocaleString(locale === 'nb' ? 'nb-NO' : 'en-US', { style: 'currency', currency: 'NOK' })}
           </CardTitle>
         </CardHeader>
         <CardContent>
           <p className="text-xs text-slate-500">
-            Includes Income Tax & National Insurance
+            {t('taxDescription')}
           </p>
         </CardContent>
       </Card>
 
       <Card className="border-l-4 border-l-green-500 bg-green-50/30">
         <CardHeader className="pb-2">
-          <CardDescription className="text-green-700">Safe-to-Spend (Profit)</CardDescription>
+          <CardDescription className="text-green-700">{t('safeToSpend')}</CardDescription>
           <CardTitle className="text-2xl text-green-700">
-            {calculations.netProfit.toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })}
+            {calculations.netProfit.toLocaleString(locale === 'nb' ? 'nb-NO' : 'en-US', { style: 'currency', currency: 'NOK' })}
           </CardTitle>
         </CardHeader>
         <CardContent>
           <p className="text-xs text-green-600">
-            This is yours to keep after taxes.
+            {t('profitDescription')}
           </p>
         </CardContent>
       </Card>

@@ -9,6 +9,7 @@ import { TrendingUp, Receipt, DollarSign, Download, Calendar, Upload } from 'luc
 import { createClient } from '@/utils/supabase/client'
 import { calculateReceiptStats, filterReceiptsByDateRange, type Receipt as ReceiptType } from '@/lib/receipt-analytics'
 import Papa from 'papaparse'
+import { useTranslations, useLocale } from 'next-intl'
 
 type DateRange = 'month' | '3months' | '6months' | 'year' | 'all'
 
@@ -18,10 +19,19 @@ const CATEGORY_COLORS: Record<string, string> = {
   'Food': '#10b981',
   'Equipment': '#f97316',
   'Marketing': '#ec4899',
+  'IT': '#6366f1',
+  'Software': '#06b6d4',
   'Other': '#6b7280',
 }
 
+const KNOWN_CATEGORIES = ['all', 'office', 'travel', 'food', 'equipment', 'marketing', 'it', 'software', 'other']
+
 export function ReceiptAnalytics() {
+  const t = useTranslations('analytics')
+  const tReceipts = useTranslations('receipts')
+  const tCategories = useTranslations('categories')
+  const tCommon = useTranslations('common')
+  const locale = useLocale()
   const [receipts, setReceipts] = useState<ReceiptType[]>([])
   const [dateRange, setDateRange] = useState<DateRange>('month')
   const [isLoading, setIsLoading] = useState(true)
@@ -62,9 +72,9 @@ export function ReceiptAnalytics() {
 
   function exportToCSV() {
     const csvData = filteredReceipts.map(r => ({
-      Date: new Date(r.created_at).toLocaleDateString('nb-NO'),
+      Date: new Date(r.created_at).toLocaleDateString(locale === 'nb' ? 'nb-NO' : 'en-US'),
       Vendor: r.vendor || 'Unknown',
-      Category: r.category || 'Other',
+      Category: r.category ? (KNOWN_CATEGORIES.includes(r.category.toLowerCase()) ? tCategories(r.category.toLowerCase() as any) : r.category) : tCategories('other'),
       Amount: r.amount.toFixed(2)
     }))
 
@@ -79,7 +89,7 @@ export function ReceiptAnalytics() {
   }
 
   if (isLoading) {
-    return <div className="text-center py-8 text-slate-400">Loading analytics...</div>
+    return <div className="text-center py-8 text-slate-400">{tCommon('loading')}</div>
   }
 
   if (receipts.length === 0) {
@@ -87,7 +97,7 @@ export function ReceiptAnalytics() {
       <Card>
         <CardContent className="py-12 text-center text-slate-400">
           <Receipt className="h-12 w-12 mx-auto mb-4 opacity-50" />
-          <p>No receipts yet. Upload your first receipt to see analytics!</p>
+          <p>{tReceipts('noReceipts')}</p>
         </CardContent>
       </Card>
     )
@@ -98,8 +108,8 @@ export function ReceiptAnalytics() {
       {/* Header with filters and export */}
       <div className="flex items-center justify-between">
         <div>
-          <h3 className="text-lg font-semibold">Receipt Analytics</h3>
-          <p className="text-sm text-slate-500">Track your spending by category</p>
+          <h3 className="text-lg font-semibold">{tReceipts('analytics')}</h3>
+          <p className="text-sm text-slate-500">{tReceipts('analyticsDescription')}</p>
         </div>
         <div className="flex items-center gap-2">
           <Select value={dateRange} onValueChange={(v) => setDateRange(v as DateRange)}>
@@ -108,11 +118,11 @@ export function ReceiptAnalytics() {
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="month">Last Month</SelectItem>
-              <SelectItem value="3months">Last 3 Months</SelectItem>
-              <SelectItem value="6months">Last 6 Months</SelectItem>
-              <SelectItem value="year">Last Year</SelectItem>
-              <SelectItem value="all">All Time</SelectItem>
+              <SelectItem value="month">{t('lastMonth')}</SelectItem>
+              <SelectItem value="3months">{t('last3Months')}</SelectItem>
+              <SelectItem value="6months">{t('last6Months')}</SelectItem>
+              <SelectItem value="year">{t('lastYear')}</SelectItem>
+              <SelectItem value="all">{t('allTime')}</SelectItem>
             </SelectContent>
           </Select>
           <Button 
@@ -123,11 +133,11 @@ export function ReceiptAnalytics() {
             size="sm"
           >
             <Upload className="h-4 w-4 mr-2" />
-            Upload Receipt
+            {tReceipts('uploadButton')}
           </Button>
           <Button onClick={exportToCSV} variant="outline" size="sm">
             <Download className="h-4 w-4 mr-2" />
-            Export CSV
+            {tReceipts('exportCSV')}
           </Button>
         </div>
       </div>
@@ -136,38 +146,38 @@ export function ReceiptAnalytics() {
       <div className="grid gap-4 md:grid-cols-3">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Spent</CardTitle>
+            <CardTitle className="text-sm font-medium">{t('totalSpent')}</CardTitle>
             <DollarSign className="h-4 w-4 text-slate-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stats.totalSpent.toLocaleString('nb-NO')} NOK</div>
+            <div className="text-2xl font-bold">{stats.totalSpent.toLocaleString(locale === 'nb' ? 'nb-NO' : 'en-US')} NOK</div>
             <p className="text-xs text-slate-500 mt-1">
-              {filteredReceipts.length} receipt{filteredReceipts.length !== 1 ? 's' : ''}
+              {tReceipts('receiptsCount', { count: filteredReceipts.length })}
             </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Receipt Count</CardTitle>
+            <CardTitle className="text-sm font-medium">{t('receiptCount')}</CardTitle>
             <Receipt className="h-4 w-4 text-slate-500" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{stats.receiptCount}</div>
             <p className="text-xs text-slate-500 mt-1">
-              {dateRange === 'all' ? 'All time' : `Last ${dateRange === 'month' ? 'month' : dateRange}`}
+              {dateRange === 'all' ? t('allTime') : t(`last${dateRange === 'month' ? 'Month' : dateRange.charAt(0).toUpperCase() + dateRange.slice(1)}`)}
             </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Average Amount</CardTitle>
+            <CardTitle className="text-sm font-medium">{t('averageAmount')}</CardTitle>
             <TrendingUp className="h-4 w-4 text-slate-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stats.averageAmount.toLocaleString('nb-NO', { maximumFractionDigits: 0 })} NOK</div>
-            <p className="text-xs text-slate-500 mt-1">Per receipt</p>
+            <div className="text-2xl font-bold">{stats.averageAmount.toLocaleString(locale === 'nb' ? 'nb-NO' : 'en-US', { maximumFractionDigits: 0 })} NOK</div>
+            <p className="text-xs text-slate-500 mt-1">{t('perReceipt')}</p>
           </CardContent>
         </Card>
       </div>
@@ -176,8 +186,8 @@ export function ReceiptAnalytics() {
       {stats.categoryTotals.length > 0 && (
         <Card>
           <CardHeader>
-            <CardTitle>Spending by Category</CardTitle>
-            <CardDescription>Breakdown of expenses across categories</CardDescription>
+            <CardTitle>{t('spendingByCategory')}</CardTitle>
+            <CardDescription>{t('categoryBreakdown')}</CardDescription>
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
@@ -187,14 +197,22 @@ export function ReceiptAnalytics() {
                   dataKey="category" 
                   tick={{ fontSize: 12 }}
                   stroke="#94a3b8"
+                  tickFormatter={(value) => {
+                    const lower = value.toLowerCase()
+                    return KNOWN_CATEGORIES.includes(lower) ? tCategories(lower as any) : value
+                  }}
                 />
                 <YAxis 
                   tick={{ fontSize: 12 }}
                   stroke="#94a3b8"
-                  tickFormatter={(value) => `${value.toLocaleString()} kr`}
+                  tickFormatter={(value) => `${value.toLocaleString(locale === 'nb' ? 'nb-NO' : 'en-US')} kr`}
                 />
                 <Tooltip 
-                  formatter={(value: number | undefined) => value ? [`${value.toLocaleString('nb-NO')} NOK`, 'Amount'] : ['0 NOK', 'Amount']}
+                  formatter={(value: number | undefined) => value ? [`${value.toLocaleString(locale === 'nb' ? 'nb-NO' : 'en-US')} NOK`, t('totalSpent')] : [`0 NOK`, t('totalSpent')]}
+                  labelFormatter={(label) => {
+                    const lower = label.toLowerCase()
+                    return KNOWN_CATEGORIES.includes(lower) ? tCategories(lower as any) : label
+                  }}
                   contentStyle={{ 
                     backgroundColor: 'white', 
                     border: '1px solid #e2e8f0',

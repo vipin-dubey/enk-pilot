@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { FileUp, Loader2, CheckCircle2, AlertCircle, Save, Percent } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 import { createClient } from '@/utils/supabase/client'
 
 interface TaxPdfSyncProps {
@@ -13,6 +14,7 @@ interface TaxPdfSyncProps {
 }
 
 export function TaxPdfSync({ initialTaxRate, onTaxRateChange }: TaxPdfSyncProps) {
+  const t = useTranslations('taxSync')
   const [taxRate, setTaxRate] = useState<string>(initialTaxRate.toString())
   const [isUploading, setIsUploading] = useState(false)
   const [isSaving, setIsSaving] = useState(false)
@@ -37,7 +39,7 @@ export function TaxPdfSync({ initialTaxRate, onTaxRateChange }: TaxPdfSyncProps)
   const handleManualSave = async () => {
     if (!taxRate || isNaN(parseFloat(taxRate))) {
       setStatus('error')
-      setMessage('Please enter a valid tax rate.')
+      setMessage(t('invalidRate'))
       return
     }
 
@@ -61,7 +63,7 @@ export function TaxPdfSync({ initialTaxRate, onTaxRateChange }: TaxPdfSyncProps)
       if (error) throw error
 
       setStatus('success')
-      setMessage(`Tax rate updated to ${taxRate}%`)
+      setMessage(t('updateSuccess', { rate: taxRate }))
       
       setTimeout(() => {
         window.location.reload()
@@ -69,7 +71,7 @@ export function TaxPdfSync({ initialTaxRate, onTaxRateChange }: TaxPdfSyncProps)
     } catch (err: any) {
       console.error('Error saving tax rate:', err)
       setStatus('error')
-      setMessage(err.message || 'Failed to update tax rate.')
+      setMessage(err.message || t('updateFailed'))
     } finally {
       setIsSaving(false)
     }
@@ -81,7 +83,7 @@ export function TaxPdfSync({ initialTaxRate, onTaxRateChange }: TaxPdfSyncProps)
 
     setIsUploading(true)
     setStatus('idle')
-    setMessage('Scanning locally...')
+    setMessage(t('detecting'))
 
     try {
       // Dynamic import to avoid SSR issues
@@ -104,11 +106,10 @@ export function TaxPdfSync({ initialTaxRate, onTaxRateChange }: TaxPdfSyncProps)
       console.log('Local Scan Content Length:', fullText.length)
 
       // Privacy-Safe Regex Patterns for Skattekort
-      // Look for "Trekkprosent" followed by a number, or just a standalone %
       const patterns = [
-        /Trekkprosent\s*[:\-]?\s*(\d+[.,]\d+|\d+)/i, // Look for Trekkprosent
-        /Skattesats\s*[:\-]?\s*(\d+[.,]\d+|\d+)/i,   // Look for Skattesats
-        /(\d+[.,]\d+|\d+)\s*%/                       // Look for anything followed by %
+        /Trekkprosent\s*[:\-]?\s*(\d+[.,]\d+|\d+)/i,
+        /Skattesats\s*[:\-]?\s*(\d+[.,]\d+|\d+)/i,
+        /(\d+[.,]\d+|\d+)\s*%/
       ]
 
       let foundRate = null
@@ -123,15 +124,15 @@ export function TaxPdfSync({ initialTaxRate, onTaxRateChange }: TaxPdfSyncProps)
       if (foundRate) {
         handleRateChange(foundRate)
         setStatus('success')
-        setMessage(`Detected ${foundRate}% from PDF! Click save to confirm.`)
+        setMessage(t('detected', { rate: foundRate }))
       } else {
         setStatus('error')
-        setMessage('Could not find tax rate in this PDF. Please enter it manually.')
+        setMessage(t('notFound'))
       }
     } catch (err: any) {
       console.error('Local scan error:', err)
       setStatus('error')
-      setMessage('Failed to read PDF locally. Please enter tax rate manually.')
+      setMessage(t('readFailed'))
     } finally {
       setIsUploading(false)
       if (fileInputRef.current) fileInputRef.current.value = ''
@@ -142,10 +143,10 @@ export function TaxPdfSync({ initialTaxRate, onTaxRateChange }: TaxPdfSyncProps)
     <div className="flex flex-col h-full">
       <div className="flex items-center gap-2 mb-1">
         <Percent className="h-4 w-4 text-blue-600" />
-        <h3 className="text-lg font-bold font-outfit">Tax Configuration</h3>
+        <h3 className="text-lg font-bold font-outfit">{t('title')}</h3>
       </div>
       <p className="text-xs text-slate-500 mb-6">
-        Set manually or scan your "Skattekort" PDF locally.
+        {t('description')}
       </p>
 
       {isLoading ? (
@@ -158,7 +159,7 @@ export function TaxPdfSync({ initialTaxRate, onTaxRateChange }: TaxPdfSyncProps)
             <div className="relative flex-1">
               <Input
                 type="number"
-                placeholder="e.g. 35"
+                placeholder={t('placeholder')}
                 value={taxRate}
                 onChange={(e) => handleRateChange(e.target.value)}
                 className="pr-8 h-12"
@@ -171,7 +172,7 @@ export function TaxPdfSync({ initialTaxRate, onTaxRateChange }: TaxPdfSyncProps)
               className="gap-2 shrink-0 h-12 px-6 font-bold"
             >
               {isSaving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
-              Save
+              {t('save')}
             </Button>
           </div>
 
@@ -180,7 +181,7 @@ export function TaxPdfSync({ initialTaxRate, onTaxRateChange }: TaxPdfSyncProps)
               <span className="w-full border-t border-slate-100" />
             </div>
             <div className="relative flex justify-center text-[10px] uppercase font-bold tracking-widest">
-              <span className="bg-white px-3 text-slate-300">Or use local scan</span>
+              <span className="bg-white px-3 text-slate-300">{t('orUseLocalScan')}</span>
             </div>
           </div>
 
@@ -201,12 +202,12 @@ export function TaxPdfSync({ initialTaxRate, onTaxRateChange }: TaxPdfSyncProps)
               {isUploading ? (
                 <>
                   <Loader2 className="h-4 w-4 animate-spin" />
-                  Scanning...
+                  {t('scanning')}
                 </>
               ) : (
                 <>
                   <FileUp className="h-4 w-4" />
-                  Scan Skattekort Locally (Privacy Safe)
+                  {t('scanButton')}
                 </>
               )}
             </Button>
@@ -228,7 +229,7 @@ export function TaxPdfSync({ initialTaxRate, onTaxRateChange }: TaxPdfSyncProps)
             )}
 
             <p className="text-[10px] text-slate-400 italic leading-tight">
-              Note: All PDF processing stays in your browser. We never see your documents.
+              {t('note')}
             </p>
           </div>
         </div>
