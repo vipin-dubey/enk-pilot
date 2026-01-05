@@ -5,11 +5,12 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Upload, Camera, FileText, Loader2, Check, X, Search, Filter } from 'lucide-react'
+import { Upload, Camera, FileText, Loader2, Check, X, Search, Filter, Edit2, Save } from 'lucide-react'
 import { createClient } from '@/utils/supabase/client'
 import { createWorker } from 'tesseract.js'
-import { extractVendor, detectCategory } from '@/lib/norwegian-stores'
+import { extractVendor, detectCategory, ALL_STORES } from '@/lib/norwegian-stores'
 import { CategoryBadge } from '@/components/ui/category-badge'
 
 const CATEGORIES = ['All', 'Office', 'Travel', 'Food', 'Equipment', 'Marketing', 'Other']
@@ -21,6 +22,11 @@ export function ReceiptTriage() {
   const [status, setStatus] = useState<'idle' | 'processing' | 'success' | 'error'>('idle')
   const [searchQuery, setSearchQuery] = useState('')
   const [categoryFilter, setCategoryFilter] = useState('All')
+  const [editingReceipt, setEditingReceipt] = useState<any | null>(null)
+  const [editVendor, setEditVendor] = useState('')
+  const [editCategory, setEditCategory] = useState('')
+  const [editAmount, setEditAmount] = useState('')
+  const [isSaving, setIsSaving] = useState(false)
   const supabase = createClient()
 
   useEffect(() => {
@@ -63,6 +69,52 @@ export function ReceiptTriage() {
 
     setFilteredReceipts(filtered)
   }, [receipts, searchQuery, categoryFilter])
+
+  const handleEditReceipt = (receipt: any) => {
+    setEditingReceipt(receipt)
+    setEditVendor(receipt.vendor || '')
+    setEditCategory(receipt.category || 'Other')
+    setEditAmount(receipt.amount?.toString() || '')
+  }
+
+  const handleSaveEdit = async () => {
+    if (!editingReceipt) return
+
+    setIsSaving(true)
+    try {
+      const parsedAmount = parseFloat(editAmount)
+      if (isNaN(parsedAmount)) {
+        alert('Please enter a valid amount')
+        setIsSaving(false)
+        return
+      }
+
+      const { error } = await supabase
+        .from('receipts')
+        .update({
+          vendor: editVendor,
+          category: editCategory,
+          amount: parsedAmount,
+        })
+        .eq('id', editingReceipt.id)
+
+      if (error) throw error
+
+      // Update local state
+      setReceipts(receipts.map(r => 
+        r.id === editingReceipt.id 
+          ? { ...r, vendor: editVendor, category: editCategory, amount: parsedAmount }
+          : r
+      ))
+
+      setEditingReceipt(null)
+    } catch (err) {
+      console.error('Error updating receipt:', err)
+      alert('Failed to update receipt')
+    } finally {
+      setIsSaving(false)
+    }
+  }
 
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     let file = event.target.files?.[0]
@@ -139,6 +191,10 @@ export function ReceiptTriage() {
       const { data: { text } } = await worker.recognize(file)
       await worker.terminate()
 
+      console.log('=== FULL OCR TEXT ===')
+      console.log(text)
+      console.log('=== END OCR TEXT ===')
+
       // 2. Extract vendor name from OCR text
       const vendor = extractVendor(text) || 'Unknown Vendor'
       console.log('Extracted vendor:', vendor)
@@ -148,25 +204,48 @@ export function ReceiptTriage() {
       let amount = 0
       
       // Pattern 1: Look for TOTAL, SUM, TOTALT (Norwegian), etc. followed by amount
+      // Handle various spacing and formatting issues from OCR
       const totalPatterns = [
-        /(?:TOTAL|SUM|TOTALT|BELØP|AMOUNT|GRAND\s*TOTAL)[:\s]*(\d+[.,]\d{2})/i,
-        /(?:TOTAL|SUM|TOTALT)[:\s]*[^\d]*(\d+[.,]\d{2})/i,
+        // Norwegian "Totalt" with various spacings and OCR errors (fotalt, totalt, etc.)
+        /(?:Totalt|TOTALT|Total|TOTAL|fotalt|Fotalt|tota1t)\s*[:\s]*(\d+[\s,.]?\d{3}[.,]\d{2})/i,
+        /(?:Totalt|TOTALT|Total|TOTAL|fotalt|Fotalt|tota1t)\s*[:\s]*(\d+[.,]\d{2})/i,
+        // English patterns
+        /(?:TOTAL|SUM|AMOUNT|GRAND\s*TOTAL)[:\s]*(\d+[\s,.]?\d{3}[.,]\d{2})/i,
+        /(?:TOTAL|SUM|AMOUNT)[:\s]*(\d+[.,]\d{2})/i,
+        // Norwegian "Beløp"
+        /(?:BELØP|Beløp|be10p)[:\s]*(\d+[\s,.]?\d{3}[.,]\d{2})/i,
+        /(?:BELØP|Beløp|be10p)[:\s]*(\d+[.,]\d{2})/i,
+        // Fallback with more spacing tolerance
+        /(?:TOTAL|TOTALT|Total|Totalt|fotalt)[:\s]*[^\d]*(\d+[\s,.]?\d{3}[.,]\d{2})/i,
       ]
       
       for (const pattern of totalPatterns) {
         const match = text.match(pattern)
         if (match && match[1]) {
-          amount = parseFloat(match[1].replace(',', '.'))
-          console.log('Found total using pattern:', pattern, '→', amount)
+          // Remove spaces from the amount (e.g., "1 404,00" -> "1404,00")
+          const cleanAmount = match[1].replace(/\s/g, '')
+          amount = parseFloat(cleanAmount.replace(',', '.'))
+          console.log('Found total using pattern:', pattern, '→', amount, 'from:', match[1])
           break
         }
       }
       
-      // Pattern 2: If no TOTAL found, look for the largest amount (likely the total)
+      // Pattern 2: If no TOTAL found, look for amounts near "BankAxcept" or "Terminal" (payment section)
       if (amount === 0) {
-        const allAmounts = text.match(/\d+[.,]\d{2}/g)
+        const bankPattern = /(?:BankAxcept|Terminal|Ci\s*hake)[^\d]*(\d+[\s,.]?\d{3}[.,]\d{2}|\d+[.,]\d{2})/i
+        const bankMatch = text.match(bankPattern)
+        if (bankMatch && bankMatch[1]) {
+          const cleanAmount = bankMatch[1].replace(/\s/g, '')
+          amount = parseFloat(cleanAmount.replace(',', '.'))
+          console.log('Found amount near payment section:', amount)
+        }
+      }
+      
+      // Pattern 3: If still no amount, look for the largest amount (likely the total)
+      if (amount === 0) {
+        const allAmounts = text.match(/\d+[\s,.]?\d{3}[.,]\d{2}|\d+[.,]\d{2}/g)
         if (allAmounts && allAmounts.length > 0) {
-          const amounts = allAmounts.map(a => parseFloat(a.replace(',', '.')))
+          const amounts = allAmounts.map(a => parseFloat(a.replace(/\s/g, '').replace(',', '.')))
           amount = Math.max(...amounts)
           console.log('Using largest amount found:', amount)
         }
@@ -294,11 +373,19 @@ export function ReceiptTriage() {
           ) : (
             <div className="space-y-3">
               {filteredReceipts.map((r) => (
-                <div key={r.id} className="flex items-center justify-between p-4 border rounded-lg hover:bg-slate-50 transition-colors">
+                <div key={r.id} className="flex items-center justify-between p-4 border rounded-lg hover:bg-slate-50 transition-colors group">
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-1">
                       <p className="font-semibold">{r.vendor || 'Unknown Vendor'}</p>
                       {r.category && <CategoryBadge category={r.category} />}
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="opacity-0 group-hover:opacity-100 transition-opacity h-6 w-6 p-0"
+                        onClick={() => handleEditReceipt(r)}
+                      >
+                        <Edit2 className="h-3 w-3" />
+                      </Button>
                     </div>
                     <p className="text-xs text-slate-500">{new Date(r.created_at).toLocaleDateString('nb-NO', { 
                       year: 'numeric', 
@@ -318,6 +405,79 @@ export function ReceiptTriage() {
           )}
         </CardContent>
       </Card>
+
+      {/* Edit Receipt Dialog */}
+      <Dialog open={!!editingReceipt} onOpenChange={(open: boolean) => !open && setEditingReceipt(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Edit Receipt</DialogTitle>
+            <DialogDescription>
+              Update the vendor name, amount, and category for this receipt.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label htmlFor="edit-vendor">Vendor Name</Label>
+              <Input
+                id="edit-vendor"
+                value={editVendor}
+                onChange={(e) => setEditVendor(e.target.value)}
+                placeholder="Enter vendor name"
+                list="vendor-suggestions"
+              />
+              <datalist id="vendor-suggestions">
+                {ALL_STORES.map((store) => (
+                  <option key={store} value={store} />
+                ))}
+              </datalist>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="edit-amount">Amount (NOK)</Label>
+              <Input
+                id="edit-amount"
+                type="number"
+                step="0.01"
+                value={editAmount}
+                onChange={(e) => setEditAmount(e.target.value)}
+                placeholder="Enter amount"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="edit-category">Category</Label>
+              <Select value={editCategory} onValueChange={setEditCategory}>
+                <SelectTrigger id="edit-category">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {CATEGORIES.filter(c => c !== 'All').map((cat) => (
+                    <SelectItem key={cat} value={cat}>
+                      {cat}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setEditingReceipt(null)} disabled={isSaving}>
+              Cancel
+            </Button>
+            <Button onClick={handleSaveEdit} disabled={isSaving}>
+              {isSaving ? (
+                <>
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  Saving...
+                </>
+              ) : (
+                <>
+                  <Save className="h-4 w-4 mr-2" />
+                  Save Changes
+                </>
+              )}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

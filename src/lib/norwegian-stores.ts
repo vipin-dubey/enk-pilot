@@ -18,7 +18,6 @@ export const NORWEGIAN_STORES = {
     'JOKER',
     'SPAR',
     'EUROPRIS',
-    'BUNNPRIS',
   ],
 
   // Electronics & Tech
@@ -56,7 +55,11 @@ export const NORWEGIAN_STORES = {
     'VERO MODA',
     'JACK & JONES',
     'VOLT',
-    'XXL',
+    'SKORINGEN',
+    'SKORINGEN', // Common OCR variation
+    'DIN SKO',
+    'EURO SKO',
+    'NILSON GROUP',
   ],
 
   // Pharmacies
@@ -173,8 +176,8 @@ export const NORWEGIAN_STORES = {
   ],
 }
 
-// Flatten all stores into a single searchable array
-export const ALL_STORES = Object.values(NORWEGIAN_STORES).flat()
+// Flatten all stores into a single searchable array and ensure uniqueness
+export const ALL_STORES = [...new Set(Object.values(NORWEGIAN_STORES).flat())]
 
 // Create regex patterns for vendor detection
 export const VENDOR_PATTERNS = ALL_STORES.map(store => ({
