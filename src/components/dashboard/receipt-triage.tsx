@@ -7,10 +7,12 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Upload, Camera, FileText, Loader2, Check, X, Search, Filter, Edit2, Save } from 'lucide-react'
+import { Upload, Camera, FileText, Loader2, Check, X, Search, Filter, Edit2, Save, ChevronDown, ChevronRight } from 'lucide-react'
 import { createClient } from '@/utils/supabase/client'
 import { createWorker } from 'tesseract.js'
 import { extractVendor, detectCategory, ALL_STORES } from '@/lib/norwegian-stores'
+import { extractReceiptDate, groupReceiptsByDate, getSortedYears, getSortedMonths, formatDateForDB } from '@/lib/receipt-grouping'
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
 import { CategoryBadge } from '@/components/ui/category-badge'
 
 const CATEGORIES = ['All', 'Office', 'Travel', 'Food', 'Equipment', 'Marketing', 'Other']
@@ -26,7 +28,9 @@ export function ReceiptTriage() {
   const [editVendor, setEditVendor] = useState('')
   const [editCategory, setEditCategory] = useState('')
   const [editAmount, setEditAmount] = useState('')
+  const [editDate, setEditDate] = useState('')
   const [isSaving, setIsSaving] = useState(false)
+  const [expandedYears, setExpandedYears] = useState<string[]>([])
   const supabase = createClient()
 
   useEffect(() => {
@@ -75,6 +79,7 @@ export function ReceiptTriage() {
     setEditVendor(receipt.vendor || '')
     setEditCategory(receipt.category || 'Other')
     setEditAmount(receipt.amount?.toString() || '')
+    setEditDate(receipt.receipt_date || formatDateForDB(new Date(receipt.created_at)))
   }
 
   const handleSaveEdit = async () => {
@@ -95,6 +100,7 @@ export function ReceiptTriage() {
           vendor: editVendor,
           category: editCategory,
           amount: parsedAmount,
+          receipt_date: editDate,
         })
         .eq('id', editingReceipt.id)
 
@@ -103,7 +109,7 @@ export function ReceiptTriage() {
       // Update local state
       setReceipts(receipts.map(r => 
         r.id === editingReceipt.id 
-          ? { ...r, vendor: editVendor, category: editCategory, amount: parsedAmount }
+          ? { ...r, vendor: editVendor, category: editCategory, amount: parsedAmount, receipt_date: editDate }
           : r
       ))
 
@@ -251,11 +257,16 @@ export function ReceiptTriage() {
         }
       }
 
-      // 4. Auto-detect category based on vendor
+      // 4. Extract receipt date from OCR text
+      const extractedDate = extractReceiptDate(text)
+      const receiptDate = extractedDate ? formatDateForDB(extractedDate) : formatDateForDB(new Date())
+      console.log('Extracted receipt date:', receiptDate)
+
+      // 5. Auto-detect category based on vendor
       const category = detectCategory(vendor)
       console.log('Auto-detected category:', category)
 
-      // 5. Upload to Storage
+      // 6. Upload to Storage
       const fileExt = file.name.split('.').pop()
       const fileName = `${user.id}/${Math.random()}.${fileExt}`
       const { data: storageData, error: storageError } = await supabase.storage
@@ -264,13 +275,14 @@ export function ReceiptTriage() {
 
       if (storageError) throw storageError
 
-      // 6. Save metadata with vendor and category
+      // 6. Save metadata with vendor, category, and receipt date
       const { error: dbError } = await supabase.from('receipts').insert({
         user_id: user.id,
         storage_path: storageData.path,
         amount: amount,
         vendor: vendor,
         category: category,
+        receipt_date: receiptDate,
         is_processed: true,
       })
 
@@ -365,44 +377,105 @@ export function ReceiptTriage() {
             </Select>
           </div>
 
-          {/* Receipts List */}
+          {/* Grouped Receipts List */}
           {filteredReceipts.length === 0 ? (
             <div className="text-center py-12 text-slate-400">
               <p>{receipts.length === 0 ? 'No receipts uploaded yet.' : 'No receipts match your filters.'}</p>
             </div>
-          ) : (
-            <div className="space-y-3">
-              {filteredReceipts.map((r) => (
-                <div key={r.id} className="flex items-center justify-between p-4 border rounded-lg hover:bg-slate-50 transition-colors group">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-1">
-                      <p className="font-semibold">{r.vendor || 'Unknown Vendor'}</p>
-                      {r.category && <CategoryBadge category={r.category} />}
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="opacity-0 group-hover:opacity-100 transition-opacity h-6 w-6 p-0"
-                        onClick={() => handleEditReceipt(r)}
+          ) : (() => {
+            const grouped = groupReceiptsByDate(filteredReceipts)
+            const years = getSortedYears(grouped)
+            const currentYear = new Date().getFullYear().toString()
+            
+            // Initialize expanded years with current year
+            if (expandedYears.length === 0 && years.includes(currentYear)) {
+              setExpandedYears([currentYear])
+            }
+
+            return (
+              <div className="space-y-4">
+                {years.map((year) => {
+                  const yearData = grouped[year]
+                  const months = getSortedMonths(yearData)
+                  const totalReceipts = Object.values(yearData).flat().length
+                  const isYearExpanded = expandedYears.includes(year)
+
+                  return (
+                    <div key={year} className="border rounded-lg">
+                      <button
+                        onClick={() => {
+                          setExpandedYears(prev =>
+                            prev.includes(year)
+                              ? prev.filter(y => y !== year)
+                              : [...prev, year]
+                          )
+                        }}
+                        className="w-full flex items-center justify-between p-4 hover:bg-slate-50 transition-colors"
                       >
-                        <Edit2 className="h-3 w-3" />
-                      </Button>
+                        <div className="flex items-center gap-2">
+                          {isYearExpanded ? (
+                            <ChevronDown className="h-5 w-5 text-slate-500" />
+                          ) : (
+                            <ChevronRight className="h-5 w-5 text-slate-500" />
+                          )}
+                          <span className="font-semibold text-lg">{year}</span>
+                          <span className="text-sm text-slate-500">({totalReceipts} receipts)</span>
+                        </div>
+                      </button>
+
+                      {isYearExpanded && (
+                        <div className="border-t">
+                          {months.map((month) => {
+                            const monthReceipts = yearData[month]
+                            return (
+                              <div key={month} className="border-b last:border-b-0">
+                                <div className="bg-slate-50 px-4 py-2 font-medium text-sm text-slate-700">
+                                  {month} ({monthReceipts.length})
+                                </div>
+                                <div className="divide-y">
+                                  {monthReceipts.map((r: any) => (
+                                    <div key={r.id} className="flex items-center justify-between p-4 hover:bg-slate-50 transition-colors group">
+                                      <div className="flex-1">
+                                        <div className="flex items-center gap-2 mb-1">
+                                          <p className="font-semibold">{r.vendor || 'Unknown Vendor'}</p>
+                                          {r.category && <CategoryBadge category={r.category} />}
+                                          <Button
+                                            variant="ghost"
+                                            size="sm"
+                                            className="opacity-0 group-hover:opacity-100 transition-opacity h-6 w-6 p-0"
+                                            onClick={() => handleEditReceipt(r)}
+                                          >
+                                            <Edit2 className="h-3 w-3" />
+                                          </Button>
+                                        </div>
+                                        <p className="text-xs text-slate-500">
+                                          {new Date(r.receipt_date || r.created_at).toLocaleDateString('en-US', {
+                                            year: 'numeric',
+                                            month: 'long',
+                                            day: 'numeric'
+                                          })}
+                                        </p>
+                                      </div>
+                                      <div className="text-right">
+                                        <p className="font-bold text-lg">{r.amount?.toLocaleString('nb-NO')} NOK</p>
+                                        <p className="text-[10px] text-green-600 flex items-center gap-1 justify-end">
+                                          <Check className="h-3 w-3" /> Processed
+                                        </p>
+                                      </div>
+                                    </div>
+                                  ))}
+                                </div>
+                              </div>
+                            )
+                          })}
+                        </div>
+                      )}
                     </div>
-                    <p className="text-xs text-slate-500">{new Date(r.created_at).toLocaleDateString('nb-NO', { 
-                      year: 'numeric', 
-                      month: 'long', 
-                      day: 'numeric' 
-                    })}</p>
-                  </div>
-                  <div className="text-right">
-                    <p className="font-bold text-lg">{r.amount?.toLocaleString('nb-NO')} NOK</p>
-                    <p className="text-[10px] text-green-600 flex items-center gap-1 justify-end">
-                      <Check className="h-3 w-3" /> Processed
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
+                  )
+                })}
+              </div>
+            )
+          })()}
         </CardContent>
       </Card>
 
@@ -440,6 +513,15 @@ export function ReceiptTriage() {
                 value={editAmount}
                 onChange={(e) => setEditAmount(e.target.value)}
                 placeholder="Enter amount"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="edit-date">Receipt Date</Label>
+              <Input
+                id="edit-date"
+                type="date"
+                value={editDate}
+                onChange={(e) => setEditDate(e.target.value)}
               />
             </div>
             <div className="space-y-2">
