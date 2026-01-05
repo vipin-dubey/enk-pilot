@@ -485,7 +485,7 @@ export function ReceiptTriage() {
           <DialogHeader>
             <DialogTitle>Edit Receipt</DialogTitle>
             <DialogDescription>
-              Update the vendor name, amount, and category for this receipt.
+              Update the vendor name, amount, date, and category for this receipt. You can choose from suggested categories or create your own.
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-4">
@@ -503,6 +503,7 @@ export function ReceiptTriage() {
                   <option key={store} value={store} />
                 ))}
               </datalist>
+              <p className="text-xs text-slate-500">Choose from suggestions or type your own</p>
             </div>
             <div className="space-y-2">
               <Label htmlFor="edit-amount">Amount (NOK)</Label>
@@ -526,18 +527,19 @@ export function ReceiptTriage() {
             </div>
             <div className="space-y-2">
               <Label htmlFor="edit-category">Category</Label>
-              <Select value={editCategory} onValueChange={setEditCategory}>
-                <SelectTrigger id="edit-category">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {CATEGORIES.filter(c => c !== 'All').map((cat) => (
-                    <SelectItem key={cat} value={cat}>
-                      {cat}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <Input
+                id="edit-category"
+                value={editCategory}
+                onChange={(e) => setEditCategory(e.target.value)}
+                placeholder="Select or type a category"
+                list="category-suggestions"
+              />
+              <datalist id="category-suggestions">
+                {CATEGORIES.filter(c => c !== 'All').map((cat) => (
+                  <option key={cat} value={cat} />
+                ))}
+              </datalist>
+              <p className="text-xs text-slate-500">Choose from suggestions or type your own</p>
             </div>
           </div>
           <DialogFooter>
