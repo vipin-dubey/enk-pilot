@@ -15,6 +15,7 @@ import { extractReceiptDate, groupReceiptsByDate, getSortedYears, getSortedMonth
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
 import { CategoryBadge } from '@/components/ui/category-badge'
 import { useTranslations, useLocale } from 'next-intl'
+import { cn } from '@/lib/utils'
 
 const CATEGORIES = ['All', 'Office', 'Travel', 'Food', 'Equipment', 'Marketing', 'IT', 'Software', 'Other']
 
@@ -38,6 +39,7 @@ export function ReceiptTriage() {
   const [editDate, setEditDate] = useState('')
   const [isSaving, setIsSaving] = useState(false)
   const [expandedYears, setExpandedYears] = useState<string[]>([])
+  const [isDragging, setIsDragging] = useState(false)
   const supabase = createClient()
 
   useEffect(() => {
@@ -159,8 +161,12 @@ export function ReceiptTriage() {
   }
 
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    let file = event.target.files?.[0]
-    if (!file) return
+    const file = event.target.files?.[0]
+    if (file) await processFile(file)
+    event.target.value = ''
+  }
+
+  const processFile = async (file: File) => {
 
     setIsProcessing(true)
     setStatus('processing')
@@ -331,7 +337,29 @@ export function ReceiptTriage() {
       setStatus('error')
     } finally {
       setIsProcessing(false)
-      if (event.target) event.target.value = ''
+    }
+  }
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    setIsDragging(true)
+  }
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    setIsDragging(false)
+  }
+
+  const handleDrop = async (e: React.DragEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    setIsDragging(false)
+
+    const file = e.dataTransfer.files?.[0]
+    if (file && (file.type.startsWith('image/') || file.name.toLowerCase().endsWith('.heic'))) {
+      await processFile(file)
     }
   }
 
@@ -343,7 +371,17 @@ export function ReceiptTriage() {
           <CardDescription>{t('description')}</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="flex flex-col items-center justify-center border-2 border-dashed rounded-xl p-12 border-slate-200 bg-slate-50/50 hover:bg-slate-50 transition-colors cursor-pointer relative">
+          <div 
+            className={cn(
+              "flex flex-col items-center justify-center border-2 border-dashed rounded-xl p-12 transition-all duration-200 cursor-pointer relative overflow-hidden",
+              isDragging 
+                ? "border-blue-500 bg-blue-50/50 scale-[0.99] shadow-inner" 
+                : "border-slate-200 bg-slate-50/50 hover:bg-slate-50 hover:border-slate-300"
+            )}
+            onDragOver={handleDragOver}
+            onDragLeave={handleDragLeave}
+            onDrop={handleDrop}
+          >
             <input 
               type="file" 
               accept="image/*,.heic" 
@@ -351,22 +389,48 @@ export function ReceiptTriage() {
               className="absolute inset-0 opacity-0 cursor-pointer"
               disabled={isProcessing}
             />
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white shadow-sm mb-4">
+            
+            {/* Animated Drag Indicator */}
+            {isDragging && (
+              <div className="absolute inset-0 pointer-events-none flex items-center justify-center bg-blue-500/5 animate-pulse">
+                <div className="bg-blue-600/10 h-32 w-32 rounded-full flex items-center justify-center animate-ping duration-1000" />
+              </div>
+            )}
+
+            <div className={cn(
+              "flex h-14 w-14 items-center justify-center rounded-full shadow-sm mb-4 transition-transform duration-200",
+              isDragging ? "bg-blue-600 scale-110 rotate-3" : "bg-white",
+              status === 'success' ? "bg-green-50" : ""
+            )}>
               {isProcessing ? (
-                <Loader2 className="h-6 w-6 text-blue-600 animate-spin" />
+                <Loader2 className="h-7 w-7 text-blue-600 animate-spin" />
+              ) : status === 'success' ? (
+                <Check className="h-7 w-7 text-green-600" />
+              ) : isDragging ? (
+                <Upload className="h-7 w-7 text-white" />
               ) : (
-                <Upload className="h-6 w-6 text-slate-400" />
+                <Upload className="h-7 w-7 text-slate-400" />
               )}
             </div>
-            <p className="font-medium">
-              {isProcessing ? t('processing') : t('dragDrop')}
-            </p>
-            <p className="text-sm text-slate-500 mb-6">PNG, JPG, HEIC up to 10MB</p>
-            <div className="flex gap-2">
-              <Button variant="outline" size="sm" className="gap-2 pointer-events-none">
+
+            <div className="text-center relative z-10">
+              <p className={cn(
+                "font-bold text-lg mb-1 transition-colors",
+                isDragging ? "text-blue-700" : "text-slate-900"
+              )}>
+                {isProcessing ? t('processing') : isDragging ? "Drop your receipt here!" : t('dragDrop')}
+              </p>
+              <p className="text-sm text-slate-500 mb-6">PNG, JPG, HEIC up to 10MB</p>
+            </div>
+
+            <div className={cn(
+              "flex gap-3 transition-opacity duration-200",
+              isDragging ? "opacity-0" : "opacity-100"
+            )}>
+              <Button variant="outline" size="sm" className="gap-2 pointer-events-none bg-white">
                 <Camera className="h-4 w-4" /> {t('camera')}
               </Button>
-              <Button size="sm" className="gap-2 pointer-events-none">
+              <Button size="sm" className="gap-2 pointer-events-none shadow-md bg-blue-600 hover:bg-blue-700">
                 <FileText className="h-4 w-4" /> {t('chooseFile')}
               </Button>
             </div>
