@@ -4,117 +4,239 @@ import { useState, useMemo } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Separator } from '@/components/ui/separator'
-import { TaxPdfSync } from './tax-pdf-sync'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+import { calculateNorwegianTax } from '@/lib/tax-calculations'
 import { useTranslations, useLocale } from 'next-intl'
+import { Info, AlertTriangle, TrendingUp, Save, Loader2, CheckCircle2 } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { createClient } from '@/utils/supabase/client'
+import { useRouter } from 'next/navigation'
 
 interface CalculatorProps {
-  taxRate?: number
+  initialTaxRate?: number
   isMvaRegistered?: boolean
+  ytdGrossIncome?: number
+  ytdExpenses?: number
+  externalSalary?: number
 }
 
-export function SafeToSpendCalculator({ taxRate: initialTaxRate = 35, isMvaRegistered = false }: CalculatorProps) {
+export function SafeToSpendCalculator({ 
+  isMvaRegistered = false,
+  ytdGrossIncome = 0,
+  ytdExpenses = 0,
+  externalSalary = 0
+}: CalculatorProps) {
   const t = useTranslations('calculator')
   const locale = useLocale()
+  const router = useRouter()
   const [grossInput, setGrossInput] = useState<string>('')
-  const [taxRate, setTaxRate] = useState<number>(initialTaxRate)
+  const [isRecording, setIsRecording] = useState(false)
+  const [showSuccess, setShowSuccess] = useState(false)
 
   const calculations = useMemo(() => {
-    const gross = parseFloat(grossInput) || 0
-    let remaining = gross
+    const amount = parseFloat(grossInput) || 0
+    return calculateNorwegianTax(
+      amount,
+      ytdGrossIncome,
+      ytdExpenses,
+      externalSalary,
+      isMvaRegistered
+    )
+  }, [grossInput, ytdGrossIncome, ytdExpenses, externalSalary, isMvaRegistered])
 
-    // 1. MVA (25% rate means 20% of gross if including MVA, or 25% on top)
-    // PRD says: "If user is MVA Registered, subtract 20% (standard 25% rate) from gross"
-    const mvaReserved = isMvaRegistered ? gross * 0.20 : 0
-    remaining -= mvaReserved
+  const formatCurrency = (val: number) => {
+    return val.toLocaleString(locale === 'nb' ? 'nb-NO' : 'en-US', { 
+      style: 'currency', 
+      currency: 'NOK',
+      maximumFractionDigits: 0
+    })
+  }
 
-    // 2. Tax (Includes National Insurance / Trygdeavgift)
-    // The Skattekort percentage (taxRate) already accounts for base tax + trygdeavgift (~11%)
-    const taxReserved = remaining * (taxRate / 100)
+  const handleRecordAllocation = async () => {
+    if (!grossInput || parseFloat(grossInput) <= 0) return
 
-    const netProfit = remaining - taxReserved
+    setIsRecording(true)
+    const supabase = createClient()
+    
+    try {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) throw new Error('Not authenticated')
 
-    return {
-      mvaReserved,
-      taxReserved,
-      netProfit
+      const { error } = await supabase.from('allocations').insert({
+        user_id: user.id,
+        gross_amount: calculations.grossAmount,
+        tax_reserved: calculations.taxBuffer,
+        mva_reserved: calculations.mvaPart,
+        net_profit: calculations.netRevenue,
+        safe_to_spend: calculations.safeToSpend,
+        marginal_rate_applied: calculations.marginalRate
+      })
+
+      if (error) throw error
+
+      setShowSuccess(true)
+      setGrossInput('')
+      
+      // Refresh to update the YTD profile data
+      router.refresh()
+      
+      setTimeout(() => setShowSuccess(false), 3000)
+    } catch (err) {
+      console.error('Failed to record allocation:', err)
+      alert(err instanceof Error ? err.message : 'Failed to record allocation')
+    } finally {
+      setIsRecording(false)
     }
-  }, [grossInput, taxRate, isMvaRegistered])
+  }
+
+  const currentProfit = (ytdGrossIncome + externalSalary) - ytdExpenses;
 
   return (
-    <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-      <Card className="md:col-span-2 lg:col-span-3 border-none shadow-none bg-transparent">
-        <CardContent className="p-0">
-          <div className="grid gap-6 md:grid-cols-2 items-start">
-            <div className="space-y-4 bg-white border rounded-xl p-6 shadow-sm h-full">
-              <div className="space-y-1 mb-2">
-                <h3 className="text-lg font-bold font-outfit">{t('incomeEntry')}</h3>
-                <p className="text-xs text-slate-500">{t('grossIncomeDescription')}</p>
+    <div className="space-y-6">
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {/* Input Section */}
+        <Card className="md:col-span-2 lg:col-span-3 border-none shadow-none bg-transparent">
+          <CardContent className="p-0">
+            <div className="grid gap-6 md:grid-cols-2 items-stretch">
+              <div className="space-y-4 bg-white border rounded-xl p-6 shadow-sm flex flex-col justify-center">
+                <div className="space-y-1 mb-2">
+                  <h3 className="text-lg font-bold font-outfit flex items-center gap-2">
+                    <TrendingUp className="h-5 w-5 text-blue-600" />
+                    {t('incomeEntry')}
+                  </h3>
+                  <p className="text-xs text-slate-500">{t('grossIncomeDescription')}</p>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="gross-income" className="text-slate-600 font-semibold">{t('grossIncomeLabel')}</Label>
+                  <div className="relative">
+                    <Input
+                      id="gross-income"
+                      type="number"
+                      placeholder="0"
+                      value={grossInput}
+                      onChange={(e) => setGrossInput(e.target.value)}
+                      className="text-4xl h-20 font-outfit pr-12 font-bold focus:ring-blue-500"
+                    />
+                    <span className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold">NOK</span>
+                  </div>
+                </div>
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="gross-income" className="text-slate-600 font-semibold">{t('grossIncomeLabel')}</Label>
-                <Input
-                  id="gross-income"
-                  type="number"
-                  placeholder="0.00"
-                  value={grossInput}
-                  onChange={(e) => setGrossInput(e.target.value)}
-                  className="text-3xl h-16 font-outfit"
-                />
-                <p className="text-[10px] text-slate-400 uppercase tracking-wider font-bold">{t('taxRulesHint')}</p>
+
+              {/* Context Summary Box */}
+              <div className="bg-slate-900 text-white border rounded-xl p-6 shadow-sm flex flex-col justify-center">
+                <div className="flex items-center gap-2 text-slate-400 mb-4">
+                  <Info className="h-4 w-4" />
+                  <span className="text-xs uppercase tracking-widest font-bold">{t('currentTaxContext')}</span>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-1">
+                    <p className="text-[10px] text-slate-500 uppercase font-bold">{t('ytdProfit')}</p>
+                    <p className="font-outfit text-lg">{formatCurrency(currentProfit)}</p>
+                  </div>
+                  <div className="space-y-1">
+                    <p className="text-[10px] text-slate-500 uppercase font-bold">{t('marginalRate')}</p>
+                    <p className="font-outfit text-lg">{(calculations.marginalRate * 100).toFixed(1)}%</p>
+                  </div>
+                </div>
+                <div className="mt-4 pt-4 border-t border-slate-800">
+                  <p className="text-[10px] text-slate-500 uppercase font-bold mb-1">{t('mvaStatus')}</p>
+                  <div className="flex items-center gap-2">
+                    <div className={`h-2 w-2 rounded-full ${isMvaRegistered ? 'bg-green-500' : 'bg-slate-600'}`} />
+                    <span className="text-sm font-medium">
+                      {isMvaRegistered ? t('registered') : t('notRegistered')}
+                    </span>
+                  </div>
+                </div>
               </div>
             </div>
-            <div className="bg-white border rounded-xl p-6 shadow-sm h-full flex flex-col">
-               <TaxPdfSync 
-                initialTaxRate={taxRate} 
-                onTaxRateChange={(newRate) => setTaxRate(parseFloat(newRate))} 
-              />
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
 
-      <Card className="border-l-4 border-l-orange-500">
-        <CardHeader className="pb-2">
-          <CardDescription>{t('mvaReserve')}</CardDescription>
-          <CardTitle className="text-2xl">
-            {calculations.mvaReserved.toLocaleString(locale === 'nb' ? 'nb-NO' : 'en-US', { style: 'currency', currency: 'NOK' })}
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p className="text-xs text-slate-500">
-            {isMvaRegistered ? t('mvaDescription', { percent: 20 }) : t('mvaNotRegistered')}
-          </p>
-        </CardContent>
-      </Card>
+        {/* MVA Result */}
+        <Card className="border-l-4 border-l-orange-500">
+          <CardHeader className="pb-2">
+            <CardDescription>{t('mvaReserve')}</CardDescription>
+            <CardTitle className="text-2xl font-outfit">
+              {formatCurrency(calculations.mvaPart)}
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-xs text-slate-500">
+              {isMvaRegistered ? t('mvaDescription', { percent: 25 }) : t('mvaNotRegistered')}
+            </p>
+          </CardContent>
+        </Card>
 
-      <Card className="border-l-4 border-l-blue-500">
-        <CardHeader className="pb-2">
-          <CardDescription>{t('taxReserve')}</CardDescription>
-          <CardTitle className="text-2xl">
-            {calculations.taxReserved.toLocaleString(locale === 'nb' ? 'nb-NO' : 'en-US', { style: 'currency', currency: 'NOK' })}
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p className="text-xs text-slate-500">
-            {t('taxDescription')}
-          </p>
-        </CardContent>
-      </Card>
+        {/* Tax Result */}
+        <Card className="border-l-4 border-l-blue-500">
+          <CardHeader className="pb-2">
+            <CardDescription>{t('taxReserve')}</CardDescription>
+            <CardTitle className="text-2xl font-outfit">
+              {formatCurrency(calculations.taxBuffer)}
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-xs text-slate-500">
+              {t('taxDescription')}
+            </p>
+          </CardContent>
+        </Card>
 
-      <Card className="border-l-4 border-l-green-500 bg-green-50/30">
-        <CardHeader className="pb-2">
-          <CardDescription className="text-green-700">{t('safeToSpend')}</CardDescription>
-          <CardTitle className="text-2xl text-green-700">
-            {calculations.netProfit.toLocaleString(locale === 'nb' ? 'nb-NO' : 'en-US', { style: 'currency', currency: 'NOK' })}
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p className="text-xs text-green-600">
-            {t('profitDescription')}
-          </p>
-        </CardContent>
-      </Card>
+        {/* Safe to Spend Result */}
+        <Card className="border-l-4 border-l-green-500 bg-green-50/10">
+          <CardHeader className="pb-2">
+            <CardDescription className="text-green-700 font-bold">{t('safeToSpend')}</CardDescription>
+            <CardTitle className="text-3xl font-outfit text-green-700">
+              {formatCurrency(calculations.safeToSpend)}
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-xs text-green-600">
+              {t('profitDescription')}
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Warnings & Thresholds */}
+      {calculations.crossesMvaThreshold && (
+        <Alert variant="destructive" className="bg-red-50 border-red-200">
+          <AlertTriangle className="h-5 w-5" />
+          <AlertTitle className="font-bold">{t('mvaThresholdWarning')}</AlertTitle>
+          <AlertDescription>
+            {t('mvaThresholdDescription')}
+          </AlertDescription>
+        </Alert>
+      )}
+
+      {/* Success Notification */}
+      {showSuccess && (
+        <div className="flex items-center gap-2 text-green-600 bg-green-50 p-4 rounded-xl border border-green-100 animate-in fade-in slide-in-from-bottom-2 duration-300">
+          <CheckCircle2 className="h-5 w-5" />
+          <p className="font-bold">Allocation recorded successfully! Your YTD profit has been updated.</p>
+        </div>
+      )}
+
+      {/* Action Button */}
+      {parseFloat(grossInput) > 0 && !showSuccess && (
+        <div className="flex justify-end">
+          <Button 
+            onClick={handleRecordAllocation}
+            disabled={isRecording}
+            className="gap-2 bg-blue-600 hover:bg-blue-700 text-white font-bold px-8 h-12 rounded-xl shadow-lg shadow-blue-500/20 active:scale-95 transition-all"
+          >
+            {isRecording ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <Save className="h-4 w-4" />
+            )}
+            {t('recordAllocation')}
+          </Button>
+        </div>
+      )}
+
     </div>
   )
 }
+
+
