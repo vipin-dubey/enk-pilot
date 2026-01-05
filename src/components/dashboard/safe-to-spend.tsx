@@ -12,8 +12,9 @@ interface CalculatorProps {
   isMvaRegistered?: boolean
 }
 
-export function SafeToSpendCalculator({ taxRate = 35, isMvaRegistered = false }: CalculatorProps) {
+export function SafeToSpendCalculator({ taxRate: initialTaxRate = 35, isMvaRegistered = false }: CalculatorProps) {
   const [grossInput, setGrossInput] = useState<string>('')
+  const [taxRate, setTaxRate] = useState<number>(initialTaxRate)
 
   const calculations = useMemo(() => {
     const gross = parseFloat(grossInput) || 0
@@ -24,43 +25,48 @@ export function SafeToSpendCalculator({ taxRate = 35, isMvaRegistered = false }:
     const mvaReserved = isMvaRegistered ? gross * 0.20 : 0
     remaining -= mvaReserved
 
-    // 2. National Insurance (~11.0% trygdeavgift)
-    // Usually calculated on net income. For simplicity here:
-    const nationalInsurance = remaining * 0.11
+    // 2. Tax (Includes National Insurance / Trygdeavgift)
+    // The Skattekort percentage (taxRate) already accounts for base tax + trygdeavgift (~11%)
+    const taxReserved = remaining * (taxRate / 100)
 
-    // 3. Tax
-    const taxReserved = (remaining - nationalInsurance) * (taxRate / 100)
-
-    const netProfit = remaining - nationalInsurance - taxReserved
+    const netProfit = remaining - taxReserved
 
     return {
       mvaReserved,
-      taxReserved: taxReserved + nationalInsurance, // Combined tax + trygdeavgift for display
+      taxReserved,
       netProfit
     }
   }, [grossInput, taxRate, isMvaRegistered])
 
   return (
     <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-      <Card className="md:col-span-2 lg:col-span-3">
-        <CardHeader>
-          <CardTitle>Income Entry & Configuration</CardTitle>
-          <CardDescription>Enter your gross income and sync your tax profile.</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="grid gap-6 md:grid-cols-2">
-            <div className="space-y-2">
-              <Label htmlFor="gross-income">Gross Income (NOK)</Label>
-              <Input
-                id="gross-income"
-                type="number"
-                placeholder="0.00"
-                value={grossInput}
-                onChange={(e) => setGrossInput(e.target.value)}
-                className="text-2xl h-14"
+      <Card className="md:col-span-2 lg:col-span-3 border-none shadow-none bg-transparent">
+        <CardContent className="p-0">
+          <div className="grid gap-6 md:grid-cols-2 items-start">
+            <div className="space-y-4 bg-white border rounded-xl p-6 shadow-sm h-full">
+              <div className="space-y-1 mb-2">
+                <h3 className="text-lg font-bold font-outfit">Income Entry</h3>
+                <p className="text-xs text-slate-500">Enter your gross income for this period.</p>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="gross-income" className="text-slate-600 font-semibold">Gross Income (NOK)</Label>
+                <Input
+                  id="gross-income"
+                  type="number"
+                  placeholder="0.00"
+                  value={grossInput}
+                  onChange={(e) => setGrossInput(e.target.value)}
+                  className="text-3xl h-16 font-outfit"
+                />
+                <p className="text-[10px] text-slate-400 uppercase tracking-wider font-bold">Calculation based on 2024 tax rules</p>
+              </div>
+            </div>
+            <div className="bg-white border rounded-xl p-6 shadow-sm h-full flex flex-col">
+               <TaxPdfSync 
+                initialTaxRate={taxRate} 
+                onTaxRateChange={(newRate) => setTaxRate(parseFloat(newRate))} 
               />
             </div>
-            <TaxPdfSync />
           </div>
         </CardContent>
       </Card>
@@ -88,7 +94,7 @@ export function SafeToSpendCalculator({ taxRate = 35, isMvaRegistered = false }:
         </CardHeader>
         <CardContent>
           <p className="text-xs text-slate-500">
-            Tax ({taxRate}%) + National Insurance (11%)
+            Includes Income Tax & National Insurance
           </p>
         </CardContent>
       </Card>
