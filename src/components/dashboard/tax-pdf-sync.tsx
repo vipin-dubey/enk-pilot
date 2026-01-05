@@ -90,7 +90,7 @@ export function TaxPdfSync({ initialTaxRate, onTaxRateChange }: TaxPdfSyncProps)
       // @ts-ignore
       const pdfjs = await import('pdfjs-dist')
       // @ts-ignore
-      pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`
+      pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`
 
       const arrayBuffer = await file.arrayBuffer()
       const loadingTask = pdfjs.getDocument({ data: arrayBuffer })
