@@ -16,10 +16,20 @@ export async function login(formData: FormData) {
 
   if (error) {
     redirect({ href: '/error', locale: 'nb' })
+    return
   }
 
+  // Fetch user preference for locale
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('default_locale')
+    .eq('id', (await supabase.auth.getUser()).data.user?.id)
+    .single()
+
+  const preferredLocale = profile?.default_locale || 'nb'
+
   revalidatePath('/', 'layout')
-  redirect({ href: '/', locale: 'nb' })
+  redirect({ href: '/', locale: preferredLocale as any })
 }
 
 export async function signup(formData: FormData) {
@@ -34,6 +44,7 @@ export async function signup(formData: FormData) {
 
   if (error) {
     redirect({ href: '/error', locale: 'nb' })
+    return
   }
 
   revalidatePath('/', 'layout')

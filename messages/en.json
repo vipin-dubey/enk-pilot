@@ -13,7 +13,7 @@
   },
   "dashboard": {
     "title": "Dashboard",
-    "welcome": "Welcome back, {name}! Here's your financial overview.",
+    "welcome": "Welcome back, {name}!",
     "upgradeToPro": "Upgrade to Pro",
     "unlockFeatures": "Unlock AI PDF Sync & OCR.",
     "proAccount": "Pro Account",
@@ -139,5 +139,25 @@
     "invalidRate": "Please enter a valid tax rate.",
     "updateSuccess": "Tax rate updated to {rate}%",
     "updateFailed": "Failed to update tax rate."
+  },
+  "settingsPage": {
+    "title": "Settings",
+    "description": "Manage your account preferences and security.",
+    "account": "Account",
+    "security": "Security",
+    "defaultLocale": "Default Language",
+    "defaultLocaleDescription": "Choose your preferred language for when you log in.",
+    "changePassword": "Change Password",
+    "newPassword": "New Password",
+    "confirmPassword": "Confirm New Password",
+    "updatePassword": "Update Password",
+    "updateLanguage": "Update Language",
+    "passwordPlaceholder": "Minimum 6 characters",
+    "passwordUpdateSuccess": "Password updated successfully",
+    "passwordUpdateError": "Failed to update password",
+    "passwordsDoNotMatch": "Passwords do not match",
+    "localeUpdateSuccess": "Default language updated",
+    "localeUpdateError": "Failed to update language",
+    "backToDashboard": "Back to Dashboard"
   }
 }

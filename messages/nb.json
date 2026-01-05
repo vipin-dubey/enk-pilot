@@ -13,7 +13,7 @@
   },
   "dashboard": {
     "title": "Dashbord",
-    "welcome": "Velkommen tilbake, {name}! Her er din økonomiske oversikt.",
+    "welcome": "Velkommen tilbake, {name}!",
     "upgradeToPro": "Oppgrader til Pro",
     "unlockFeatures": "Lås opp AI PDF-synkronisering og OCR.",
     "proAccount": "Pro-konto",
@@ -139,5 +139,25 @@
     "invalidRate": "Vennligst skriv inn en gyldig skattesats.",
     "updateSuccess": "Skattesats oppdatert til {rate}%",
     "updateFailed": "Kunne ikke oppdatere skattesats."
+  },
+  "settingsPage": {
+    "title": "Innstillinger",
+    "description": "Administrer dine kontoinnstillinger og sikkerhet.",
+    "account": "Konto",
+    "security": "Sikkerhet",
+    "defaultLocale": "Standard språk",
+    "defaultLocaleDescription": "Velg ditt foretrukne språk for når du logger inn.",
+    "changePassword": "Bytt passord",
+    "newPassword": "Nytt passord",
+    "confirmPassword": "Bekreft nytt passord",
+    "updatePassword": "Oppdater passord",
+    "updateLanguage": "Oppdater språk",
+    "passwordPlaceholder": "Minimum 6 tegn",
+    "passwordUpdateSuccess": "Passordet ble oppdatert",
+    "passwordUpdateError": "Kunne ikke oppdatere passordet",
+    "passwordsDoNotMatch": "Passordene er ikke like",
+    "localeUpdateSuccess": "Standard språk ble oppdatert",
+    "localeUpdateError": "Kunne ikke oppdatere språk",
+    "backToDashboard": "Tilbake til dashbord"
   }
 }

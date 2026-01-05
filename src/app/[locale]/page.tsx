@@ -1,5 +1,5 @@
 import { createClient } from '@/utils/supabase/server'
-import { redirect } from '@/navigation'
+import { redirect, Link } from '@/navigation'
 import { SafeToSpendCalculator } from '@/components/dashboard/safe-to-spend'
 import { DeadlineTracker } from '@/components/dashboard/deadline-tracker'
 import { ReceiptTriage } from '@/components/dashboard/receipt-triage'
@@ -83,10 +83,12 @@ export default async function DashboardPage({
               </TabsTrigger>
             </TabsList>
             
-            <Button variant="outline" size="sm" className="hidden md:flex gap-2 mr-1">
-              <Settings className="h-4 w-4" />
-              {t('settings')}
-            </Button>
+            <Link href="/settings">
+              <Button variant="outline" size="sm" className="hidden md:flex gap-2 mr-1">
+                <Settings className="h-4 w-4" />
+                {t('settings')}
+              </Button>
+            </Link>
           </div>
 
           <TabsContent value="safe-to-spend" className="mt-0 border-none p-0 focus-visible:ring-0">
