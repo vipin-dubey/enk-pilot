@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { LogOut, LayoutDashboard, Calendar, Receipt, Settings, Sparkles, UserCircle } from 'lucide-react'
 import { LanguageSwitcher } from '@/components/language-switcher'
+import { NotificationCenter } from '@/components/dashboard/notification-center'
 import { getTranslations } from 'next-intl/server'
 
 export default async function DashboardPage({
@@ -45,6 +46,7 @@ export default async function DashboardPage({
           </div>
           
           <div className="flex items-center gap-4">
+            <NotificationCenter />
             <LanguageSwitcher />
             <div className="h-8 w-8 rounded-full bg-slate-100 flex items-center justify-center border">
               <UserCircle className="h-5 w-5 text-slate-500" />

@@ -4,9 +4,10 @@ import { redirect, Link } from '@/navigation'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { ChevronLeft, Lock, Globe, Save, CheckCircle2, AlertCircle } from 'lucide-react'
+import { ChevronLeft, Lock, Globe, Save, CheckCircle2, AlertCircle, Bell } from 'lucide-react'
 import { LocaleSettings } from './locale-settings'
 import { PasswordSettings } from './password-settings'
+import { ReminderSettings } from './reminder-settings'
 
 export default async function SettingsPage({
   params,
@@ -15,6 +16,7 @@ export default async function SettingsPage({
 }) {
   const { locale } = await params
   const t = await getTranslations('settingsPage')
+  const tr = await getTranslations('reminderSettings')
   const supabase = await createClient()
 
   const { data: { user } } = await supabase.auth.getUser()
@@ -26,7 +28,7 @@ export default async function SettingsPage({
 
   const { data: profile } = await supabase
     .from('profiles')
-    .select('default_locale')
+    .select('default_locale, email_notifications_enabled, push_notifications_enabled, reminder_lead_days')
     .eq('id', user.id)
     .single()
 
@@ -59,6 +61,21 @@ export default async function SettingsPage({
                 <h3 className="text-lg font-semibold">{t('account')}</h3>
               </div>
               <LocaleSettings initialLocale={profile?.default_locale || locale} />
+            </div>
+
+            {/* Notification Settings */}
+            <div className="space-y-6">
+              <div className="flex items-center gap-2 pb-2 border-b">
+                <Bell className="h-5 w-5 text-blue-600" />
+                <h3 className="text-lg font-semibold">{tr('title')}</h3>
+              </div>
+              <ReminderSettings 
+                initialSettings={{
+                  emailEnabled: profile?.email_notifications_enabled ?? true,
+                  pushEnabled: profile?.push_notifications_enabled ?? true,
+                  leadDays: profile?.reminder_lead_days ?? [1, 7, 14]
+                }} 
+              />
             </div>
 
             {/* Security Settings */}

@@ -159,5 +159,27 @@
     "localeUpdateSuccess": "Standard språk ble oppdatert",
     "localeUpdateError": "Kunne ikke oppdatere språk",
     "backToDashboard": "Tilbake til dashbord"
+  },
+  "notifications": {
+    "title": "Varslinger",
+    "empty": "Ingen varslinger ennå",
+    "markAsRead": "Marker som lest",
+    "markAllRead": "Marker alle som lest",
+    "viewAll": "Vis alle",
+    "deadlineReminder": "Påminnelse om frist"
+  },
+  "reminderSettings": {
+    "title": "Frister & påminnelser",
+    "description": "Velg hvordan og når du vil bli påminnet om viktige skattefrister.",
+    "emailReminders": "E-postpåminnelser",
+    "emailDescription": "Motta e-postvarsler før frister.",
+    "pushReminders": "Push-varsler",
+    "pushDescription": "Få varsler i nettleseren når en frist nærmer seg.",
+    "leadDays": "Varslingstid",
+    "leadDaysDescription": "Hvor mange dager før fristen skal vi påminne deg?",
+    "day": "{count} dag",
+    "days": "{count} dager",
+    "saveSuccess": "Innstillinger for påminnelser ble lagret",
+    "saveError": "Kunne ikke lagre innstillinger"
   }
 }

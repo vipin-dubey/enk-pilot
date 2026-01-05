@@ -41,3 +41,30 @@ export async function updateDefaultLocale(locale: string) {
   revalidatePath('/[locale]/settings', 'page')
   return { success: true }
 }
+
+export async function updateNotificationSettings(settings: {
+  emailEnabled: boolean
+  pushEnabled: boolean
+  leadDays: number[]
+}) {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+
+  if (!user) return { error: 'unauthorized' }
+
+  const { error } = await supabase
+    .from('profiles')
+    .update({
+      email_notifications_enabled: settings.emailEnabled,
+      push_notifications_enabled: settings.pushEnabled,
+      reminder_lead_days: settings.leadDays
+    })
+    .eq('id', user.id)
+
+  if (error) {
+    return { error: 'notificationUpdateError' }
+  }
+
+  revalidatePath('/[locale]/settings', 'page')
+  return { success: true }
+}

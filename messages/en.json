@@ -159,5 +159,27 @@
     "localeUpdateSuccess": "Default language updated",
     "localeUpdateError": "Failed to update language",
     "backToDashboard": "Back to Dashboard"
+  },
+  "notifications": {
+    "title": "Notifications",
+    "empty": "No notifications yet",
+    "markAsRead": "Mark as read",
+    "markAllRead": "Mark all as read",
+    "viewAll": "View all",
+    "deadlineReminder": "Deadline Reminder"
+  },
+  "reminderSettings": {
+    "title": "Deadlines & Reminders",
+    "description": "Choose how and when you want to be reminded about important tax deadlines.",
+    "emailReminders": "Email Reminders",
+    "emailDescription": "Receive email alerts before deadlines.",
+    "pushReminders": "Push Notifications",
+    "pushDescription": "Get browser alerts when a deadline is approaching.",
+    "leadDays": "Lead Time",
+    "leadDaysDescription": "How many days before the deadline should we remind you?",
+    "day": "{count} day",
+    "days": "{count} days",
+    "saveSuccess": "Reminder settings saved",
+    "saveError": "Failed to save settings"
   }
 }
