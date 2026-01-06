@@ -4,10 +4,11 @@ import { redirect, Link } from '@/navigation'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { ChevronLeft, Lock, Globe, Save, CheckCircle2, AlertCircle, Bell } from 'lucide-react'
+import { ChevronLeft, Lock, Globe, Save, CheckCircle2, AlertCircle, Bell, Briefcase } from 'lucide-react'
 import { LocaleSettings } from './locale-settings'
 import { PasswordSettings } from './password-settings'
 import { ReminderSettings } from './reminder-settings'
+import { BusinessSettings } from './business-settings'
 
 export default async function SettingsPage({
   params,
@@ -28,7 +29,7 @@ export default async function SettingsPage({
 
   const { data: profile } = await supabase
     .from('profiles')
-    .select('default_locale, email_notifications_enabled, push_notifications_enabled, reminder_lead_days')
+    .select('*')
     .eq('id', user.id)
     .single()
 
@@ -61,6 +62,22 @@ export default async function SettingsPage({
                 <h3 className="text-lg font-semibold">{t('account')}</h3>
               </div>
               <LocaleSettings initialLocale={profile?.default_locale || locale} />
+            </div>
+
+            {/* Business Settings */}
+            <div className="space-y-6">
+              <div className="flex items-center gap-2 pb-2 border-b">
+                <Briefcase className="h-5 w-5 text-blue-600" />
+                <h3 className="text-lg font-semibold">{t('business')}</h3>
+              </div>
+              <BusinessSettings 
+                initialSettings={{
+                  isMvaRegistered: profile?.is_mva_registered ?? false,
+                  ytdGrossIncome: profile?.ytd_gross_income ?? 0,
+                  ytdExpenses: profile?.ytd_expenses ?? 0,
+                  externalSalary: profile?.external_salary_income ?? 0
+                }} 
+              />
             </div>
 
             {/* Notification Settings */}

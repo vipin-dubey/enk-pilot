@@ -124,10 +124,78 @@ export function SafeToSpendCalculator({
     }
   }
 
+  const handleMarkAsMvaRegistered = async () => {
+    const supabase = createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (user) {
+      await supabase.from('profiles').update({ is_mva_registered: true }).eq('id', user.id)
+      router.refresh()
+    }
+  }
+
   const currentProfit = (ytdGrossIncome + externalSalary) - ytdExpenses;
 
   return (
     <div className="space-y-6">
+      {/* Redesigned MVA Warning Card */}
+      {calculations.crossesMvaThreshold && (
+        <Card className="overflow-hidden border-l-4 border-l-amber-500 border-amber-100 bg-gradient-to-br from-amber-50/50 to-white shadow-md animate-in fade-in slide-in-from-top-4 duration-500">
+          <CardContent className="p-6">
+            <div className="flex flex-col md:flex-row gap-6 items-start">
+              <div className="h-12 w-12 rounded-2xl bg-amber-100 flex items-center justify-center shrink-0">
+                <AlertTriangle className="h-6 w-6 text-amber-600" />
+              </div>
+              
+              <div className="flex-1 space-y-4">
+                <div className="space-y-1">
+                  <h3 className="text-xl font-bold font-outfit text-amber-900 leading-tight">
+                    {t('mvaThresholdWarning')}
+                  </h3>
+                  <p className="text-slate-600 text-sm max-w-2xl leading-relaxed">
+                    {t('mvaThresholdDescription')}
+                  </p>
+                </div>
+
+                <div className="grid sm:grid-cols-3 gap-3">
+                  <div className="bg-blue-50/80 p-4 rounded-xl border border-blue-100 relative overflow-hidden group">
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-blue-600 mb-2 relative z-10">Step 1</p>
+                    <p className="text-xs text-slate-700 font-semibold leading-relaxed relative z-10">{t('mvaGuideStep1')}</p>
+                  </div>
+                  <div className="bg-blue-50/80 p-4 rounded-xl border border-blue-100 relative overflow-hidden group">
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-blue-600 mb-2 relative z-10">Step 2</p>
+                    <p className="text-xs text-slate-700 font-semibold leading-relaxed relative z-10">{t('mvaGuideStep2')}</p>
+                  </div>
+                  <div className="bg-blue-50/80 p-4 rounded-xl border border-blue-100 relative overflow-hidden group">
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-blue-600 mb-2 relative z-10">Step 3</p>
+                    <p className="text-xs text-slate-700 font-semibold leading-relaxed relative z-10">{t('mvaGuideStep3')}</p>
+                  </div>
+                </div>
+
+                <div className="flex flex-wrap items-center gap-4 pt-2">
+                  <Button 
+                    asChild
+                    className="bg-amber-600 hover:bg-amber-700 text-white font-bold h-10 px-6 rounded-xl shadow-lg shadow-amber-600/10 active:scale-95 transition-all"
+                  >
+                    <a href="https://www.skatteetaten.no/en/business-and-organisation/vat/register-a-business-for-vat/" target="_blank" rel="noreferrer">
+                      {t('mvaAction')}
+                    </a>
+                  </Button>
+                  <Button 
+                    variant="ghost"
+                    size="sm"
+                    onClick={handleMarkAsMvaRegistered}
+                    className="text-slate-500 hover:text-emerald-700 hover:bg-emerald-50 font-bold h-10 px-4 rounded-xl transition-all group/mva flex items-center gap-2"
+                  >
+                    <CheckCircle2 className="h-4 w-4 opacity-0 group-hover/mva:opacity-100 transition-opacity" />
+                    {t('mvaMarkAsRegistered')}
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {/* Input Section */}
         <Card className="md:col-span-2 lg:col-span-3 border-none shadow-none bg-transparent">
@@ -301,17 +369,6 @@ export function SafeToSpendCalculator({
           </CardContent>
         </Card>
       </div>
-
-      {/* Warnings & Thresholds */}
-      {calculations.crossesMvaThreshold && (
-        <Alert variant="destructive" className="bg-red-50 border-red-200">
-          <AlertTriangle className="h-5 w-5" />
-          <AlertTitle className="font-bold">{t('mvaThresholdWarning')}</AlertTitle>
-          <AlertDescription>
-            {t('mvaThresholdDescription')}
-          </AlertDescription>
-        </Alert>
-      )}
 
       {/* Success Notification */}
       {showSuccess && (
