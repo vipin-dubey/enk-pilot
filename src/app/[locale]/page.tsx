@@ -10,6 +10,7 @@ import { LogOut, LayoutDashboard, Calendar, Receipt, Settings, Sparkles, UserCir
 import { LanguageSwitcher } from '@/components/language-switcher'
 import { NotificationCenter } from '@/components/dashboard/notification-center'
 import { getTranslations } from 'next-intl/server'
+import { MvaSummary } from '@/components/dashboard/mva-summary'
 
 export default async function DashboardPage({
   params,
@@ -131,6 +132,7 @@ export default async function DashboardPage({
                 externalSalary={profile?.external_salary_income}
                 useManualTax={profile?.use_manual_tax}
               />
+              {profile?.is_mva_registered && <MvaSummary />}
             </div>
           </TabsContent>
 

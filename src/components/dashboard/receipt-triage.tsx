@@ -36,6 +36,7 @@ export function ReceiptTriage() {
   const [editVendor, setEditVendor] = useState('')
   const [editCategory, setEditCategory] = useState('')
   const [editAmount, setEditAmount] = useState('')
+  const [editMva, setEditMva] = useState('')
   const [editDate, setEditDate] = useState('')
   const [isSaving, setIsSaving] = useState(false)
   const [expandedYears, setExpandedYears] = useState<string[]>([])
@@ -102,6 +103,7 @@ export function ReceiptTriage() {
     setEditVendor(receipt.vendor || '')
     setEditCategory(receipt.category || 'Other')
     setEditAmount(receipt.amount?.toString() || '')
+    setEditMva(receipt.mva_amount?.toString() || (receipt.amount ? (receipt.amount * 0.2).toFixed(2) : '0'))
     setEditDate(receipt.receipt_date || formatDateForDB(new Date(receipt.created_at)))
   }
 
@@ -138,6 +140,7 @@ export function ReceiptTriage() {
           vendor: editVendor,
           category: editCategory,
           amount: parsedAmount,
+          mva_amount: parseFloat(editMva) || 0,
           receipt_date: editDate,
         })
         .eq('id', editingReceipt.id)
@@ -147,7 +150,7 @@ export function ReceiptTriage() {
       // Update local state
       setReceipts(receipts.map(r => 
         r.id === editingReceipt.id 
-          ? { ...r, vendor: editVendor, category: editCategory, amount: parsedAmount, receipt_date: editDate }
+          ? { ...r, vendor: editVendor, category: editCategory, amount: parsedAmount, mva_amount: parseFloat(editMva) || 0, receipt_date: editDate }
           : r
       ))
 
@@ -308,32 +311,51 @@ export function ReceiptTriage() {
       const category = detectCategory(vendor)
       console.log('Auto-detected category:', category)
 
-      // 6. Upload to Storage
+      console.log('3. Uploading to Storage...')
       const fileExt = file.name.split('.').pop()
       const fileName = `${user.id}/${Math.random()}.${fileExt}`
       const { data: storageData, error: storageError } = await supabase.storage
         .from('receipts')
         .upload(fileName, file)
 
-      if (storageError) throw storageError
+      if (storageError) {
+        console.error('Storage Upload Error:', storageError)
+        throw storageError
+      }
 
-      // 6. Save metadata with vendor, category, and receipt date
-      const { error: dbError } = await supabase.from('receipts').insert({
+      // Safety check for NaN
+      const finalAmount = isNaN(amount) ? 0 : amount
+      const finalMva = isNaN(amount) ? 0 : (amount * 0.2)
+
+      console.log('4. Saving metadata to DB...', { vendor, amount: finalAmount, date: receiptDate })
+      
+      const insertData: any = {
         user_id: user.id,
         storage_path: storageData.path,
-        amount: amount,
+        amount: finalAmount,
         vendor: vendor,
         category: category,
         receipt_date: receiptDate,
+        mva_amount: finalMva,
         is_processed: true,
-      })
+      }
 
-      if (dbError) throw dbError
+      const { error: dbError } = await supabase.from('receipts').insert(insertData)
 
+      if (dbError) {
+        console.error('Database Insert Error:', dbError)
+        // If it's a column missing error, provide a helpful message
+        if (dbError.code === '42703') {
+          throw new Error('Database schema out of date. Please run the MVA migration (20260106000001).')
+        }
+        throw dbError
+      }
+
+      console.log('5. Process complete!')
       setStatus('success')
       fetchReceipts()
     } catch (err: any) {
-      console.error('Processing Error:', err)
+      console.error('FULL Processing Error details:', err)
       setStatus('error')
     } finally {
       setIsProcessing(false)
@@ -562,7 +584,10 @@ export function ReceiptTriage() {
                                       </div>
                                       <div className="text-right">
                                         <p className="font-bold text-lg">{r.amount?.toLocaleString(locale === 'nb' ? 'nb-NO' : 'en-US')} NOK</p>
-                                        <p className="text-[10px] text-green-600 flex items-center gap-1 justify-end">
+                                        <p className="text-[10px] text-slate-500 font-medium">
+                                          {(r.mva_amount || 0).toLocaleString(locale === 'nb' ? 'nb-NO' : 'en-US')} NOK {tEdit('mvaAmount')}
+                                        </p>
+                                        <p className="text-[10px] text-green-600 flex items-center gap-1 justify-end mt-1">
                                           <Check className="h-3 w-3" /> {t('processed')}
                                         </p>
                                       </div>
@@ -616,9 +641,26 @@ export function ReceiptTriage() {
                 type="number"
                 step="0.01"
                 value={editAmount}
-                onChange={(e) => setEditAmount(e.target.value)}
+                onChange={(e) => {
+                  setEditAmount(e.target.value)
+                  // Auto-calculate 20% MVA on total
+                  const val = parseFloat(e.target.value)
+                  if (!isNaN(val)) setEditMva((val * 0.2).toFixed(2))
+                }}
                 placeholder={tEdit('amountPlaceholder')}
               />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="edit-mva">{tEdit('mvaAmount')}</Label>
+              <Input
+                id="edit-mva"
+                type="number"
+                step="0.01"
+                value={editMva}
+                onChange={(e) => setEditMva(e.target.value)}
+                placeholder="0.00"
+              />
+              <p className="text-[10px] text-slate-500">{tEdit('mvaAmountHint')}</p>
             </div>
             <div className="space-y-2">
               <Label htmlFor="edit-date">{tEdit('receiptDate')}</Label>

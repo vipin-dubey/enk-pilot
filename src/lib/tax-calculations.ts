@@ -62,21 +62,31 @@ export function calculateNorwegianTax(
   // Step 3: Tax Calculation
   let totalTaxBuffer = 0;
   let marginalRate = 0;
-  const baseRate = TAX_CONSTANTS_2026.ORDINARY_INCOME_TAX + TAX_CONSTANTS_2026.NATIONAL_INSURANCE_ENK;
+  const trygdeavgiftRate = TAX_CONSTANTS_2026.NATIONAL_INSURANCE_ENK;
+  const ordinaryRate = TAX_CONSTANTS_2026.ORDINARY_INCOME_TAX;
 
   if (manualTaxRate !== undefined && manualTaxRate > 0) {
-    // Manual Mode
+    // Manual Mode: Flat rate as requested by user
     totalTaxBuffer = netRevenue * (manualTaxRate / 100);
     marginalRate = manualTaxRate / 100;
   } else {
-    // Engine Mode: Incremental Bracket Calculation
+    // Engine Mode: Sophisticated Norwegian Logic
+
+    // 1. National Insurance (Trygdeavgift) - Applied to all income
+    const trygdeavgiftAmount = netRevenue * trygdeavgiftRate;
+
+    // 2. Ordinary Tax (22%) - Accounts for Personal Allowance (Personfradrag)
+    const ordinaryTaxAmount = calculateIncrementalOrdinaryTax(currentProfitYTD, netRevenue);
+
+    // 3. Trinnskatt - Accounts for tiered brackets
     const trinnskattAmount = calculateIncrementalTrinnskatt(currentProfitYTD, netRevenue);
-    const ordinaryTaxAmount = netRevenue * baseRate;
-    totalTaxBuffer = trinnskattAmount + ordinaryTaxAmount;
+
+    totalTaxBuffer = trygdeavgiftAmount + ordinaryTaxAmount + trinnskattAmount;
 
     // Marginal rate for the next NOK
     const currentTrinnskattRate = TRINNSKATT_BRACKETS_2026.find(b => currentProfitYTD <= b.limit)?.rate ?? 0.178;
-    marginalRate = baseRate + currentTrinnskattRate;
+    const currentOrdinaryRate = currentProfitYTD >= TAX_CONSTANTS_2026.PERSONAL_ALLOWANCE ? ordinaryRate : 0;
+    marginalRate = trygdeavgiftRate + currentOrdinaryRate + currentTrinnskattRate;
   }
 
   return {
@@ -88,6 +98,28 @@ export function calculateNorwegianTax(
     marginalRate,
     crossesMvaThreshold,
   };
+}
+
+/**
+ * Calculates the 22% ordinary tax while respecting the Personal Allowance (Personfradrag).
+ */
+function calculateIncrementalOrdinaryTax(currentProfit: number, incrementalRevenue: number): number {
+  const allowance = TAX_CONSTANTS_2026.PERSONAL_ALLOWANCE;
+  const rate = TAX_CONSTANTS_2026.ORDINARY_INCOME_TAX;
+
+  // Case 1: Already above allowance
+  if (currentProfit >= allowance) {
+    return incrementalRevenue * rate;
+  }
+
+  // Case 2: Entirely below allowance even after this transaction
+  if (currentProfit + incrementalRevenue <= allowance) {
+    return 0;
+  }
+
+  // Case 3: Crossing the threshold
+  const amountAboveThreshold = (currentProfit + incrementalRevenue) - allowance;
+  return amountAboveThreshold * rate;
 }
 
 /**

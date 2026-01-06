@@ -57,6 +57,8 @@
     "category": "Kategori",
     "categoryPlaceholder": "Velg eller skriv inn kategori",
     "categoryHint": "Velg fra forslag eller skriv inn din egen",
+    "mvaAmount": "MVA",
+    "mvaAmountHint": "Vanligvis 25% for de fleste varer/tjenester.",
     "saving": "Lagrer...",
     "invalidAmount": "Vennligst skriv inn et gyldig beløp",
     "updateFailed": "Kunne ikke oppdatere kvittering"
@@ -139,7 +141,18 @@
     "currentTaxContext": "Gjeldende skattesituasjon",
     "useManualTax": "Bruk manuell skattesats",
     "useEngine": "Bruk skattemotor (Anbefalt)",
-    "configureTax": "Konfigurer skattekontekst"
+    "configureTax": "Konfigurer skattekontekst",
+    "mvaReport": "MVA-rapportering",
+    "mvaReportDescription": "Sammendrag for din MVA-melding til Skatteetaten.",
+    "mvaPeriod1": "Jan - Feb",
+    "mvaPeriod2": "Mar - Apr",
+    "mvaPeriod3": "Mai - Jun",
+    "mvaPeriod4": "Jul - Aug",
+    "mvaPeriod5": "Sep - Okt",
+    "mvaPeriod6": "Nov - Des",
+    "inputVat": "Inngående MVA (Utgifter)",
+    "outputVat": "Utgående MVA (Inntekt)",
+    "netToPay": "Netto å betale"
   },
   "taxSync": {
     "title": "Skatteinnstillinger",

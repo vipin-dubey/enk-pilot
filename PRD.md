@@ -131,3 +131,35 @@ Total Expected Cost: $0 for the first 50 users.
 
 1. Expanded Tax Buffer
 Executive SummaryThe Tax Buffer Engine is the core intelligence of the app. It calculates exactly how much a user should set aside from every incoming payment based on their Year-to-Date (YTD) profit, 2026 tax brackets, and MVA status. Unlike a static calculator, it accounts for Marginal Tax Rate shifts as income grows throughout the year.2. 2026 Tax Constants & BracketsThe following rates are codified for the 2026 fiscal year in Norway:2.1 Fixed RatesOrdinary Income Tax (Alminnelig inntekt): 22.0%National Insurance (Trygdeavgift - High Rate for ENK): 10.8%Standard MVA (VAT): 25.0%Personal Allowance (Personfradrag): 114,210 NOK (The amount of "Alminnelig inntekt" that is tax-free).2.2 Trinnskatt (Bracket Tax) 2026Calculated on Gross Personal Income (before deductions):| Bracket | Income Range (NOK) | Rate || :--- | :--- | :--- || Level 0 | 0 – 226,100 | 0.0% || Level 1 | 226,101 – 318,300 | 1.7% || Level 2 | 318,301 – 725,050 | 4.0% || Level 3 | 725,051 – 980,100 | 13.7% || Level 4 | 980,101 – 1,467,200 | 16.8% || Level 5 | 1,467,201 and above | 17.8% |3. Database Schema Requirements (Supabase)Table: profilesytd_gross_income: numeric (Sum of all income excluding MVA).ytd_expenses: numeric (Sum of all deductible business costs).external_salary_income: numeric (User's salary from other jobs, used for bracket calculation).is_mva_registered: boolean.Table: allocationstransaction_id: uuid.gross_received: numeric (The actual amount that hit the bank).mva_reserved: numeric.tax_reserved: numeric.safe_to_spend: numeric.marginal_rate_applied: numeric (e.g., 0.368).4. The "Master Algorithm" LogicWhen a user enters a new payment amount ($X$), the system must execute the following logic in sequence:Step 1: MVA SeparationCheck if the user is is_mva_registered.If Yes:$MVA\_Part = X - (X / 1.25)$$Net\_Revenue = X / 1.25$If No:$MVA\_Part = 0$$Net\_Revenue = X$Step 2: Calculate Current Profit ContextDetermine where the user currently stands in the tax year:$Current\_Profit\_YTD = (ytd\_gross\_income + external\_salary\_income) - ytd\_expenses$Step 3: Incremental Bracket CalculationThe engine must determine the Marginal Rate for the next NOK earned.Base Rate: 22% (Ordinary) + 10.8% (Trygdeavgift) = 32.8%.Trinnskatt Rate: Based on where $Current\_Profit\_YTD$ falls in the brackets.Effective Rate: $32.8\% + Trinnskatt\%$.Complex Logic Alert: If a single transaction (e.g., 100,000 NOK) spans across two tax brackets, the engine must split the calculation: apply the lower bracket rate to the portion "filling" the current bracket, and the higher rate to the remainder.Step 4: Final AllocationTotal Tax Buffer = (Incremental Bracket Calculation)Total Reserved = $MVA\_Part + Total\ Tax\ Buffer$Safe to Spend = $X - Total\ Reserved$5. User Scenarios (Edge Cases)Scenario A: The 50k MVA ThresholdLogic: If is_mva_registered is false AND ytd_gross_income + $Net\_Revenue > 50,000$.Action: Flag for user: "This transaction crosses the 50,000 NOK threshold. You must apply for MVA registration immediately."Scenario B: Business ExpensesLogic: When an expense is added, the system updates the ytd_expenses.UI Feedback: Show the user how much their "Tax Debt" decreased. (e.g., "Buying this laptop saved you 4,200 NOK in future tax").Scenario C: External SalaryLogic: If a user has a part-time job earning 400,000 NOK, the ENK profit starts calculating Trinnskatt from Level 2 (4.0%) immediately, because the salary has already "used up" the lower brackets.6. Technical Implementation PromptsFor the Backend (Edge Function/Database):"Write a Postgres Trigger in Supabase that updates the profiles.ytd_gross_income every time a record is inserted into allocations. Ensure Row Level Security (RLS) is strictly enforced so users only calculate against their own data."For the Frontend (TypeScript Logic):"Create a TypeScript utility calculateNorwegianTax.ts. Input: amount, currentYTD, isMVA. Output: Object with mva, tax, safeAmount. It must loop through the 2026 Trinnskatt array and handle 'bracket jumping' if a large amount is entered."
+
+
+
+Based on my analysis of the current state of ENK Pilot, we have built a very solid "pre-accounting" foundation. You have the Tax Engine tracking brackets, PDF Sync for context, Receipt OCR for deductions, and a Deadline Tracker.
+
+However, looking at the real-world workflow of a Norwegian sole proprietor (ENK), there are three critical gaps that would move this application from "useful" to "indispensable":
+
+1. Forskuddsskatt (Prepaid Tax) "Health Check"
+We track the deadlines for prepaid tax, but we don't actually tell the user if they are paying enough.
+
+The Problem: You might have told Skatteetaten you'd earn 500k, but by June you've already made 400k. You are headed for a massive tax bill next year.
+The ENK Requirement: A feature that compares YTD Profit vs. Expected Profit (from the PDF) and warns you: "You're earning more than expected. We recommend increasing your prepaid tax by 5,000 NOK to avoid a back-tax penalty."
+2. MVA Period Summaries (The "MVA Melding" Draft)
+We reserve the MVA, which is great, but every 2 months (Jan-Feb, Mar-Apr, etc.), you have to log into Altinn and report it.
+
+The Problem: Currently, you'd have to manually filter receipts and allocations to find the numbers for the Altinn form.
+The ENK Requirement: A "MVA Report" view that groups your data by the 6 Norwegian MVA periods and shows exactly two numbers: Output MVA (from income) and Input MVA (from expenses). It would tell you: "For Period 1, you owe Skatteetaten 12,400 NOK. Here is the breakdown."
+3. Smart Deduction Suggestions (The "Tax Benefit" UI)
+Sole proprietors often miss out on valid deductions like the "Home Office" allowance or mileage.
+
+The Problem: Users only think about deductions when they have a physical receipt.
+The ENK Requirement: A "Deduction Optimizer" that asks: "Do you work from home?" and automatically adds the standard deduction (currently ~2,000 NOK) to the YTD expenses, showing the user exactly how much tax they just saved.
+4. Technical Detail: Personal Allowance (Personfradrag)
+Currently, our calculator applies the 22% Ordinary Tax to the entire profit. In reality, the first 114,210 NOK (for 2026) is tax-free "Ordinary Income."
+
+Recommendation: We should update the 
+calculateNorwegianTax
+ logic to account for the Personal Allowance. This would make the "Safe to Spend" amount much more accurate and less "scary" for people just starting their year.
+My Recommendation for the Next Step:
+I would prioritize #4 (Personal Allowance accuracy) and then #2 (The MVA Period Summary). These two features directly impact the user's bank account and their bi-monthly regulatory stress.
+
+Would you like me to start by making the Tax Engine smarter regarding the Personal Allowance?

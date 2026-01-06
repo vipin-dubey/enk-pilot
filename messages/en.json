@@ -57,6 +57,8 @@
     "category": "Category",
     "categoryPlaceholder": "Select or type a category",
     "categoryHint": "Choose from suggestions or type your own",
+    "mvaAmount": "MVA",
+    "mvaAmountHint": "Usually 25% for most goods/services.",
     "saving": "Saving...",
     "invalidAmount": "Please enter a valid amount",
     "updateFailed": "Failed to update receipt"
@@ -139,7 +141,18 @@
     "currentTaxContext": "Current Tax Context",
     "useManualTax": "Use Manual Tax Rate",
     "useEngine": "Use Tax Engine (Recommended)",
-    "configureTax": "Configure Tax Context"
+    "configureTax": "Configure Tax Context",
+    "mvaReport": "MVA Reporting Summary",
+    "mvaReportDescription": "Summary for your bi-monthly MVA return to Skatteetaten.",
+    "mvaPeriod1": "Jan - Feb",
+    "mvaPeriod2": "Mar - Apr",
+    "mvaPeriod3": "May - Jun",
+    "mvaPeriod4": "Jul - Aug",
+    "mvaPeriod5": "Sep - Oct",
+    "mvaPeriod6": "Nov - Dec",
+    "inputVat": "Input VAT (Expenses)",
+    "outputVat": "Output VAT (Income)",
+    "netToPay": "Net to Pay"
   },
   "taxSync": {
     "title": "Tax Configuration",
