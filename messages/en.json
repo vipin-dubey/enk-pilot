@@ -130,7 +130,10 @@
     "mvaThresholdWarning": "MVA Threshold Warning",
     "mvaThresholdDescription": "This transaction puts you above the 50,000 NOK threshold. You must apply for MVA registration immediately.",
     "recordAllocation": "Record Allocation",
-    "currentTaxContext": "Current Tax Context"
+    "currentTaxContext": "Current Tax Context",
+    "useManualTax": "Use Manual Tax Rate",
+    "useEngine": "Use Tax Engine (Recommended)",
+    "configureTax": "Configure Tax Context"
   },
   "taxSync": {
     "title": "Tax Configuration",
@@ -143,6 +146,7 @@
     "note": "Note: All PDF processing stays in your browser. We never see your documents.",
     "detecting": "Scanning locally...",
     "detected": "Detected {rate}% from PDF! Click save to confirm.",
+    "detectedMulti": "Detected {rate}% tax rate and {salary} NOK in external salary! Click save to confirm.",
     "notFound": "Could not find tax rate in this PDF. Please enter it manually.",
     "readFailed": "Failed to read PDF locally. Please enter tax rate manually.",
     "invalidRate": "Please enter a valid tax rate.",

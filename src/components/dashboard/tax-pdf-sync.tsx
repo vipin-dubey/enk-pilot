@@ -21,6 +21,7 @@ export function TaxPdfSync({ initialTaxRate, onTaxRateChange }: TaxPdfSyncProps)
   const [isLoading, setIsLoading] = useState(false)
   const [status, setStatus] = useState<'idle' | 'success' | 'error'>('idle')
   const [message, setMessage] = useState('')
+  const [detectedSalary, setDetectedSalary] = useState<string | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   // Sync internal state if the prop changes from outside (e.g. fresh DB load)
@@ -52,24 +53,33 @@ export function TaxPdfSync({ initialTaxRate, onTaxRateChange }: TaxPdfSyncProps)
       
       if (!user) throw new Error('Not authenticated')
 
+      const updates: any = {
+        tax_rate_percent: parseFloat(taxRate),
+        updated_at: new Date().toISOString(),
+      }
+
+      if (detectedSalary) {
+        updates.external_salary_income = parseFloat(detectedSalary)
+      }
+
       const { error } = await supabase
         .from('profiles')
-        .update({
-          tax_rate_percent: parseFloat(taxRate),
-          updated_at: new Date().toISOString(),
-        })
+        .update(updates)
         .eq('id', user.id)
 
       if (error) throw error
 
       setStatus('success')
-      setMessage(t('updateSuccess', { rate: taxRate }))
+      setMessage(detectedSalary 
+        ? t('updateSuccess', { rate: taxRate }) + " + Salary Sync"
+        : t('updateSuccess', { rate: taxRate })
+      )
       
       setTimeout(() => {
         window.location.reload()
       }, 1500)
     } catch (err: any) {
-      console.error('Error saving tax rate:', err)
+      console.error('Error saving tax data:', err)
       setStatus('error')
       setMessage(err.message || t('updateFailed'))
     } finally {
@@ -84,6 +94,7 @@ export function TaxPdfSync({ initialTaxRate, onTaxRateChange }: TaxPdfSyncProps)
     setIsUploading(true)
     setStatus('idle')
     setMessage(t('detecting'))
+    setDetectedSalary(null)
 
     try {
       // Dynamic import to avoid SSR issues
@@ -106,14 +117,19 @@ export function TaxPdfSync({ initialTaxRate, onTaxRateChange }: TaxPdfSyncProps)
       console.log('Local Scan Content Length:', fullText.length)
 
       // Privacy-Safe Regex Patterns for Skattekort
-      const patterns = [
+      const ratePatterns = [
         /Trekkprosent\s*[:\-]?\s*(\d+[.,]\d+|\d+)/i,
         /Skattesats\s*[:\-]?\s*(\d+[.,]\d+|\d+)/i,
         /(\d+[.,]\d+|\d+)\s*%/
       ]
 
+      const salaryPatterns = [
+        /(?:Antatt|Forventet)\s*lønnsinntekt\s*[:\-]?\s*(\d+[\s\d]*)/i,
+        /Lønnsinntekt\s*[:\-]?\s*(\d+[\s\d]*)/i
+      ]
+
       let foundRate = null
-      for (const pattern of patterns) {
+      for (const pattern of ratePatterns) {
         const match = fullText.match(pattern)
         if (match && match[1]) {
           foundRate = match[1].replace(',', '.')
@@ -121,10 +137,25 @@ export function TaxPdfSync({ initialTaxRate, onTaxRateChange }: TaxPdfSyncProps)
         }
       }
 
+      let foundSalary = null
+      for (const pattern of salaryPatterns) {
+        const match = fullText.match(pattern)
+        if (match && match[1]) {
+          foundSalary = match[1].replace(/\s+/g, '')
+          break
+        }
+      }
+
       if (foundRate) {
         handleRateChange(foundRate)
-        setStatus('success')
-        setMessage(t('detected', { rate: foundRate }))
+        if (foundSalary) {
+          setDetectedSalary(foundSalary)
+          setStatus('success')
+          setMessage(t('detectedMulti', { rate: foundRate, salary: parseInt(foundSalary).toLocaleString() }))
+        } else {
+          setStatus('success')
+          setMessage(t('detected', { rate: foundRate }))
+        }
       } else {
         setStatus('error')
         setMessage(t('notFound'))

@@ -130,7 +130,10 @@
     "mvaThresholdWarning": "Advarsel: MVA-terskel nådd",
     "mvaThresholdDescription": "Denne transaksjonen gjør at du overstiger terskelen på 50 000 NOK. Du må søke om MVA-registrering umiddelbart.",
     "recordAllocation": "Registrer avsetning",
-    "currentTaxContext": "Gjeldende skattesituasjon"
+    "currentTaxContext": "Gjeldende skattesituasjon",
+    "useManualTax": "Bruk manuell skattesats",
+    "useEngine": "Bruk skattemotor (Anbefalt)",
+    "configureTax": "Konfigurer skattekontekst"
   },
   "taxSync": {
     "title": "Skatteinnstillinger",
@@ -143,6 +146,7 @@
     "note": "Merk: All PDF-behandling skjer i nettleseren din. Vi ser aldri dokumentene dine.",
     "detecting": "Skanner lokalt...",
     "detected": "Fant {rate}% i PDF-en! Klikk lagre for å bekrefte.",
+    "detectedMulti": "Fant {rate}% skattesats og {salary} kr i lønnsinntekt! Klikk lagre for å bekrefte.",
     "notFound": "Fant ikke skattesats i denne PDF-en. Vennligst skriv den inn manuelt.",
     "readFailed": "Kunne ikke lese PDF-en lokalt. Vennligst skriv inn skattesats manuelt.",
     "invalidRate": "Vennligst skriv inn en gyldig skattesats.",

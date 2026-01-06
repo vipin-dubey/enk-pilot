@@ -31,7 +31,7 @@ export default async function DashboardPage({
 
   const { data: profile } = await supabase
     .from('profiles')
-    .select('*')
+    .select('*, use_manual_tax')
     .eq('id', user.id)
     .single()
 
@@ -124,10 +124,12 @@ export default async function DashboardPage({
           <TabsContent value="safe-to-spend" className="mt-0 border-none p-0 focus-visible:ring-0">
             <div className="space-y-6">
               <SafeToSpendCalculator 
+                initialTaxRate={profile?.tax_rate_percent}
                 isMvaRegistered={profile?.is_mva_registered} 
                 ytdGrossIncome={profile?.ytd_gross_income}
                 ytdExpenses={profile?.ytd_expenses}
                 externalSalary={profile?.external_salary_income}
+                useManualTax={profile?.use_manual_tax}
               />
             </div>
           </TabsContent>

@@ -1,16 +1,18 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { calculateNorwegianTax } from '@/lib/tax-calculations'
 import { useTranslations, useLocale } from 'next-intl'
-import { Info, AlertTriangle, TrendingUp, Save, Loader2, CheckCircle2 } from 'lucide-react'
+import { Info, AlertTriangle, TrendingUp, Save, Loader2, CheckCircle2, Settings as SettingsIcon, Zap } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { createClient } from '@/utils/supabase/client'
 import { useRouter } from 'next/navigation'
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
+import { TaxPdfSync } from './tax-pdf-sync'
 
 interface CalculatorProps {
   initialTaxRate?: number
@@ -18,13 +20,16 @@ interface CalculatorProps {
   ytdGrossIncome?: number
   ytdExpenses?: number
   externalSalary?: number
+  useManualTax?: boolean
 }
 
 export function SafeToSpendCalculator({ 
+  initialTaxRate = 35,
   isMvaRegistered = false,
   ytdGrossIncome = 0,
   ytdExpenses = 0,
-  externalSalary = 0
+  externalSalary = 0,
+  useManualTax = false
 }: CalculatorProps) {
   const t = useTranslations('calculator')
   const locale = useLocale()
@@ -32,6 +37,13 @@ export function SafeToSpendCalculator({
   const [grossInput, setGrossInput] = useState<string>('')
   const [isRecording, setIsRecording] = useState(false)
   const [showSuccess, setShowSuccess] = useState(false)
+  const [isManualMode, setIsManualMode] = useState(useManualTax)
+  const [manualRate, setManualRate] = useState<string>(initialTaxRate.toString())
+
+  // Sync manual rate if prop changes from outside
+  useEffect(() => {
+    setManualRate(initialTaxRate.toString())
+  }, [initialTaxRate])
 
   const calculations = useMemo(() => {
     const amount = parseFloat(grossInput) || 0
@@ -40,9 +52,21 @@ export function SafeToSpendCalculator({
       ytdGrossIncome,
       ytdExpenses,
       externalSalary,
-      isMvaRegistered
+      isMvaRegistered,
+      isManualMode ? parseFloat(manualRate) : undefined
     )
-  }, [grossInput, ytdGrossIncome, ytdExpenses, externalSalary, isMvaRegistered])
+  }, [grossInput, ytdGrossIncome, ytdExpenses, externalSalary, isMvaRegistered, isManualMode, manualRate])
+
+  const toggleManualMode = async () => {
+    const newMode = !isManualMode
+    setIsManualMode(newMode)
+
+    const supabase = createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (user) {
+      await supabase.from('profiles').update({ use_manual_tax: newMode }).eq('id', user.id)
+    }
+  }
 
   const formatCurrency = (val: number) => {
     return val.toLocaleString(locale === 'nb' ? 'nb-NO' : 'en-US', { 
@@ -61,6 +85,17 @@ export function SafeToSpendCalculator({
     try {
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) throw new Error('Not authenticated')
+
+      // If in manual mode, ensure the rate is saved to profile so it "stays" after refresh
+      if (isManualMode) {
+        const rateVal = parseFloat(manualRate)
+        if (!isNaN(rateVal) && rateVal !== initialTaxRate) {
+          await supabase.from('profiles').update({ 
+            tax_rate_percent: rateVal,
+            use_manual_tax: true 
+          }).eq('id', user.id)
+        }
+      }
 
       const { error } = await supabase.from('allocations').insert({
         user_id: user.id,
@@ -99,13 +134,28 @@ export function SafeToSpendCalculator({
           <CardContent className="p-0">
             <div className="grid gap-6 md:grid-cols-2 items-stretch">
               <div className="space-y-4 bg-white border rounded-xl p-6 shadow-sm flex flex-col justify-center">
-                <div className="space-y-1 mb-2">
-                  <h3 className="text-lg font-bold font-outfit flex items-center gap-2">
-                    <TrendingUp className="h-5 w-5 text-blue-600" />
-                    {t('incomeEntry')}
-                  </h3>
-                  <p className="text-xs text-slate-500">{t('grossIncomeDescription')}</p>
+                <div className="flex items-center justify-between mb-2">
+                  <div className="space-y-1">
+                    <h3 className="text-lg font-bold font-outfit flex items-center gap-2">
+                      <TrendingUp className="h-5 w-5 text-blue-600" />
+                      {t('incomeEntry')}
+                    </h3>
+                    <p className="text-xs text-slate-500">{t('grossIncomeDescription')}</p>
+                  </div>
+                  
+                  <div className="flex items-center gap-2">
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      onClick={toggleManualMode}
+                      className={`gap-2 h-8 text-[10px] uppercase font-bold tracking-widest ${isManualMode ? 'text-blue-600 bg-blue-50' : 'text-slate-400'}`}
+                    >
+                      {isManualMode ? <SettingsIcon className="h-3 w-3" /> : <Zap className="h-3 w-3" />}
+                      {isManualMode ? t('useManualTax') : t('useEngine')}
+                    </Button>
+                  </div>
                 </div>
+
                 <div className="space-y-2">
                   <Label htmlFor="gross-income" className="text-slate-600 font-semibold">{t('grossIncomeLabel')}</Label>
                   <div className="relative">
@@ -120,13 +170,67 @@ export function SafeToSpendCalculator({
                     <span className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold">NOK</span>
                   </div>
                 </div>
+
+                {isManualMode && (
+                  <div className="pt-2 animate-in fade-in slide-in-from-top-2 duration-300">
+                    <Label htmlFor="manual-rate" className="text-xs text-slate-500 font-bold uppercase tracking-wider mb-1 block">
+                      Custom Tax Rate (%)
+                    </Label>
+                    <div className="flex gap-2">
+                      <Input
+                        id="manual-rate"
+                        type="number"
+                        value={manualRate}
+                        onChange={(e) => setManualRate(e.target.value)}
+                        className="h-10 w-24 font-bold"
+                      />
+                      <Dialog>
+                        <DialogTrigger asChild>
+                          <Button variant="outline" size="sm" className="h-10 gap-2 text-xs">
+                            <SettingsIcon className="h-4 w-4" />
+                            {t('configureTax')}
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent className="max-w-md">
+                          <DialogHeader>
+                            <DialogTitle>{t('configureTax')}</DialogTitle>
+                          </DialogHeader>
+                          <TaxPdfSync 
+                            initialTaxRate={parseFloat(manualRate)} 
+                            onTaxRateChange={(rate) => setManualRate(rate)} 
+                          />
+                        </DialogContent>
+                      </Dialog>
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* Context Summary Box */}
               <div className="bg-slate-900 text-white border rounded-xl p-6 shadow-sm flex flex-col justify-center">
-                <div className="flex items-center gap-2 text-slate-400 mb-4">
-                  <Info className="h-4 w-4" />
-                  <span className="text-xs uppercase tracking-widest font-bold">{t('currentTaxContext')}</span>
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center gap-2 text-slate-400">
+                    <Info className="h-4 w-4" />
+                    <span className="text-xs uppercase tracking-widest font-bold">{t('currentTaxContext')}</span>
+                  </div>
+                  {!isManualMode && (
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        <Button variant="ghost" size="icon" className="h-6 w-6 text-slate-400 hover:text-white">
+                          <SettingsIcon className="h-4 w-4" />
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent className="max-w-md">
+                        <DialogHeader>
+                          <DialogTitle>{t('configureTax')}</DialogTitle>
+                        </DialogHeader>
+                        <TaxPdfSync 
+                          initialTaxRate={initialTaxRate} 
+                          onTaxRateChange={(rate) => setManualRate(rate)} 
+                        />
+                      </DialogContent>
+                    </Dialog>
+                  )}
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-1">

@@ -41,7 +41,8 @@ export function calculateNorwegianTax(
   ytdGrossIncome: number,
   ytdExpenses: number,
   externalSalary: number,
-  isMvaRegistered: boolean
+  isMvaRegistered: boolean,
+  manualTaxRate?: number
 ): TaxCalculationResult {
   // Step 1: MVA Separation
   let mvaPart = 0;
@@ -57,20 +58,26 @@ export function calculateNorwegianTax(
 
   // Step 2: Calculate Current Profit Context
   const currentProfitYTD = (ytdGrossIncome + externalSalary) - ytdExpenses;
-  const newProfitYTD = currentProfitYTD + netRevenue;
 
-  // Step 3: Incremental Bracket Calculation
-  // We need to calculate trinnskatt for the incremental revenue
+  // Step 3: Tax Calculation
+  let totalTaxBuffer = 0;
+  let marginalRate = 0;
   const baseRate = TAX_CONSTANTS_2026.ORDINARY_INCOME_TAX + TAX_CONSTANTS_2026.NATIONAL_INSURANCE_ENK;
 
-  const trinnskattAmount = calculateIncrementalTrinnskatt(currentProfitYTD, netRevenue);
-  const ordinaryTaxAmount = netRevenue * baseRate;
+  if (manualTaxRate !== undefined && manualTaxRate > 0) {
+    // Manual Mode
+    totalTaxBuffer = netRevenue * (manualTaxRate / 100);
+    marginalRate = manualTaxRate / 100;
+  } else {
+    // Engine Mode: Incremental Bracket Calculation
+    const trinnskattAmount = calculateIncrementalTrinnskatt(currentProfitYTD, netRevenue);
+    const ordinaryTaxAmount = netRevenue * baseRate;
+    totalTaxBuffer = trinnskattAmount + ordinaryTaxAmount;
 
-  const totalTaxBuffer = trinnskattAmount + ordinaryTaxAmount;
-
-  // Marginal rate for the next NOK
-  const currentTrinnskattRate = TRINNSKATT_BRACKETS_2026.find(b => currentProfitYTD <= b.limit)?.rate ?? 0.178;
-  const marginalRate = baseRate + currentTrinnskattRate;
+    // Marginal rate for the next NOK
+    const currentTrinnskattRate = TRINNSKATT_BRACKETS_2026.find(b => currentProfitYTD <= b.limit)?.rate ?? 0.178;
+    marginalRate = baseRate + currentTrinnskattRate;
+  }
 
   return {
     grossAmount: amount,
