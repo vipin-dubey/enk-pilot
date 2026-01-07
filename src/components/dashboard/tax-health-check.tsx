@@ -88,8 +88,14 @@ export function TaxHealthCheck() {
   // Calculate projected tax vs original estimated tax
   const projectedAnnualTax = calculateAnnualTax(projectedAnnualProfit)
   const estimatedAnnualTax = calculateAnnualTax(estimatedTotalProfit)
+
+  // Baseline for "covered" tax is either their explicit prepaid tax or the calculated tax of their original estimate
+  const baselineTax = Number(currentPrepaidTax) > 0 ? Number(currentPrepaidTax) : estimatedAnnualTax
   
-  const taxDifference = projectedAnnualTax - estimatedAnnualTax
+  // The amount they need to ADJUST by is the difference between projected total tax and what they've covered
+  const taxDifference = projectedAnnualTax - baselineTax
+  
+  // Determine if they are significantly deviation from their estimate
   const isOverEarning = projectedAnnualProfit > estimatedTotalProfit * 1.05 // 5% buffer
   const isUnderEarning = projectedAnnualProfit < estimatedTotalProfit * 0.95 // 5% buffer
   
@@ -100,28 +106,11 @@ export function TaxHealthCheck() {
   const daysSinceUpdate = Math.floor((now.getTime() - lastUpdated.getTime()) / (1000 * 60 * 60 * 24))
   const needsReview = daysSinceUpdate > 90
 
+  const taxGapSignificant = Math.abs(taxDifference) > 2000 // 2k threshold for noise
+
   const getStatusConfig = () => {
-    if (isOverEarning) return { 
-      bg: 'bg-amber-50', 
-      border: 'border-amber-500', 
-      text: 'text-amber-900',
-      sub: 'text-amber-700/80',
-      badge: 'bg-amber-100 text-amber-700 border-amber-200',
-      icon: <AlertTriangle className="h-5 w-5 text-amber-600" />,
-      title: t('projectedConflict'),
-      subtitle: t('underEarningSubtitle', { projected: Math.round(projectedAnnualProfit).toLocaleString() }) // Reusing subtitle key logic
-    }
-    if (isUnderEarning) return { 
-      bg: 'bg-blue-50', 
-      border: 'border-blue-500', 
-      text: 'text-blue-900',
-      sub: 'text-blue-700/80',
-      badge: 'bg-blue-100 text-blue-700 border-blue-200',
-      icon: <TrendingUp className="h-5 w-5 text-blue-600" />,
-      title: t('underEarning'),
-      subtitle: t('underEarningSubtitle', { projected: Math.round(projectedAnnualProfit).toLocaleString() })
-    }
-    return { 
+    // 1. Success State: Tax is well-aligned with projected earnings
+    if (!taxGapSignificant) return { 
       bg: 'bg-emerald-50', 
       border: 'border-emerald-500', 
       text: 'text-emerald-900',
@@ -131,13 +120,37 @@ export function TaxHealthCheck() {
       title: t('title'),
       subtitle: t('onTrackSubtitle')
     }
+
+    // 2. Risk State: Not enough tax covered (Back-tax risk)
+    if (taxDifference > 0) return { 
+      bg: 'bg-amber-50', 
+      border: 'border-amber-500', 
+      text: 'text-amber-900',
+      sub: 'text-amber-700/80',
+      badge: 'bg-amber-100 text-amber-700 border-amber-200',
+      icon: <AlertTriangle className="h-5 w-5 text-amber-600" />,
+      title: t('projectedConflict'),
+      subtitle: t('projectedConflictSubtitle', { projected: Math.round(projectedAnnualProfit).toLocaleString() })
+    }
+
+    // 3. Efficiency State: Too much tax covered (Overpaying)
+    return { 
+      bg: 'bg-blue-50', 
+      border: 'border-blue-500', 
+      text: 'text-blue-900',
+      sub: 'text-blue-700/80',
+      badge: 'bg-blue-100 text-blue-700 border-blue-200',
+      icon: <TrendingUp className="h-5 w-5 text-blue-600" />,
+      title: t('underEarning'),
+      subtitle: t('underEarningSubtitle', { projected: Math.round(projectedAnnualProfit).toLocaleString() })
+    }
   }
 
   const config = getStatusConfig()
 
   return (
     <Card className={`overflow-hidden border-none shadow-md ${config.bg}`}>
-      <div className={`h-1.5 w-full ${isOverEarning ? 'bg-amber-500' : isUnderEarning ? 'bg-blue-500' : 'bg-emerald-500'}`} />
+      <div className={`h-1.5 w-full ${taxDifference > 2000 ? 'bg-amber-500' : taxDifference < -2000 ? 'bg-blue-500' : 'bg-emerald-500'}`} />
       <CardHeader className="pb-2">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -160,10 +173,10 @@ export function TaxHealthCheck() {
             <span>YTD Profit: {Math.round(ytdBusinessProfit).toLocaleString()} NOK</span>
             <span>Est. Annual: {estimatedProfit.toLocaleString()} NOK</span>
           </div>
-          <Progress value={progressPercent} className={`h-2 ${isOverEarning ? 'bg-amber-100' : isUnderEarning ? 'bg-blue-100' : 'bg-emerald-100'}`} />
+          <Progress value={progressPercent} className={`h-2 ${taxDifference > 2000 ? 'bg-amber-100' : taxDifference < -2000 ? 'bg-blue-100' : 'bg-emerald-100'}`} />
         </div>
 
-        {isOverEarning && (
+        {taxDifference > 2000 && (
           <div className="p-3 rounded-lg bg-white/50 border border-amber-200 text-sm text-amber-900">
             <p className="flex items-center gap-2">
               <AlertTriangle className="h-4 w-4" />
@@ -172,7 +185,7 @@ export function TaxHealthCheck() {
           </div>
         )}
 
-        {isUnderEarning && (
+        {taxDifference < -2000 && (
           <div className="p-3 rounded-lg bg-white/50 border border-blue-200 text-sm text-blue-900">
             <p className="flex items-center gap-2">
               <TrendingUp className="h-4 w-4" />
@@ -181,7 +194,7 @@ export function TaxHealthCheck() {
           </div>
         )}
 
-        {!isOverEarning && !isUnderEarning && (
+        {!taxGapSignificant && (
           <div className="p-3 rounded-lg bg-white/50 border border-emerald-200 text-sm text-emerald-900">
             <p className="flex items-center gap-2 text-emerald-700">
               <CheckCircle2 className="h-4 w-4" />
