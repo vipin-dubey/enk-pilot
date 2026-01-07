@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Upload, Camera, FileText, Loader2, Check, X, Search, Filter, Edit2, Save, ChevronDown, ChevronRight, Eye } from 'lucide-react'
+import { Upload, Camera, FileText, Loader2, Check, X, Search, Filter, Edit2, Save, ChevronDown, ChevronRight, Eye, ShieldCheck } from 'lucide-react'
 import { createClient } from '@/utils/supabase/client'
 import { createWorker } from 'tesseract.js'
 import { extractVendor, detectCategory, ALL_STORES, CATEGORY_MVA_RATES } from '@/lib/norwegian-stores'
@@ -408,10 +408,20 @@ export function ReceiptTriage() {
   return (
     <div className="grid gap-6">
       <Card id="receipt-upload">
-        <CardHeader>
-          <CardTitle>{t('title')}</CardTitle>
-          <CardDescription>{t('description')}</CardDescription>
-        </CardHeader>
+        <CardHeader className="pb-4">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <CardTitle className="text-2xl font-bold font-outfit">{t('title')}</CardTitle>
+            <CardDescription>{t('description')}</CardDescription>
+          </div>
+          <div className="flex items-center gap-2 px-3 py-1.5 bg-emerald-50 rounded-full border border-emerald-100/50 self-start md:self-center">
+            <ShieldCheck className="h-3.5 w-3.5 text-emerald-600" />
+            <span className="text-[10px] font-black uppercase tracking-tight text-emerald-700">
+              {locale === 'nb' ? 'Privat & Sikker: Lokal skanning • EU-lagring' : 'Private & Secure: Local Scanning • EU Storage'}
+            </span>
+          </div>
+        </div>
+      </CardHeader>
         <CardContent>
           <div 
             className={cn(

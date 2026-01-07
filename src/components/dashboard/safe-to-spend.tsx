@@ -22,7 +22,15 @@ interface CalculatorProps {
   externalSalary?: number
   useManualTax?: boolean
   virtualDeductions?: number
+  isPro?: boolean
+  seatsLeft?: number
+  percentFull?: number
 }
+
+import { getExchangeRate, SUPPORTED_CURRENCIES } from '@/lib/exchange-rates'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Lock } from 'lucide-react'
+import { UpgradeModal } from './upgrade-modal'
 
 export function SafeToSpendCalculator({ 
   initialTaxRate = 35,
@@ -31,7 +39,10 @@ export function SafeToSpendCalculator({
   ytdExpenses = 0,
   externalSalary = 0,
   useManualTax = false,
-  virtualDeductions = 0
+  virtualDeductions = 0,
+  isPro = false,
+  seatsLeft = 100,
+  percentFull = 37
 }: CalculatorProps) {
   const t = useTranslations('calculator')
   const locale = useLocale()
@@ -42,22 +53,47 @@ export function SafeToSpendCalculator({
   const [isManualMode, setIsManualMode] = useState(useManualTax)
   const [manualRate, setManualRate] = useState<string>(initialTaxRate.toString())
 
+  const [currency, setCurrency] = useState('NOK')
+  const [exchangeRate, setExchangeRate] = useState(1.0)
+  const [isFallback, setIsFallback] = useState(false)
+  const [isFetchingRate, setIsFetchingRate] = useState(false)
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false)
+
+  // Fetch exchange rate when currency changes
+  useEffect(() => {
+    if (currency === 'NOK') {
+      setExchangeRate(1.0)
+      return
+    }
+
+    const fetchRate = async () => {
+      setIsFetchingRate(true)
+      const result = await getExchangeRate(currency, 'NOK')
+      setExchangeRate(result.rate)
+      setIsFallback(result.isFallback)
+      setIsFetchingRate(false)
+    }
+    fetchRate()
+  }, [currency])
+
   // Sync manual rate if prop changes from outside
   useEffect(() => {
     setManualRate(initialTaxRate.toString())
   }, [initialTaxRate])
 
   const calculations = useMemo(() => {
-    const amount = parseFloat(grossInput) || 0
+    const originalAmount = parseFloat(grossInput) || 0
+    const amountInNok = originalAmount * exchangeRate
+    
     return calculateNorwegianTax(
-      amount,
+      amountInNok,
       ytdGrossIncome,
       ytdExpenses + (virtualDeductions || 0),
       externalSalary,
       isMvaRegistered,
       isManualMode ? parseFloat(manualRate) : undefined
     )
-  }, [grossInput, ytdGrossIncome, ytdExpenses, virtualDeductions, externalSalary, isMvaRegistered, isManualMode, manualRate])
+  }, [grossInput, ytdGrossIncome, ytdExpenses, virtualDeductions, externalSalary, isMvaRegistered, isManualMode, manualRate, exchangeRate])
 
   const toggleManualMode = async () => {
     const newMode = !isManualMode
@@ -70,10 +106,10 @@ export function SafeToSpendCalculator({
     }
   }
 
-  const formatCurrency = (val: number) => {
+  const formatCurrency = (val: number, curr: string = 'NOK') => {
     return val.toLocaleString(locale === 'nb' ? 'nb-NO' : 'en-US', { 
       style: 'currency', 
-      currency: 'NOK',
+      currency: curr,
       maximumFractionDigits: 0
     })
   }
@@ -106,7 +142,10 @@ export function SafeToSpendCalculator({
         mva_reserved: calculations.mvaPart,
         net_profit: calculations.netRevenue,
         safe_to_spend: calculations.safeToSpend,
-        marginal_rate_applied: calculations.marginalRate
+        marginal_rate_applied: calculations.marginalRate,
+        original_currency: currency,
+        original_amount: parseFloat(grossInput),
+        exchange_rate: exchangeRate
       })
 
       if (error) throw error
@@ -226,8 +265,38 @@ export function SafeToSpendCalculator({
                   </div>
                 </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="gross-income" className="text-slate-600 font-semibold">{t('grossIncomeLabel')}</Label>
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor="gross-income" className="text-slate-600 font-semibold">{t('grossIncomeLabel')}</Label>
+                    <div className="flex items-center gap-2">
+                      <Label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">{t('currency')}</Label>
+                      <Select 
+                        value={currency} 
+                        onValueChange={(v) => {
+                          if (!isPro && v !== 'NOK') {
+                            setShowUpgradeModal(true)
+                            return
+                          }
+                          setCurrency(v)
+                        }}
+                      >
+                        <SelectTrigger className="w-[100px] h-8 text-xs font-bold border-slate-200 bg-white">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {SUPPORTED_CURRENCIES.map(c => (
+                            <SelectItem key={c.code} value={c.code} className="text-xs font-medium">
+                              <div className="flex items-center justify-between w-full gap-2">
+                                <span>{c.code}</span>
+                                {!isPro && c.code !== 'NOK' && <Lock className="h-3 w-3 text-slate-300" />}
+                              </div>
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+                  
                   <div className="relative">
                     <Input
                       id="gross-income"
@@ -235,10 +304,40 @@ export function SafeToSpendCalculator({
                       placeholder="0"
                       value={grossInput}
                       onChange={(e) => setGrossInput(e.target.value)}
-                      className="text-4xl h-20 font-outfit pr-12 font-bold focus:ring-blue-500"
+                      className="text-4xl h-20 font-outfit pr-20 font-bold focus:ring-blue-500"
                     />
-                    <span className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold">NOK</span>
+                    <span className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold text-xl uppercase tracking-wider">
+                      {SUPPORTED_CURRENCIES.find(c => c.code === currency)?.symbol || 'kr'}
+                    </span>
                   </div>
+
+                  {currency !== 'NOK' && (
+                    <div className="space-y-2 animate-in fade-in slide-in-from-top-1 duration-300">
+                      <div className="flex items-center justify-between px-4 py-2 bg-blue-50/50 rounded-lg border border-blue-100/50">
+                        <div className="flex items-center gap-2 text-blue-600">
+                          <TrendingUp className="h-3 w-3" />
+                          <span className="text-[10px] font-bold uppercase tracking-widest">{t('nokEquivalent')}</span>
+                        </div>
+                        <div className="text-right">
+                          <p className="text-sm font-black font-mono text-blue-700">
+                            {formatCurrency(parseFloat(grossInput || '0') * exchangeRate)}
+                          </p>
+                          <p className="text-[9px] text-blue-400 font-medium">
+                            1 {currency} = {exchangeRate.toFixed(4)} NOK
+                          </p>
+                        </div>
+                      </div>
+                      
+                      {isFallback && (
+                        <div className="flex items-center gap-2 px-3 py-1.5 bg-amber-50 rounded-md border border-amber-200">
+                          <AlertTriangle className="h-3 w-3 text-amber-600" />
+                          <p className="text-[10px] font-bold text-amber-700">
+                            {t('usingFallback')}
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
 
                 {isManualMode && (
@@ -398,6 +497,12 @@ export function SafeToSpendCalculator({
         </div>
       )}
 
+      <UpgradeModal 
+        isOpen={showUpgradeModal} 
+        onClose={() => setShowUpgradeModal(false)}
+        seatsLeft={seatsLeft}
+        percentFull={percentFull}
+      />
     </div>
   )
 }

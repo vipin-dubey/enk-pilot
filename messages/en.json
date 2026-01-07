@@ -10,7 +10,8 @@
     "loading": "Loading...",
     "error": "Error",
     "success": "Success",
-    "search": "Search..."
+    "search": "Search...",
+    "foundingUser": "Founding Supporter"
   },
   "dashboard": {
     "title": "Dashboard",
@@ -168,7 +169,15 @@
     "mvaPeriod6": "Nov - Dec",
     "inputVat": "Input VAT (Expenses)",
     "outputVat": "Output VAT (Income)",
-    "netToPay": "Net to Pay"
+    "netToPay": "Net to Pay",
+    "currency": "Currency",
+    "exchangeRate": "Exchange Rate",
+    "originalAmount": "Original Amount",
+    "nokEquivalent": "NOK Equivalent",
+    "proOnly": "Pro Feature",
+    "upgradeToUseCurrency": "Upgrade to Pro to record income in USD, EUR, and more with live exchange rates.",
+    "usingFallback": "Using estimated rate",
+    "fallbackNotice": "We couldn't reach Norges Bank for live rates. Using an estimated approximate rate instead."
   },
   "taxSync": {
     "title": "Tax Configuration",
@@ -281,9 +290,26 @@
     "vendor": "Vendor / Description",
     "amount": "Amount",
     "actions": "Actions",
+    "export": "Download Account-Ready Export",
+    "exportTrial": "Trial Export Used",
+    "exportUpgrade": "Upgrade to Pro for unlimited exports",
     "noTransactions": "No transactions found for this period.",
-    "deleteConfirm": "Are you sure you want to delete this transaction? This will automatically adjust your YTD totals.",
-    "deleteSuccess": "Transaction deleted and YTD totals updated.",
-    "deleteError": "Failed to delete transaction."
+    "exportSuccess": "Export generated successfully.",
+    "exportError": "Failed to generate export."
+  },
+  "pricing": {
+    "title": "Upgrade to Pro",
+    "description": "Unlock international currencies, audit-ready exports, and smart tax insight.",
+    "monthly": "Monthly",
+    "yearly": "Yearly",
+    "founding": "Founding Supporter",
+    "foundingSubtitle": "Limited to first 100 users",
+    "foundingPerks": "Founding Badge, Priority Feature Requests, Beta Access",
+    "startTrial": "Start 14-day Free Trial",
+    "billedAnnually": "Billed annually",
+    "cancelAnytime": "Cancel anytime",
+    "currentPlan": "Current Plan",
+    "upgradeNow": "Upgrade Now",
+    "mostPopular": "Most Popular"
   }
 }

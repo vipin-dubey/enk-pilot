@@ -6,13 +6,13 @@ import { ReceiptTriage } from '@/components/dashboard/receipt-triage'
 import { ReceiptAnalytics } from '@/components/dashboard/receipt-analytics'
 import { Button } from '@/components/ui/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { LogOut, LayoutDashboard, Calendar, Receipt, Settings, Sparkles, UserCircle, History } from 'lucide-react'
+import { LogOut, LayoutDashboard, Calendar, Receipt, Settings, Sparkles, UserCircle, History, ShieldCheck, Globe } from 'lucide-react'
 import { LanguageSwitcher } from '@/components/language-switcher'
 import { NotificationCenter } from '@/components/dashboard/notification-center'
 import { getTranslations } from 'next-intl/server'
 import { MvaSummary } from '@/components/dashboard/mva-summary'
 import { DeductionOptimizer } from '@/components/dashboard/deduction-optimizer'
-import { DashboardSummary } from '@/components/dashboard/dashboard-summary'
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { TransactionJournal } from '@/components/dashboard/transaction-journal'
 
 export default async function DashboardPage({
@@ -35,9 +35,21 @@ export default async function DashboardPage({
 
   const { data: profile } = await supabase
     .from('profiles')
-    .select('*, use_manual_tax')
+    .select('*, use_manual_tax, is_founding_user, subscription_status, plan_type, trial_exports_used')
     .eq('id', user.id)
     .single()
+
+  const { count: foundingCount } = await supabase
+    .from('profiles')
+    .select('*', { count: 'exact', head: true })
+    .eq('plan_type', 'founding')
+
+  // Real capacity is 100. We add 37 for social proof.
+  const baseFoundingCount = 37
+  const virtualTotal = 137
+  const currentTaken = (foundingCount || 0) + baseFoundingCount
+  const seatsLeft = Math.max(0, 100 - (foundingCount || 0))
+  const percentFull = Math.round((currentTaken / virtualTotal) * 100)
 
   return (
     <div className="min-h-screen bg-slate-50/50">
@@ -50,7 +62,17 @@ export default async function DashboardPage({
           </div>
           
           <div className="flex items-center gap-4">
-            <NotificationCenter />
+            <div className="flex items-center gap-2">
+              {profile?.is_founding_user && (
+                <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 bg-amber-50 border border-amber-200 rounded-full shadow-sm animate-in fade-in zoom-in duration-500">
+                  <Sparkles className="h-3 w-3 text-amber-600" />
+                  <span className="text-[10px] font-bold text-amber-700 uppercase tracking-wider">
+                    {tCommon('foundingUser')}
+                  </span>
+                </div>
+              )}
+              <NotificationCenter />
+            </div>
             <LanguageSwitcher />
             <div className="h-8 w-8 rounded-full bg-slate-100 flex items-center justify-center border">
               <UserCircle className="h-5 w-5 text-slate-500" />
@@ -78,23 +100,55 @@ export default async function DashboardPage({
           
           {profile?.is_pro ? (
             <div className="flex items-center gap-2">
-              <span className="inline-flex items-center rounded-full bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700 ring-1 ring-inset ring-blue-700/10">
+              <span className="inline-flex items-center rounded-full bg-blue-50 px-3 py-1 text-xs font-bold text-blue-700 ring-1 ring-inset ring-blue-700/10">
                 {t('proAccount')}
               </span>
+              {profile?.plan_type === 'founding' && (
+                <span className="inline-flex items-center gap-1 rounded-full bg-amber-50 px-3 py-1 text-xs font-bold text-amber-700 ring-1 ring-inset ring-amber-700/10 fill-amber-700">
+                  <Sparkles className="h-3 w-3" />
+                  {locale === 'nb' ? 'Grunnlegger' : 'Founding'}
+                </span>
+              )}
             </div>
           ) : (
-            <Card className="max-w-sm bg-gradient-to-br from-blue-600 to-indigo-700 text-white border-none shadow-lg overflow-hidden">
-              <div className="p-5 flex items-center gap-4">
-                <div className="h-10 w-10 shrink-0 rounded-full bg-white/20 flex items-center justify-center">
+            <Card className="max-w-sm bg-gradient-to-br from-indigo-600 via-blue-600 to-blue-700 text-white border-none shadow-xl overflow-hidden relative group transition-all hover:shadow-2xl hover:-translate-y-0.5">
+              <div className="absolute top-0 right-0 p-3 opacity-10 group-hover:opacity-20 transition-opacity">
+                <Sparkles className="h-12 w-12" />
+              </div>
+              
+              <div className="absolute top-2 left-2 flex items-center gap-1.5 px-2 py-0.5 bg-white/20 backdrop-blur-md rounded-full border border-white/20">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-500"></span>
+                </span>
+                <span className="text-[9px] font-black uppercase tracking-tighter text-white">
+                  {locale === 'nb' ? 'Begrenset tid' : 'Limited Time'}
+                </span>
+              </div>
+
+              <div className="p-5 pt-8 flex items-center gap-4 relative z-0">
+                <div className="h-10 w-10 shrink-0 rounded-full bg-white/20 flex items-center justify-center backdrop-blur-sm border border-white/30">
                   <Sparkles className="h-5 w-5 text-white" />
                 </div>
-                <div>
-                  <p className="text-sm font-bold">{t('upgradeToPro')}</p>
-                  <p className="text-xs text-blue-100">{t('unlockFeatures')}</p>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-black tracking-tight">{locale === 'nb' ? 'Grunnlegger-tilbud' : 'Founding Offer'}</p>
+                  <div className="flex items-center gap-2 mt-0.5">
+                    <p className="text-[11px] text-blue-100 font-medium leading-tight line-clamp-1">
+                      {locale === 'nb' ? `${seatsLeft} plasser igjen!` : `${seatsLeft} seats left!`}
+                    </p>
+                      <div className="flex-1 h-1 bg-white/20 rounded-full overflow-hidden max-w-[60px]">
+                        <div 
+                          className="h-full bg-amber-400 transition-all duration-1000" 
+                          style={{ width: `${percentFull}%` }}
+                        ></div>
+                      </div>
+                  </div>
                 </div>
-                <Button size="sm" variant="secondary" className="ml-auto bg-white text-blue-700 hover:bg-blue-50 border-none font-bold">
-                  {locale === 'nb' ? 'kr 299' : '$29'}
-                </Button>
+                <Link href="/settings">
+                  <Button size="sm" variant="secondary" className="bg-white text-blue-700 hover:bg-blue-50 border-none font-black shadow-sm h-8 px-4">
+                    kr 299
+                  </Button>
+                </Link>
               </div>
             </Card>
           )}
@@ -138,6 +192,9 @@ export default async function DashboardPage({
                 ytdExpenses={profile?.ytd_expenses}
                 externalSalary={profile?.external_salary_income}
                 useManualTax={profile?.use_manual_tax}
+                isPro={profile?.is_pro}
+                seatsLeft={seatsLeft}
+                percentFull={percentFull}
                 virtualDeductions={
                   (profile?.has_home_office ? 2050 : 0) + 
                   ((profile?.estimated_annual_mileage || 0) * 3.50)
@@ -158,30 +215,37 @@ export default async function DashboardPage({
           </TabsContent>
 
           <TabsContent value="history" className="mt-0 border-none p-0 focus-visible:ring-0">
-            <TransactionJournal />
+            <TransactionJournal 
+              isPro={profile?.is_pro} 
+              trialExportsUsed={profile?.trial_exports_used || 0}
+              seatsLeft={seatsLeft}
+              percentFull={percentFull}
+            />
           </TabsContent>
         </Tabs>
       </main>
+
+      <footer className="mt-20 pb-12 px-6">
+        <div className="max-w-7xl mx-auto pt-8 border-t border-slate-200">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-6 opacity-60 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-500">
+            <div className="flex items-center gap-6">
+              <div className="flex items-center gap-2">
+                <ShieldCheck className="h-4 w-4 text-emerald-600" />
+                <span className="text-[10px] font-black uppercase tracking-widest text-slate-600">GDPR Compliant</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Globe className="h-4 w-4 text-blue-600" />
+                <span className="text-[10px] font-black uppercase tracking-widest text-slate-600">Stored in EU</span>
+              </div>
+            </div>
+            <div className="flex flex-col items-center md:items-end gap-1">
+              <p className="text-[10px] font-black uppercase tracking-widest text-slate-600">Built with 🇳🇴 in Oslo</p>
+              <p className="text-[9px] text-slate-400 font-medium">ENK Pilot • No data tracking, no external AI exposure.</p>
+            </div>
+          </div>
+        </div>
+      </footer>
     </div>
   )
 }
 
-function Card({ children, className, ...props }: any) {
-  return <div className={`rounded-xl border bg-white shadow-sm ${className}`} {...props}>{children}</div>
-}
-
-function CardHeader({ children, className, ...props }: any) {
-  return <div className={`flex flex-col space-y-1.5 p-6 ${className}`} {...props}>{children}</div>
-}
-
-function CardTitle({ children, className, ...props }: any) {
-  return <h3 className={`font-semibold leading-none tracking-tight ${className}`} {...props}>{children}</h3>
-}
-
-function CardDescription({ children, className, ...props }: any) {
-  return <p className={`text-sm text-slate-500 ${className}`} {...props}>{children}</p>
-}
-
-function CardContent({ children, className, ...props }: any) {
-  return <div className={`p-6 pt-0 ${className}`} {...props}>{children}</div>
-}

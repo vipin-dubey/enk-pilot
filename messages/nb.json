@@ -10,7 +10,8 @@
     "loading": "Laster...",
     "error": "Feil",
     "success": "Suksess",
-    "search": "Søk..."
+    "search": "Søk...",
+    "foundingUser": "Grunnlegger"
   },
   "dashboard": {
     "title": "Dashbord",
@@ -168,7 +169,15 @@
     "mvaPeriod6": "Nov - Des",
     "inputVat": "Inngående MVA (Utgifter)",
     "outputVat": "Utgående MVA (Inntekt)",
-    "netToPay": "Netto å betale"
+    "netToPay": "Netto å betale",
+    "currency": "Valuta",
+    "exchangeRate": "Valutakurs",
+    "originalAmount": "Opprinnelig beløp",
+    "nokEquivalent": "Tilsvarende i NOK",
+    "proOnly": "Pro-funksjon",
+    "upgradeToUseCurrency": "Oppgrader til Pro for å registrere inntekt i USD, EUR og mer med sanntidskurser.",
+    "usingFallback": "Bruker estimert kurs",
+    "fallbackNotice": "Vi kunne ikke nå Norges Bank for live-kurser. Bruker en estimert kurs i stedet."
   },
   "taxSync": {
     "title": "Skatteinnstillinger",
@@ -281,9 +290,29 @@
     "vendor": "Butikk / Beskrivelse",
     "amount": "Beløp",
     "actions": "Handlinger",
+    "export": "Last ned eksport for regnskap",
+    "exportTrial": "Prøve-eksport brukt",
+    "exportUpgrade": "Oppgrader til Pro for ubegrensede eksporter",
     "noTransactions": "Ingen transaksjoner funnet for denne perioden.",
+    "exportSuccess": "Eksport ble generert.",
+    "exportError": "Kunne ikke generere eksport.",
     "deleteConfirm": "Er du sikker på at du vil slette denne transaksjonen? Dette vil automatisk justere summen for året.",
     "deleteSuccess": "Transaksjonen ble slettet og årsresultatet ble oppdatert.",
     "deleteError": "Kunne ikke slette transaksjonen."
+  },
+  "pricing": {
+    "title": "Oppgrader til Pro",
+    "description": "Lås opp internasjonale valutaer, eksport for regnskapsfører og smarte skatteinnikter.",
+    "monthly": "Månedlig",
+    "yearly": "Årlig",
+    "founding": "Grunnlegger",
+    "foundingSubtitle": "Kun for de første 100 brukerne",
+    "foundingPerks": "Grunnlegger-merke, Prioritert ønsker om funksjonalitet, Beta-tilgang",
+    "startTrial": "Start 14-dagers gratis prøveperiode",
+    "billedAnnually": "Faktureres årlig",
+    "cancelAnytime": "Avbryt når som helst",
+    "currentPlan": "Nåværende plan",
+    "upgradeNow": "Oppgrader nå",
+    "mostPopular": "Mest populær"
   }
 }

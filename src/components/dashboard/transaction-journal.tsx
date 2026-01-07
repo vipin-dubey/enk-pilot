@@ -18,16 +18,17 @@ import {
   Trash2, 
   ArrowUpRight, 
   ArrowDownRight, 
-  Filter, 
   Loader2,
   AlertCircle,
-  ChevronDown,
   ChevronRight,
-  Calendar
+  Calendar,
+  Download,
+  CheckCircle2
 } from 'lucide-react'
 import { createClient } from '@/utils/supabase/client'
 import { useTranslations, useLocale } from 'next-intl'
 import { useRouter } from 'next/navigation'
+import { UpgradeModal } from './upgrade-modal'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -47,9 +48,18 @@ interface Transaction {
   amount: number
   mva: number
   category?: string
+  originalCurrency?: string
+  originalAmount?: number
 }
 
-export function TransactionJournal() {
+interface TransactionJournalProps {
+  isPro?: boolean
+  trialExportsUsed?: number
+  seatsLeft?: number
+  percentFull?: number
+}
+
+export function TransactionJournal({ isPro = false, trialExportsUsed = 0, seatsLeft = 100, percentFull = 37 }: TransactionJournalProps) {
   const t = useTranslations('journal')
   const tCommon = useTranslations('common')
   const locale = useLocale()
@@ -61,6 +71,9 @@ export function TransactionJournal() {
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false)
   const [transactionToDelete, setTransactionToDelete] = useState<Transaction | null>(null)
   const [isDeleting, setIsDeleting] = useState(false)
+  const [isExporting, setIsExporting] = useState(false)
+  const [exportSuccess, setExportSuccess] = useState(false)
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false)
   
   const currentMonthKey = useMemo(() => {
     const d = new Date()
@@ -81,14 +94,12 @@ export function TransactionJournal() {
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) return
 
-      // 1. Fetch Allocations (Income)
       const { data: allocations } = await supabase
         .from('allocations')
         .select('*')
         .eq('user_id', user.id)
         .order('created_at', { ascending: false })
 
-      // 2. Fetch Receipts (Expenses)
       const { data: receipts } = await supabase
         .from('receipts')
         .select('*')
@@ -96,7 +107,6 @@ export function TransactionJournal() {
         .eq('is_processed', true)
         .order('receipt_date', { ascending: false })
 
-      // 3. Merge and normalize
       const income: Transaction[] = (allocations || []).map(a => ({
         id: a.id,
         type: 'income',
@@ -104,7 +114,9 @@ export function TransactionJournal() {
         vendor: 'Income Allocation',
         amount: Number(a.gross_amount),
         mva: Number(a.mva_reserved || 0),
-        category: 'Revenue'
+        category: 'Revenue',
+        originalCurrency: a.original_currency,
+        originalAmount: a.original_amount ? Number(a.original_amount) : undefined
       }))
 
       const expenses: Transaction[] = (receipts || []).map(r => ({
@@ -117,7 +129,7 @@ export function TransactionJournal() {
         category: r.category
       }))
 
-      const combined = [...income, ...expenses].sort((a, b) => 
+      const combined: Transaction[] = [...income, ...expenses].sort((a, b) => 
         new Date(b.date).getTime() - new Date(a.date).getTime()
       )
 
@@ -129,14 +141,67 @@ export function TransactionJournal() {
     }
   }
 
+  const handleExport = async () => {
+    if (!isPro && trialExportsUsed >= 1) {
+      setShowUpgradeModal(true)
+      return
+    }
+
+    setIsExporting(true)
+    try {
+      const headers = ['Date', 'Type', 'Vendor', 'Category', 'Original Amount', 'Currency', 'NOK Amount', 'MVA (NOK)']
+      const rows = transactions.map(tr => [
+        new Date(tr.date).toLocaleDateString(locale === 'nb' ? 'nb-NO' : 'en-US'),
+        tr.type === 'income' ? (locale === 'nb' ? 'Inntekt' : 'Income') : (locale === 'nb' ? 'Utgift' : 'Expense'),
+        tr.vendor,
+        tr.category || '',
+        tr.originalAmount?.toString() || tr.amount.toString(),
+        tr.originalCurrency || 'NOK',
+        tr.amount.toFixed(2),
+        tr.mva.toFixed(2)
+      ])
+
+      const csvContent = [headers, ...rows].map(e => e.join(',')).join('\n')
+      
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' })
+      const url = URL.createObjectURL(blob)
+      const link = document.createElement('a')
+      link.setAttribute('href', url)
+      link.setAttribute('download', `enk-pilot-export-${new Date().toISOString().split('T')[0]}.csv`)
+      link.style.visibility = 'hidden'
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+
+      if (!isPro) {
+        const { data: { user } } = await supabase.auth.getUser()
+        if (user) {
+          await supabase
+            .from('profiles')
+            .update({ trial_exports_used: trialExportsUsed + 1 })
+            .eq('id', user.id)
+          
+          // Refresh session to update UI state
+          router.refresh()
+        }
+      }
+
+      setExportSuccess(true)
+      setTimeout(() => setExportSuccess(false), 3000)
+    } catch (error) {
+      console.error('Export failed:', error)
+      alert(t('exportError'))
+    } finally {
+      setIsExporting(false)
+    }
+  }
+
   const filteredTransactions = useMemo(() => {
     return transactions.filter(t => {
       const matchesSearch = t.vendor.toLowerCase().includes(searchQuery.toLowerCase()) ||
                            t.amount.toString().includes(searchQuery) ||
                            (t.category?.toLowerCase().includes(searchQuery.toLowerCase()))
-      
       const matchesType = typeFilter === 'all' || t.type === typeFilter
-      
       return matchesSearch && matchesType
     })
   }, [transactions, searchQuery, typeFilter])
@@ -147,7 +212,6 @@ export function TransactionJournal() {
       const d = new Date(tr.date)
       const year = d.getFullYear().toString()
       const month = d.toLocaleString('en-US', { month: 'long' }).toLowerCase()
-      
       if (!groups[year]) groups[year] = {}
       if (!groups[year][month]) groups[year][month] = []
       groups[year][month].push(tr)
@@ -165,7 +229,7 @@ export function TransactionJournal() {
       'july', 'august', 'september', 'october', 'november', 'december'
     ]
     return Object.keys(groupedTransactions[year]).sort((a, b) => {
-      return monthOrder.indexOf(b) - monthOrder.indexOf(a) // Newest month first
+      return monthOrder.indexOf(b) - monthOrder.indexOf(a)
     })
   }
 
@@ -178,42 +242,21 @@ export function TransactionJournal() {
   async function handleDelete() {
     if (!transactionToDelete) return
     setIsDeleting(true)
-
     try {
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) return
 
       const table = transactionToDelete.type === 'income' ? 'allocations' : 'receipts'
-      
-      let error;
-      if (transactionToDelete.type === 'expense') {
-        // For receipts, we just mark as unprocessed so it doesn't count as an expense, 
-        // but keeps the OCR data if they want to triage it again later.
-        // Actually, the user wants "delete mistakes", so let's delete it or reset it.
-        // Resetting is safer, but "Delete" usually means delete.
-        // Let's delete the record.
-        const { error: err } = await supabase
-          .from('receipts')
-          .delete()
-          .eq('id', transactionToDelete.id)
-          .eq('user_id', user.id)
-        error = err
-      } else {
-        const { error: err } = await supabase
-          .from('allocations')
-          .delete()
-          .eq('id', transactionToDelete.id)
-          .eq('user_id', user.id)
-        error = err
-      }
+      const { error } = await supabase
+        .from(table)
+        .delete()
+        .eq('id', transactionToDelete.id)
+        .eq('user_id', user.id)
 
       if (error) throw error
-
       setTransactions(prev => prev.filter(t => t.id !== transactionToDelete.id))
       setDeleteConfirmOpen(false)
       setTransactionToDelete(null)
-      
-      // Refresh to update YTD values in other components
       router.refresh()
     } catch (error) {
       console.error('Delete error:', error)
@@ -250,12 +293,48 @@ export function TransactionJournal() {
             <CardTitle className="text-xl font-bold font-outfit text-slate-900">{t('title')}</CardTitle>
             <CardDescription className="text-slate-500">{t('description')}</CardDescription>
           </div>
-          
-          <div className="flex bg-white rounded-lg p-1 border shadow-sm self-start">
+          <Button 
+          variant={(!isPro && trialExportsUsed >= 1) ? "secondary" : "outline"}
+          size="sm" 
+          className={`gap-2 font-bold shadow-sm transition-all ${(!isPro && trialExportsUsed >= 1) ? 'opacity-75 grayscale-[0.5]' : ''}`}
+          onClick={handleExport}
+          disabled={isExporting}
+        >
+          {isExporting ? (
+            <Loader2 className="h-4 w-4 animate-spin" />
+          ) : exportSuccess ? (
+            <CheckCircle2 className="h-4 w-4 text-emerald-500" />
+          ) : (!isPro && trialExportsUsed >= 1) ? (
+            <AlertCircle className="h-4 w-4 text-slate-400" />
+          ) : (
+            <Download className="h-4 w-4" />
+          )}
+          {(!isPro && trialExportsUsed >= 1) ? (locale === 'nb' ? 'Oppgrader for å låse opp' : 'Upgrade to Unlock') : t('export')}
+          {!isPro && (
+            <Badge variant="secondary" className={`ml-1 text-[10px] px-1.5 py-0 ${trialExportsUsed >= 1 ? 'bg-slate-200 text-slate-600 border-none' : 'bg-blue-50 text-blue-600 border-blue-100 animate-pulse'}`}>
+              {trialExportsUsed >= 1 ? (locale === 'nb' ? 'Låst' : 'Locked') : (locale === 'nb' ? 'Prøve' : 'Trial')}
+            </Badge>
+          )}
+        </Button>
+        </div>
+      </CardHeader>
+      
+      <CardContent className="p-0">
+        <div className="p-4 border-b flex flex-col md:flex-row gap-4">
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+            <Input
+              placeholder={tCommon('search') || "Search transactions..."}
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-10 h-10 border-slate-200"
+            />
+          </div>
+          <div className="flex bg-slate-100 rounded-lg p-1 border shadow-inner self-start">
             <button
               onClick={() => setTypeFilter('all')}
               className={`px-4 py-1.5 text-xs font-bold rounded-md transition-all ${
-                typeFilter === 'all' ? "bg-slate-900 text-white" : "text-slate-500 hover:text-slate-900"
+                typeFilter === 'all' ? "bg-white text-slate-900 shadow-sm" : "text-slate-500 hover:text-slate-900"
               }`}
             >
               All
@@ -263,7 +342,7 @@ export function TransactionJournal() {
             <button
               onClick={() => setTypeFilter('income')}
               className={`px-4 py-1.5 text-xs font-bold rounded-md transition-all flex items-center gap-1.5 ${
-                typeFilter === 'income' ? "bg-emerald-600 text-white" : "text-slate-500 hover:text-emerald-600"
+                typeFilter === 'income' ? "bg-emerald-600 text-white shadow-sm" : "text-slate-500 hover:text-emerald-600"
               }`}
             >
               <ArrowUpRight className="h-3 w-3" />
@@ -272,26 +351,12 @@ export function TransactionJournal() {
             <button
               onClick={() => setTypeFilter('expense')}
               className={`px-4 py-1.5 text-xs font-bold rounded-md transition-all flex items-center gap-1.5 ${
-                typeFilter === 'expense' ? "bg-amber-600 text-white" : "text-slate-500 hover:text-amber-600"
+                typeFilter === 'expense' ? "bg-amber-600 text-white shadow-sm" : "text-slate-500 hover:text-amber-600"
               }`}
             >
               <ArrowDownRight className="h-3 w-3" />
               {t('expense')}
             </button>
-          </div>
-        </div>
-      </CardHeader>
-      
-      <CardContent className="p-0">
-        <div className="p-4 border-b flex gap-4">
-          <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
-            <Input
-              placeholder={tCommon('search') || "Search transactions..."}
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 h-10"
-            />
           </div>
         </div>
 
@@ -361,9 +426,7 @@ export function TransactionJournal() {
                                 {monthTransactions.map((tr) => (
                                   <TableRow key={`${tr.type}-${tr.id}`} className="hover:bg-slate-50/30 transition-colors border-b last:border-b-0">
                                     <TableCell className="text-xs font-medium text-slate-400 w-[80px]">
-                                      {new Date(tr.date).toLocaleDateString(locale === 'nb' ? 'nb-NO' : 'en-US', {
-                                        day: 'numeric'
-                                      })}
+                                      {new Date(tr.date).toLocaleDateString(locale === 'nb' ? 'nb-NO' : 'en-US', { day: 'numeric' })}
                                     </TableCell>
                                     <TableCell>
                                       <div className="space-y-0.5">
@@ -387,9 +450,16 @@ export function TransactionJournal() {
                                       )}
                                     </TableCell>
                                     <TableCell className="text-right font-mono font-bold text-sm">
-                                      <span className={tr.type === 'income' ? 'text-emerald-600' : 'text-slate-900'}>
-                                        {tr.type === 'income' ? '+' : '-'}{Math.round(tr.amount).toLocaleString()}
-                                      </span>
+                                      <div className="flex flex-col items-end">
+                                        <span className={tr.type === 'income' ? 'text-emerald-600' : 'text-slate-900'}>
+                                          {tr.type === 'income' ? '+' : '-'}{Math.round(tr.amount).toLocaleString()}
+                                        </span>
+                                        {tr.originalCurrency && tr.originalCurrency !== 'NOK' && tr.originalAmount && (
+                                          <span className="text-[10px] text-slate-400 font-medium">
+                                            {tr.originalAmount.toLocaleString()} {tr.originalCurrency}
+                                          </span>
+                                        )}
+                                      </div>
                                     </TableCell>
                                     <TableCell className="text-right w-[60px]">
                                       <Button
@@ -444,6 +514,12 @@ export function TransactionJournal() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+      <UpgradeModal 
+        isOpen={showUpgradeModal} 
+        onClose={() => setShowUpgradeModal(false)}
+        seatsLeft={seatsLeft}
+        percentFull={percentFull}
+      />
     </Card>
   )
 }
