@@ -50,3 +50,10 @@ export async function signup(formData: FormData) {
   revalidatePath('/', 'layout')
   redirect({ href: '/', locale: 'nb' })
 }
+
+export async function signout() {
+  const supabase = await createClient()
+  await supabase.auth.signOut()
+  revalidatePath('/', 'layout')
+  redirect({ href: '/login', locale: 'nb' })
+}

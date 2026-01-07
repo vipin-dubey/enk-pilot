@@ -19,6 +19,7 @@ import { SmartTaxAssistant } from '@/components/dashboard/smart-tax-assistant'
 import { DashboardHeaderActions } from '@/components/dashboard/header-actions'
 import { DashboardTabs } from '@/components/dashboard/dashboard-tabs'
 import { CfoAnalytics } from '@/components/dashboard/cfo-analytics'
+import { signout } from './login/actions'
 
 export default async function DashboardPage({
   params,
@@ -82,7 +83,7 @@ export default async function DashboardPage({
             <div className="h-8 w-8 rounded-full bg-slate-100 flex items-center justify-center border">
               <UserCircle className="h-5 w-5 text-slate-500" />
             </div>
-            <form action="/auth/signout" method="post">
+            <form action={signout}>
               <Button variant="ghost" size="sm" className="gap-2 text-slate-500">
                 <LogOut className="h-4 w-4" />
                 <span className="hidden sm:inline">{tCommon('logout')}</span>
