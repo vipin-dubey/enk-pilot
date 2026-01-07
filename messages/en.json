@@ -295,7 +295,10 @@
     "exportUpgrade": "Upgrade to Pro for unlimited exports",
     "noTransactions": "No transactions found for this period.",
     "exportSuccess": "Export generated successfully.",
-    "exportError": "Failed to generate export."
+    "exportError": "Failed to generate export.",
+    "deleteConfirm": "Are you sure you want to delete this transaction? This will automatically adjust your year-to-date totals.",
+    "deleteSuccess": "Transaction deleted and YTD totals updated.",
+    "deleteError": "Failed to delete transaction."
   },
   "pricing": {
     "title": "Upgrade to Pro",

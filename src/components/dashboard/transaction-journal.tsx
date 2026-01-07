@@ -5,30 +5,35 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
-import { 
-  Table, 
-  TableBody, 
-  TableCell, 
-  TableHead, 
-  TableHeader, 
-  TableRow 
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow
 } from '@/components/ui/table'
-import { 
-  Search, 
-  Trash2, 
-  ArrowUpRight, 
-  ArrowDownRight, 
+import {
+  Plus,
+  Search,
+  Filter,
+  Download,
+  Trash2,
+  Calendar,
+  ArrowUpRight,
+  ArrowDownRight,
+  CheckCircle2,
   Loader2,
   AlertCircle,
   ChevronRight,
-  Calendar,
-  Download,
-  CheckCircle2
+  Lock,
+  FileBox
 } from 'lucide-react'
 import { createClient } from '@/utils/supabase/client'
 import { useTranslations, useLocale } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { UpgradeModal } from './upgrade-modal'
+import { ACCOUNTING_MAPPINGS, escapeCSV, getMvaPeriod } from '@/lib/accounting-utils'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -74,6 +79,7 @@ export function TransactionJournal({ isPro = false, trialExportsUsed = 0, seatsL
   const [isExporting, setIsExporting] = useState(false)
   const [exportSuccess, setExportSuccess] = useState(false)
   const [showUpgradeModal, setShowUpgradeModal] = useState(false)
+  const [showAccountantView, setShowAccountantView] = useState(false)
   
   const currentMonthKey = useMemo(() => {
     const d = new Date()
@@ -147,21 +153,49 @@ export function TransactionJournal({ isPro = false, trialExportsUsed = 0, seatsL
       return
     }
 
+    if (transactions.length === 0) {
+      alert(t('noTransactions'))
+      return
+    }
+
     setIsExporting(true)
     try {
-      const headers = ['Date', 'Type', 'Vendor', 'Category', 'Original Amount', 'Currency', 'NOK Amount', 'MVA (NOK)']
-      const rows = transactions.map(tr => [
-        new Date(tr.date).toLocaleDateString(locale === 'nb' ? 'nb-NO' : 'en-US'),
-        tr.type === 'income' ? (locale === 'nb' ? 'Inntekt' : 'Income') : (locale === 'nb' ? 'Utgift' : 'Expense'),
-        tr.vendor,
-        tr.category || '',
-        tr.originalAmount?.toString() || tr.amount.toString(),
-        tr.originalCurrency || 'NOK',
-        tr.amount.toFixed(2),
-        tr.mva.toFixed(2)
-      ])
+      const headers = [
+        'Date', 
+        'Type', 
+        'Vendor', 
+        'Category', 
+        'Account #', 
+        'MVA Code', 
+        'MVA Period',
+        'Original Amount', 
+        'Currency', 
+        'NOK Gross', 
+        'NOK Net', 
+        'MVA Amount'
+      ]
 
-      const csvContent = [headers, ...rows].map(e => e.join(',')).join('\n')
+      const rows = transactions.map(tr => {
+        const transDate = new Date(tr.date)
+        const mapping = ACCOUNTING_MAPPINGS[tr.category || 'Other']?.[tr.type] || ACCOUNTING_MAPPINGS['Other'][tr.type]
+        
+        return [
+          transDate.toISOString().split('T')[0],
+          tr.type === 'income' ? (locale === 'nb' ? 'Inntekt' : 'Income') : (locale === 'nb' ? 'Utgift' : 'Expense'),
+          escapeCSV(tr.vendor),
+          escapeCSV(tr.category || 'Other'),
+          mapping.account,
+          mapping.mvaCode,
+          getMvaPeriod(transDate),
+          tr.originalAmount?.toFixed(2) || tr.amount.toFixed(2),
+          tr.originalCurrency || 'NOK',
+          tr.amount.toFixed(2),
+          (tr.amount - tr.mva).toFixed(2),
+          tr.mva.toFixed(2)
+        ]
+      })
+
+      const csvContent = [headers, ...rows].map(e => e.join(';')).join('\n')
       
       const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' })
       const url = URL.createObjectURL(blob)
@@ -293,29 +327,39 @@ export function TransactionJournal({ isPro = false, trialExportsUsed = 0, seatsL
             <CardTitle className="text-xl font-bold font-outfit text-slate-900">{t('title')}</CardTitle>
             <CardDescription className="text-slate-500">{t('description')}</CardDescription>
           </div>
-          <Button 
-          variant={(!isPro && trialExportsUsed >= 1) ? "secondary" : "outline"}
-          size="sm" 
-          className={`gap-2 font-bold shadow-sm transition-all ${(!isPro && trialExportsUsed >= 1) ? 'opacity-75 grayscale-[0.5]' : ''}`}
-          onClick={handleExport}
-          disabled={isExporting}
-        >
-          {isExporting ? (
-            <Loader2 className="h-4 w-4 animate-spin" />
-          ) : exportSuccess ? (
-            <CheckCircle2 className="h-4 w-4 text-emerald-500" />
-          ) : (!isPro && trialExportsUsed >= 1) ? (
-            <AlertCircle className="h-4 w-4 text-slate-400" />
-          ) : (
-            <Download className="h-4 w-4" />
-          )}
-          {(!isPro && trialExportsUsed >= 1) ? (locale === 'nb' ? 'Oppgrader for å låse opp' : 'Upgrade to Unlock') : t('export')}
-          {!isPro && (
-            <Badge variant="secondary" className={`ml-1 text-[10px] px-1.5 py-0 ${trialExportsUsed >= 1 ? 'bg-slate-200 text-slate-600 border-none' : 'bg-blue-50 text-blue-600 border-blue-100 animate-pulse'}`}>
-              {trialExportsUsed >= 1 ? (locale === 'nb' ? 'Låst' : 'Locked') : (locale === 'nb' ? 'Prøve' : 'Trial')}
-            </Badge>
-          )}
-        </Button>
+          <div className="flex flex-col items-end gap-1.5">
+            <Button 
+              variant={(!isPro && trialExportsUsed >= 1) ? "secondary" : "default"}
+              size="sm" 
+              className={`gap-2 font-bold shadow-md transition-all h-10 ${(!isPro && trialExportsUsed >= 1) ? 'bg-slate-100 text-slate-500 hover:bg-slate-200' : 'bg-slate-900 hover:bg-black text-white'}`}
+              onClick={handleExport}
+              disabled={isExporting}
+            >
+              {isExporting ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : exportSuccess ? (
+                <CheckCircle2 className="h-4 w-4 text-emerald-500" />
+              ) : (!isPro && trialExportsUsed >= 1) ? (
+                <Lock className="h-3.5 w-3.5" />
+              ) : (
+                <Download className="h-4 w-4" />
+              )}
+              {t('export')}
+              {!isPro && (
+                <Badge className={`ml-1 text-[10px] px-1.5 py-0 border-none font-black ${trialExportsUsed >= 1 ? 'bg-slate-200 text-slate-500' : 'bg-blue-600 text-white shadow-sm animate-pulse uppercase'}`}>
+                  {trialExportsUsed >= 1 ? (locale === 'nb' ? 'Låst' : 'Locked') : (locale === 'nb' ? 'Gratis prøve' : 'Free Trial')}
+                </Badge>
+              )}
+            </Button>
+            {!isPro && trialExportsUsed >= 1 && (
+              <p className="text-[10px] text-slate-400 font-bold uppercase tracking-tight text-right flex items-center gap-1">
+                <FileBox className="h-3 w-3" />
+                {locale === 'nb' 
+                  ? 'Lås opp SAF-T koder & regnskapsformater' 
+                  : 'Unlock SAF-T codes & Accountant formats'}
+              </p>
+            )}
+          </div>
         </div>
       </CardHeader>
       
@@ -357,6 +401,26 @@ export function TransactionJournal({ isPro = false, trialExportsUsed = 0, seatsL
               <ArrowDownRight className="h-3 w-3" />
               {t('expense')}
             </button>
+          </div>
+
+          <div className="flex-1 flex flex-col items-end gap-1">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setShowAccountantView(!showAccountantView)}
+              className={`gap-2 font-bold transition-all h-9 ${showAccountantView ? 'bg-blue-50 text-blue-700 hover:bg-blue-100 ring-1 ring-blue-200' : 'text-slate-400 hover:text-slate-900'}`}
+            >
+              <FileBox className="h-4 w-4" />
+              {locale === 'nb' ? 'Regnskap-visning' : 'Accountant View'}
+              {showAccountantView && <Badge className="bg-blue-600 text-white border-none ml-1 text-[8px] h-4 px-1 uppercase tracking-tighter shadow-sm">SAF-T</Badge>}
+            </Button>
+            {showAccountantView && (
+              <p className="text-[9px] text-blue-600/60 font-medium tracking-tight animate-in fade-in slide-in-from-right-1">
+                {locale === 'nb' 
+                  ? 'Viser offisielle SAF-T koder for Skatteetaten' 
+                  : 'Showing official SAF-T codes for Tax Authorities'}
+              </p>
+            )}
           </div>
         </div>
 
@@ -417,6 +481,7 @@ export function TransactionJournal({ isPro = false, trialExportsUsed = 0, seatsL
                                 <TableRow>
                                   <TableHead>Date</TableHead>
                                   <TableHead>Description</TableHead>
+                                  {showAccountantView && <TableHead>Accounting</TableHead>}
                                   <TableHead>Type</TableHead>
                                   <TableHead>Amount</TableHead>
                                   <TableHead>Actions</TableHead>
@@ -449,6 +514,23 @@ export function TransactionJournal({ isPro = false, trialExportsUsed = 0, seatsL
                                         </Badge>
                                       )}
                                     </TableCell>
+                                    {showAccountantView && (
+                                      <TableCell className="w-[120px]">
+                                        {(() => {
+                                          const mapping = ACCOUNTING_MAPPINGS[tr.category || 'Other']?.[tr.type] || ACCOUNTING_MAPPINGS['Other'][tr.type]
+                                          return (
+                                            <div className="flex flex-col gap-0.5">
+                                              <span className="text-[10px] font-black text-blue-700 bg-blue-50 px-1.5 py-0.5 rounded border border-blue-100 w-fit">
+                                                Acc: {mapping.account}
+                                              </span>
+                                              <span className="text-[9px] font-bold text-slate-500">
+                                                MVA: {mapping.mvaCode} ({Math.round(mapping.mvaRate * 100)}%)
+                                              </span>
+                                            </div>
+                                          )
+                                        })()}
+                                      </TableCell>
+                                    )}
                                     <TableCell className="text-right font-mono font-bold text-sm">
                                       <div className="flex flex-col items-end">
                                         <span className={tr.type === 'income' ? 'text-emerald-600' : 'text-slate-900'}>
