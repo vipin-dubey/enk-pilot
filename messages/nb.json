@@ -101,10 +101,13 @@
       "title": "Sjekk av skattehelse",
       "projectedConflict": "Du tjener mer enn forventet.",
       "projectedConflictSubtitle": "Basert på resultatet hittil i år, beregner vi at ditt årsresultat vil bli {projected} kr.",
-      "recommendation": "Vi anbefaler å øke din årlige forskuddsskatt med {amount} kr for å unngå baksmell neste år.",
-      "onTrack": "Skatten din er i rute.",
-      "onTrackSubtitle": "Dine forventede inntekter samsvarer med skatteplanen din.",
-      "setupRequired": "Sett opp helsesjekk",
+      "recommendation": "Vi anbefaler å øke din forskuddsskatt med {amount} kr for å unngå restskatt neste år.",
+      "recommendationDecrease": "Du er projisert til å betale mer skatt enn nødvendig. Du kan redusere din forskuddsskatt med {amount} kr for å forbedre likviditeten.",
+      "onTrack": "Skatten din er på rett spor.",
+      "onTrackSubtitle": "Dine projiserte inntekter stemmer overens med skatteplanen din.",
+      "underEarning": "Du tjener mindre enn forventet.",
+      "underEarningSubtitle": "Basert på ditt resultat hittil i år, projiserer vi et årsresultat på {projected} kr.",
+      "setupRequired": "Sett opp skattesjekk",
       "setupRequiredSubtitle": "Legg inn din forventede inntekt i innstillinger for å aktivere sanntidsovervåking av skatt.",
       "action": "Juster i innstillinger"
     }

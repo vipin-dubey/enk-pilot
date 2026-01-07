@@ -102,8 +102,11 @@
       "projectedConflict": "You're earning more than expected.",
       "projectedConflictSubtitle": "Based on your YTD profit, we project your annual profit will be {projected} NOK.",
       "recommendation": "We recommend increasing your annual prepaid tax by {amount} NOK to avoid a back-tax penalty next year.",
+      "recommendationDecrease": "You are projected to pay more tax than required. You can decrease your annual prepaid tax by {amount} NOK to improve cash flow.",
       "onTrack": "Your taxes are on track.",
       "onTrackSubtitle": "Your projected earnings match your tax plan.",
+      "underEarning": "You're earning less than expected.",
+      "underEarningSubtitle": "Based on your YTD profit, we project your annual profit will be {projected} NOK.",
       "setupRequired": "Set up Tax Health Check",
       "setupRequiredSubtitle": "Enter your expected profit in settings to enable real-time monitoring.",
       "action": "Adjust in settings"

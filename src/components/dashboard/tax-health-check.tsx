@@ -82,14 +82,16 @@ export function TaxHealthCheck() {
   const projectedAnnualProfit = projectedAnnualBusinessProfit + annualExternalSalary
   
   const estimatedProfit = profile.estimated_annual_profit || 1
+  const estimatedTotalProfit = estimatedProfit + annualExternalSalary
   const currentPrepaidTax = profile.annual_prepaid_tax_amount || 0
   
   // Calculate projected tax vs original estimated tax
   const projectedAnnualTax = calculateAnnualTax(projectedAnnualProfit)
-  const estimatedAnnualTax = calculateAnnualTax(estimatedProfit)
+  const estimatedAnnualTax = calculateAnnualTax(estimatedTotalProfit)
   
   const taxDifference = projectedAnnualTax - estimatedAnnualTax
-  const isOverEarning = projectedAnnualProfit > estimatedProfit * 1.1 // Show warning if 10% higher
+  const isOverEarning = projectedAnnualProfit > estimatedTotalProfit * 1.05 // 5% buffer
+  const isUnderEarning = projectedAnnualProfit < estimatedTotalProfit * 0.95 // 5% buffer
   
   const progressPercent = Math.min(100, Math.round((ytdBusinessProfit / estimatedProfit) * 100))
   
@@ -98,30 +100,58 @@ export function TaxHealthCheck() {
   const daysSinceUpdate = Math.floor((now.getTime() - lastUpdated.getTime()) / (1000 * 60 * 60 * 24))
   const needsReview = daysSinceUpdate > 90
 
+  const getStatusConfig = () => {
+    if (isOverEarning) return { 
+      bg: 'bg-amber-50', 
+      border: 'border-amber-500', 
+      text: 'text-amber-900',
+      sub: 'text-amber-700/80',
+      badge: 'bg-amber-100 text-amber-700 border-amber-200',
+      icon: <AlertTriangle className="h-5 w-5 text-amber-600" />,
+      title: t('projectedConflict'),
+      subtitle: t('underEarningSubtitle', { projected: Math.round(projectedAnnualProfit).toLocaleString() }) // Reusing subtitle key logic
+    }
+    if (isUnderEarning) return { 
+      bg: 'bg-blue-50', 
+      border: 'border-blue-500', 
+      text: 'text-blue-900',
+      sub: 'text-blue-700/80',
+      badge: 'bg-blue-100 text-blue-700 border-blue-200',
+      icon: <TrendingUp className="h-5 w-5 text-blue-600" />,
+      title: t('underEarning'),
+      subtitle: t('underEarningSubtitle', { projected: Math.round(projectedAnnualProfit).toLocaleString() })
+    }
+    return { 
+      bg: 'bg-emerald-50', 
+      border: 'border-emerald-500', 
+      text: 'text-emerald-900',
+      sub: 'text-emerald-700/80',
+      badge: 'bg-emerald-100 text-emerald-700 border-emerald-200',
+      icon: <CheckCircle2 className="h-5 w-5 text-emerald-600" />,
+      title: t('title'),
+      subtitle: t('onTrackSubtitle')
+    }
+  }
+
+  const config = getStatusConfig()
+
   return (
-    <Card className={`overflow-hidden border-none shadow-md ${isOverEarning ? 'bg-amber-50' : 'bg-emerald-50'}`}>
-      <div className={`h-1.5 w-full ${isOverEarning ? 'bg-amber-500' : 'bg-emerald-500'}`} />
+    <Card className={`overflow-hidden border-none shadow-md ${config.bg}`}>
+      <div className={`h-1.5 w-full ${isOverEarning ? 'bg-amber-500' : isUnderEarning ? 'bg-blue-500' : 'bg-emerald-500'}`} />
       <CardHeader className="pb-2">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            {isOverEarning ? (
-              <AlertTriangle className="h-5 w-5 text-amber-600" />
-            ) : (
-              <CheckCircle2 className="h-5 w-5 text-emerald-600" />
-            )}
-            <CardTitle className={`text-lg font-bold font-outfit ${isOverEarning ? 'text-amber-900' : 'text-emerald-900'}`}>
-              {t('title')}
+            {config.icon}
+            <CardTitle className={`text-lg font-bold font-outfit ${config.text}`}>
+              {config.title}
             </CardTitle>
           </div>
-          <Badge variant="outline" className={isOverEarning ? 'bg-amber-100 text-amber-700 border-amber-200' : 'bg-emerald-100 text-emerald-700 border-emerald-200'}>
+          <Badge variant="outline" className={config.badge}>
             {progressPercent}% of target
           </Badge>
         </div>
-        <CardDescription className={isOverEarning ? 'text-amber-700/80' : 'text-emerald-700/80'}>
-          {isOverEarning 
-            ? t('projectedConflictSubtitle', { projected: Math.round(projectedAnnualProfit).toLocaleString() })
-            : t('onTrackSubtitle')
-          }
+        <CardDescription className={config.sub}>
+          {config.subtitle}
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -130,19 +160,28 @@ export function TaxHealthCheck() {
             <span>YTD Profit: {Math.round(ytdBusinessProfit).toLocaleString()} NOK</span>
             <span>Est. Annual: {estimatedProfit.toLocaleString()} NOK</span>
           </div>
-          <Progress value={progressPercent} className={`h-2 ${isOverEarning ? 'bg-amber-200' : 'bg-emerald-200'}`} />
+          <Progress value={progressPercent} className={`h-2 ${isOverEarning ? 'bg-amber-100' : isUnderEarning ? 'bg-blue-100' : 'bg-emerald-100'}`} />
         </div>
 
         {isOverEarning && (
           <div className="p-3 rounded-lg bg-white/50 border border-amber-200 text-sm text-amber-900">
             <p className="flex items-center gap-2">
-              <TrendingUp className="h-4 w-4" />
-              <strong>{t('recommendation', { amount: Math.round(taxDifference).toLocaleString() })}</strong>
+              <AlertTriangle className="h-4 w-4" />
+              <strong>{t('recommendation', { amount: Math.abs(Math.round(taxDifference)).toLocaleString() })}</strong>
             </p>
           </div>
         )}
 
-        {!isOverEarning && (
+        {isUnderEarning && (
+          <div className="p-3 rounded-lg bg-white/50 border border-blue-200 text-sm text-blue-900">
+            <p className="flex items-center gap-2">
+              <TrendingUp className="h-4 w-4" />
+              <strong>{t('recommendationDecrease', { amount: Math.abs(Math.round(taxDifference)).toLocaleString() })}</strong>
+            </p>
+          </div>
+        )}
+
+        {!isOverEarning && !isUnderEarning && (
           <div className="p-3 rounded-lg bg-white/50 border border-emerald-200 text-sm text-emerald-900">
             <p className="flex items-center gap-2 text-emerald-700">
               <CheckCircle2 className="h-4 w-4" />
