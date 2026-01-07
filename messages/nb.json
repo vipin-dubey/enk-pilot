@@ -25,7 +25,8 @@
     "safeToSpend": "Trygt å bruke",
     "deadlines": "Frister",
     "receipts": "Kvitteringer",
-    "history": "Journal"
+    "history": "Journal",
+    "analytics": "Analyse"
   },
   "receipts": {
     "title": "Last opp kvittering",
@@ -305,6 +306,20 @@
     "deleteConfirm": "Er du sikker på at du vil slette denne transaksjonen? Dette vil automatisk justere summen for året.",
     "deleteSuccess": "Transaksjonen ble slettet og årsresultatet ble oppdatert.",
     "deleteError": "Kunne ikke slette transaksjonen."
+  },
+  "cfo": {
+    "performanceTitle": "Resultatutvikling",
+    "performanceDesc": "Månedlig oversikt over inntekt vs. resultat.",
+    "burdenTitle": "Fordeling av skattebyrde",
+    "burdenDesc": "Fokusert utelukkende på bedriftens økonomi. Ekstern lønn er holdt utenfor.",
+    "expenseTitle": "Utgiftanalyse",
+    "expenseDesc": "Største utgiftskategorier for inneværende år.",
+    "preCheckTitle": "Skatteetaten Sjekkliste",
+    "preCheckDesc": "Finn verdiene du trenger til den offisielle skattemeldingen.",
+    "box101": "Driftsinntekter",
+    "box401": "Kostnader",
+    "box711": "Personfradrag",
+    "box440": "Netto næringsinntekt"
   },
   "pricing": {
     "title": "Oppgrader til Pro",

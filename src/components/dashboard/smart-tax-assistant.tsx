@@ -8,6 +8,8 @@ import { Sparkles, ArrowRight, Lightbulb, TrendingUp, AlertCircle, Info, Calcula
 import { useTranslations, useLocale } from 'next-intl'
 import { createClient } from '@/utils/supabase/client'
 import { Link } from '@/navigation'
+import { UpgradeModal } from './upgrade-modal'
+import { Lock } from 'lucide-react'
 
 interface Insight {
   id: string
@@ -19,13 +21,14 @@ interface Insight {
   actionHref?: string
 }
 
-export function SmartTaxAssistant() {
+export function SmartTaxAssistant({ isPro, seatsLeft, percentFull }: { isPro?: boolean, seatsLeft?: number, percentFull?: number }) {
   const t = useTranslations('taxInsights')
   const locale = useLocale()
   const [profile, setProfile] = useState<any>(null)
   const [transactions, setTransactions] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [isVisible, setIsVisible] = useState(true)
+  const [showUpgrade, setShowUpgrade] = useState(false)
   const supabase = createClient()
 
   useEffect(() => {
@@ -185,7 +188,34 @@ export function SmartTaxAssistant() {
   if (loading || !isVisible || insights.length === 0) return null
 
   return (
-    <Card className="border-none shadow-premium bg-gradient-to-br from-slate-900 to-slate-800 text-white overflow-hidden animate-in fade-in slide-in-from-top-4 duration-500">
+    <Card className="border-none shadow-premium bg-gradient-to-br from-slate-900 to-slate-800 text-white overflow-hidden animate-in fade-in slide-in-from-top-4 duration-500 relative">
+      {!isPro && (
+        <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-[6px] z-10 flex flex-col items-center justify-center p-6 text-center">
+          <div className="h-10 w-10 rounded-full bg-blue-500 flex items-center justify-center mb-3 shadow-lg">
+            <Lock className="h-5 w-5 text-white" />
+          </div>
+          <h4 className="font-bold text-sm uppercase tracking-wider mb-1">AI Tax Audit Found Insights</h4>
+          <p className="text-[10px] text-slate-300 max-w-[200px] mb-4">
+            We found {insights.length} ways to optimize your taxes. Upgrade to Pro to see your personalized alerts.
+          </p>
+          <Button 
+            size="sm" 
+            onClick={() => setShowUpgrade(true)}
+            className="h-8 bg-blue-600 hover:bg-blue-700 text-white font-bold mb-2 w-full max-w-[160px]"
+          >
+            Unlock Intelligence
+          </Button>
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            onClick={dismiss}
+            className="h-8 text-slate-400 hover:text-white hover:bg-white/10 text-[10px] uppercase font-bold tracking-widest"
+          >
+            Hide these insights
+          </Button>
+        </div>
+      )}
+      
       <CardHeader className="pb-2 border-b border-white/5">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -262,6 +292,15 @@ export function SmartTaxAssistant() {
           </p>
         </div>
       </CardContent>
+
+      {showUpgrade && (
+        <UpgradeModal 
+          isOpen={showUpgrade} 
+          onClose={() => setShowUpgrade(false)} 
+          seatsLeft={seatsLeft || 0}
+          percentFull={percentFull || 0}
+        />
+      )}
     </Card>
   )
 }

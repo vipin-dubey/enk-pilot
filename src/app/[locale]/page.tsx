@@ -17,6 +17,7 @@ import { TransactionJournal } from '@/components/dashboard/transaction-journal'
 import { SmartTaxAssistant } from '@/components/dashboard/smart-tax-assistant'
 import { DashboardHeaderActions } from '@/components/dashboard/header-actions'
 import { DashboardTabs } from '@/components/dashboard/dashboard-tabs'
+import { CfoAnalytics } from '@/components/dashboard/cfo-analytics'
 
 export default async function DashboardPage({
   params,
@@ -161,7 +162,11 @@ export default async function DashboardPage({
           {{
             safeToSpend: (
               <div className="space-y-6">
-                <SmartTaxAssistant />
+                <SmartTaxAssistant 
+                  isPro={profile?.is_pro} 
+                  seatsLeft={seatsLeft} 
+                  percentFull={percentFull} 
+                />
                 <SafeToSpendCalculator 
                   initialTaxRate={profile?.tax_rate_percent}
                   isMvaRegistered={profile?.is_mva_registered} 
@@ -192,6 +197,13 @@ export default async function DashboardPage({
               <TransactionJournal 
                 isPro={profile?.is_pro} 
                 trialExportsUsed={profile?.trial_exports_used || 0}
+                seatsLeft={seatsLeft}
+                percentFull={percentFull}
+              />
+            ),
+            analytics: (
+              <CfoAnalytics 
+                isPro={profile?.is_pro}
                 seatsLeft={seatsLeft}
                 percentFull={percentFull}
               />

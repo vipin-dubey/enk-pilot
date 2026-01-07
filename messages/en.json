@@ -25,7 +25,8 @@
     "safeToSpend": "Safe-to-Spend",
     "deadlines": "Deadlines",
     "receipts": "Receipts",
-    "history": "Journal"
+    "history": "Journal",
+    "analytics": "Analytics"
   },
   "receipts": {
     "title": "Receipt Upload",
@@ -305,7 +306,21 @@
     "exportError": "Failed to generate export.",
     "deleteConfirm": "Are you sure you want to delete this transaction? This will automatically adjust your year-to-date totals.",
     "deleteSuccess": "Transaction deleted and YTD totals updated.",
-    "deleteError": "Failed to delete transaction."
+    "deleteError": "Could not delete transaction."
+  },
+  "cfo": {
+    "performanceTitle": "Performance Trends",
+    "performanceDesc": "Monthly breakdown of income vs. profit.",
+    "burdenTitle": "Tax Burden Breakdown",
+    "burdenDesc": "Focus strictly on business economy. External salaries are excluded.",
+    "expenseTitle": "Expense Analytics",
+    "expenseDesc": "Top spending categories for the current year.",
+    "preCheckTitle": "Skatteetaten Pre-Check",
+    "preCheckDesc": "Map your business values directly to the official Tax Return form.",
+    "box101": "Revenue",
+    "box401": "Expenses",
+    "box711": "Personal Allowance",
+    "box440": "Net Business Result"
   },
   "pricing": {
     "title": "Upgrade to Pro",

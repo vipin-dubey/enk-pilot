@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { LayoutDashboard, Calendar, Receipt, History } from 'lucide-react'
+import { LayoutDashboard, Calendar, Receipt, History, LineChart } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 import { DashboardHeaderActions } from './header-actions'
 
@@ -12,6 +12,7 @@ interface DashboardTabsProps {
     deadlines: React.ReactNode
     receipts: React.ReactNode
     history: React.ReactNode
+    analytics: React.ReactNode
   }
 }
 
@@ -22,7 +23,7 @@ export function DashboardTabs({ children }: DashboardTabsProps) {
   useEffect(() => {
     const handleHash = () => {
       const hash = window.location.hash.replace('#', '')
-      if (['safe-to-spend', 'deadlines', 'receipts', 'history'].includes(hash)) {
+      if (['safe-to-spend', 'deadlines', 'receipts', 'history', 'analytics'].includes(hash)) {
         setActiveTab(hash)
       }
     }
@@ -62,6 +63,13 @@ export function DashboardTabs({ children }: DashboardTabsProps) {
             <History className="h-4 w-4" />
             {tTabs('history')}
           </TabsTrigger>
+          <TabsTrigger value="analytics" className="gap-2 px-6 data-[state=active]:bg-slate-100 data-[state=active]:shadow-none">
+            <LineChart className="h-4 w-4" />
+            <div className="flex items-center gap-1.5">
+              {tTabs('analytics')}
+              <span className="text-[8px] font-black bg-blue-600 text-white px-1.5 py-0.5 rounded-full uppercase tracking-tighter">Pro</span>
+            </div>
+          </TabsTrigger>
         </TabsList>
         <DashboardHeaderActions />
       </div>
@@ -80,6 +88,10 @@ export function DashboardTabs({ children }: DashboardTabsProps) {
 
       <TabsContent value="history" className="mt-0 border-none p-0 focus-visible:ring-0">
         {children.history}
+      </TabsContent>
+
+      <TabsContent value="analytics" className="mt-0 border-none p-0 focus-visible:ring-0">
+        {children.analytics}
       </TabsContent>
     </Tabs>
   )
