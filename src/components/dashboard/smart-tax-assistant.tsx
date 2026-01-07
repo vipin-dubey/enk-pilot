@@ -7,8 +7,7 @@ import { Badge } from '@/components/ui/badge'
 import { Sparkles, ArrowRight, Lightbulb, TrendingUp, AlertCircle, Info, Calculator, Lock, Gavel } from 'lucide-react'
 import { useTranslations, useLocale } from 'next-intl'
 import { createClient } from '@/utils/supabase/client'
-import { Link } from '@/navigation'
-import { UpgradeModal } from './upgrade-modal'
+import { Link, useRouter } from '@/navigation'
 
 interface Insight {
   id: string
@@ -28,7 +27,7 @@ export function SmartTaxAssistant({ isPro, seatsLeft, percentFull }: { isPro?: b
   const [transactions, setTransactions] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [isVisible, setIsVisible] = useState(true)
-  const [showUpgrade, setShowUpgrade] = useState(false)
+  const router = useRouter()
   const supabase = createClient()
 
   useEffect(() => {
@@ -200,7 +199,7 @@ export function SmartTaxAssistant({ isPro, seatsLeft, percentFull }: { isPro?: b
           </p>
           <Button 
             size="sm" 
-            onClick={() => setShowUpgrade(true)}
+            onClick={() => router.push('/upgrade')}
             className="h-8 bg-blue-600 hover:bg-blue-700 text-white font-bold mb-2 w-full max-w-[160px]"
           >
             Unlock Intelligence
@@ -299,14 +298,6 @@ export function SmartTaxAssistant({ isPro, seatsLeft, percentFull }: { isPro?: b
         </div>
       </CardContent>
 
-      {showUpgrade && (
-        <UpgradeModal 
-          isOpen={showUpgrade} 
-          onClose={() => setShowUpgrade(false)} 
-          seatsLeft={seatsLeft || 0}
-          percentFull={percentFull || 0}
-        />
-      )}
     </Card>
   )
 }

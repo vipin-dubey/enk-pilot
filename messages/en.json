@@ -11,7 +11,8 @@
     "error": "Error",
     "success": "Success",
     "search": "Search...",
-    "foundingUser": "Founding Supporter"
+    "foundingUser": "Founding Supporter",
+    "settings": "Settings"
   },
   "dashboard": {
     "title": "Dashboard",

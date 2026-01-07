@@ -154,15 +154,19 @@ export function DeadlineTracker() {
   return (
     <Card>
       <CardHeader>
-        <div className="flex items-center justify-between">
-          <div>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="space-y-1">
             <CardTitle>{t('title')}</CardTitle>
-            <CardDescription>{t('description')}</CardDescription>
+            <CardDescription className="max-w-[280px] sm:max-w-none">
+              {t('description')}
+            </CardDescription>
           </div>
           <Select value={filter} onValueChange={(v) => setFilter(v as DeadlineFilter)}>
-            <SelectTrigger className="w-[180px]">
-              <Filter className="h-4 w-4 mr-2" />
-              <SelectValue />
+            <SelectTrigger className="w-full sm:w-[180px] h-10 font-bold border-slate-200">
+              <div className="flex items-center gap-2">
+                <Filter className="h-4 w-4 text-slate-400" />
+                <SelectValue />
+              </div>
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">{t('allDeadlines')}</SelectItem>

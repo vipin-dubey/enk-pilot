@@ -8,7 +8,7 @@ export function LegalShield() {
   const t = useTranslations('legal')
 
   return (
-    <Card className="border-none shadow-premium bg-slate-50 border border-slate-200 mt-12 mb-8 overflow-hidden">
+    <Card className="border-none shadow-premium bg-slate-50 border border-slate-200 mt-8 mb-4 overflow-hidden">
       <div className="bg-slate-200 h-1.5 w-full" />
       <CardContent className="p-6">
         <div className="flex flex-col md:flex-row gap-6 items-start">

@@ -31,8 +31,7 @@ import {
 } from 'lucide-react'
 import { createClient } from '@/utils/supabase/client'
 import { useTranslations, useLocale } from 'next-intl'
-import { useRouter } from 'next/navigation'
-import { UpgradeModal } from './upgrade-modal'
+import { useRouter } from '@/navigation'
 import { ACCOUNTING_MAPPINGS, escapeCSV, getMvaPeriod } from '@/lib/accounting-utils'
 import {
   AlertDialog,
@@ -78,7 +77,6 @@ export function TransactionJournal({ isPro = false, trialExportsUsed = 0, seatsL
   const [isDeleting, setIsDeleting] = useState(false)
   const [isExporting, setIsExporting] = useState(false)
   const [exportSuccess, setExportSuccess] = useState(false)
-  const [showUpgradeModal, setShowUpgradeModal] = useState(false)
   const [showAccountantView, setShowAccountantView] = useState(false)
   
   const currentMonthKey = useMemo(() => {
@@ -149,7 +147,7 @@ export function TransactionJournal({ isPro = false, trialExportsUsed = 0, seatsL
 
   const handleExport = async () => {
     if (!isPro && trialExportsUsed >= 1) {
-      setShowUpgradeModal(true)
+      router.push('/upgrade')
       return
     }
 
@@ -596,12 +594,6 @@ export function TransactionJournal({ isPro = false, trialExportsUsed = 0, seatsL
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-      <UpgradeModal 
-        isOpen={showUpgradeModal} 
-        onClose={() => setShowUpgradeModal(false)}
-        seatsLeft={seatsLeft}
-        percentFull={percentFull}
-      />
     </Card>
   )
 }

@@ -16,11 +16,10 @@ export function LanguageSwitcher() {
 
   return (
     <Select value={locale} onValueChange={handleChange}>
-      <SelectTrigger className="w-[140px]">
-        <Globe className="h-4 w-4 mr-2" />
+      <SelectTrigger className="w-[120px] font-bold border-slate-200">
         <SelectValue />
       </SelectTrigger>
-      <SelectContent>
+      <SelectContent className="z-[110]">
         <SelectItem value="en">🇬🇧 English</SelectItem>
         <SelectItem value="nb">🇳🇴 Norsk</SelectItem>
       </SelectContent>

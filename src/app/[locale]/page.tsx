@@ -20,6 +20,7 @@ import { DashboardHeaderActions } from '@/components/dashboard/header-actions'
 import { DashboardTabs } from '@/components/dashboard/dashboard-tabs'
 import { CfoAnalytics } from '@/components/dashboard/cfo-analytics'
 import { signout } from './login/actions'
+import { MobileMenu } from '@/components/dashboard/mobile-menu'
 
 export default async function DashboardPage({
   params,
@@ -67,7 +68,7 @@ export default async function DashboardPage({
             </Link>
           </div>
           
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 md:gap-4">
             <div className="flex items-center gap-2">
               {profile?.is_founding_user && (
                 <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 bg-amber-50 border border-amber-200 rounded-full shadow-sm animate-in fade-in zoom-in duration-500">
@@ -79,43 +80,57 @@ export default async function DashboardPage({
               )}
               <NotificationCenter />
             </div>
-            <LanguageSwitcher />
-            <div className="h-8 w-8 rounded-full bg-slate-100 flex items-center justify-center border">
-              <UserCircle className="h-5 w-5 text-slate-500" />
+            
+            {/* Desktop Only Actions */}
+            <div className="hidden md:flex items-center gap-4">
+              <LanguageSwitcher />
+              <div className="h-8 w-8 rounded-full bg-slate-100 flex items-center justify-center border">
+                <UserCircle className="h-5 w-5 text-slate-500" />
+              </div>
+              <form action={signout}>
+                <Button variant="ghost" size="sm" className="gap-2 text-slate-500">
+                  <LogOut className="h-4 w-4" />
+                  <span>{tCommon('logout')}</span>
+                </Button>
+              </form>
             </div>
-            <form action={signout}>
-              <Button variant="ghost" size="sm" className="gap-2 text-slate-500">
-                <LogOut className="h-4 w-4" />
-                <span className="hidden sm:inline">{tCommon('logout')}</span>
-              </Button>
-            </form>
+
+            {/* Mobile Dedicated Menu */}
+            <MobileMenu isPro={profile?.plan_type === 'founding' || profile?.subscription_status === 'active'} profile={profile} />
           </div>
         </div>
       </header>
 
-      <main className="container mx-auto px-4 py-8 max-w-6xl">
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
-          <div className="space-y-1">
-            <h2 className="text-3xl font-bold tracking-tight text-slate-900 font-outfit">
-              {t('title')}
-            </h2>
-            <p className="text-slate-500">
-              {t('welcome', { name: profile?.full_name || user.email?.split('@')[0] })}
-            </p>
+      <main className="container mx-auto px-4 pt-8 pb-4 max-w-6xl">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-6">
+          <div className="flex items-start justify-between w-full md:w-auto gap-4">
+            <div className="space-y-1">
+              <h2 className="text-3xl font-bold tracking-tight text-slate-900 font-outfit">
+                {t('title')}
+              </h2>
+              <p className="text-slate-500 text-sm md:text-base truncate max-w-[200px] xs:max-w-none">
+                {t('welcome', { name: profile?.full_name || user.email?.split('@')[0] })}
+              </p>
+            </div>
+            
+            <div className="md:hidden pt-1 shrink-0">
+              <DashboardHeaderActions showSettings={false} />
+            </div>
           </div>
           
-          {profile?.is_pro && (
-            <div className="flex items-center gap-2">
-              <span className="inline-flex items-center rounded-full bg-blue-50 px-3 py-1 text-xs font-bold text-blue-700 ring-1 ring-inset ring-blue-700/10">
-                {t('proAccount')}
-              </span>
-            </div>
-          )}
-          {!profile?.is_pro && (
-            <Card className="max-w-sm bg-gradient-to-br from-indigo-600 via-blue-600 to-blue-700 text-white border-none shadow-xl overflow-hidden relative group transition-all hover:shadow-2xl hover:-translate-y-0.5">
-              <div className="absolute top-0 right-0 p-3 opacity-10 group-hover:opacity-20 transition-opacity">
-                <Sparkles className="h-12 w-12" />
+          <div className="flex flex-col items-center md:items-end gap-4">
+            {profile?.is_pro && (
+              <div className="flex items-center gap-2">
+                <span className="inline-flex items-center rounded-full bg-blue-50 px-3 py-1 text-xs font-bold text-blue-700 ring-1 ring-inset ring-blue-700/10">
+                  {t('proAccount')}
+                </span>
               </div>
+            )}
+            {!profile?.is_pro && (
+              <Card className="max-w-sm w-full bg-gradient-to-br from-indigo-600 via-blue-600 to-blue-700 text-white border-none shadow-xl overflow-hidden relative group transition-all hover:shadow-2xl hover:-translate-y-0.5 animate-in fade-in slide-in-from-right duration-700">
+                <div className="absolute top-0 right-0 p-3 opacity-10 group-hover:opacity-20 transition-opacity">
+                  <Sparkles className="h-12 w-12" />
+                </div>
               
               <div className="absolute top-2 left-2 flex items-center gap-1.5 px-2 py-0.5 bg-white/20 backdrop-blur-md rounded-full border border-white/20">
                 <span className="relative flex h-2 w-2">
@@ -145,7 +160,7 @@ export default async function DashboardPage({
                       </div>
                   </div>
                 </div>
-                <Link href="/settings">
+                <Link href="/upgrade">
                   <Button size="sm" variant="secondary" className="bg-white text-blue-700 hover:bg-blue-50 border-none font-black shadow-sm h-8 px-4">
                     kr 299
                   </Button>
@@ -154,8 +169,9 @@ export default async function DashboardPage({
             </Card>
           )}
         </div>
+      </div>
 
-        <DashboardTabs>
+      <DashboardTabs>
           {{
             safeToSpend: (
               <div className="space-y-6">
@@ -212,7 +228,7 @@ export default async function DashboardPage({
         <LegalShield />
       </main>
 
-      <footer className="mt-20 pb-12 px-6">
+      <footer className="mt-8 pb-12 px-6">
         <div className="max-w-7xl mx-auto pt-8 border-t border-slate-200">
           <div className="flex flex-col md:flex-row items-center justify-between gap-6 opacity-60 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-500">
             <div className="flex items-center gap-6">
@@ -226,7 +242,7 @@ export default async function DashboardPage({
               </div>
             </div>
             <div className="flex flex-col items-center md:items-end gap-1">
-              <p className="text-[10px] font-black uppercase tracking-widest text-slate-600">Built with 🇳🇴 in Oslo</p>
+              <p className="text-[10px] font-black uppercase tracking-widest text-slate-600">Built with 🇳🇴 in Norway</p>
               <p className="text-[9px] text-slate-400 font-medium">ENK Pilot • No data tracking, no external AI exposure.</p>
             </div>
           </div>

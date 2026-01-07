@@ -33,23 +33,23 @@ export function DashboardHeaderActions({ showSettings = true }: { showSettings?:
   }
 
   return (
-    <div className="flex items-center gap-2 mr-1">
+    <div className="flex items-center gap-2">
       {hasHiddenInsights && insightCount > 0 && (
         <Button 
           variant="ghost" 
           size="sm" 
           onClick={restoreInsights}
-          className="gap-2 text-blue-600 hover:text-blue-700 hover:bg-blue-50 font-bold group"
+          className="h-8 md:h-9 gap-1.5 md:gap-2 text-blue-600 hover:text-blue-700 hover:bg-blue-50 font-bold px-2 md:px-3 bg-blue-50/50 md:bg-transparent"
         >
-          <Sparkles className="h-4 w-4 animate-pulse" />
-          <span className="hidden lg:inline text-[10px] uppercase tracking-wider">Show Insights</span>
-          <Badge className="h-4 px-1 bg-blue-600 text-[8px] animate-in zoom-in">{insightCount}</Badge>
+          <Sparkles className="h-4 w-4 animate-pulse shrink-0" />
+          <span className="hidden sm:inline text-[9px] md:text-[10px] uppercase tracking-wider whitespace-nowrap">Show Insights</span>
+          <Badge className="h-4 min-w-[1rem] px-1 bg-blue-600 text-[8px] flex items-center justify-center animate-in zoom-in">{insightCount}</Badge>
         </Button>
       )}
 
       {showSettings && (
         <Link href="/settings">
-          <Button variant="outline" size="sm" className="hidden md:flex gap-2">
+          <Button variant="outline" size="sm" className="hidden md:flex gap-2 h-9">
             <Settings className="h-4 w-4" />
             {t('settings')}
           </Button>

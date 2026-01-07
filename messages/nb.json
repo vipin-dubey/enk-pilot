@@ -11,7 +11,8 @@
     "error": "Feil",
     "success": "Suksess",
     "search": "Søk...",
-    "foundingUser": "Grunnlegger"
+    "foundingUser": "Grunnlegger",
+    "settings": "Innstillinger"
   },
   "dashboard": {
     "title": "Dashbord",

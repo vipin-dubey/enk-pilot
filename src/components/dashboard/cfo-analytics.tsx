@@ -30,9 +30,9 @@ import {
   Gavel
 } from 'lucide-react'
 import { useTranslations, useLocale } from 'next-intl'
+import { useRouter } from '@/navigation'
 import { createClient } from '@/utils/supabase/client'
 import { calculateAnnualTax } from '@/lib/tax-calculations'
-import { UpgradeModal } from './upgrade-modal'
 
 interface CfoAnalyticsProps {
   isPro: boolean
@@ -47,7 +47,7 @@ export function CfoAnalytics({ isPro, seatsLeft, percentFull }: CfoAnalyticsProp
   const [profile, setProfile] = useState<any>(null)
   const [transactions, setTransactions] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
-  const [showUpgrade, setShowUpgrade] = useState(false)
+  const router = useRouter()
   const supabase = createClient()
 
   useEffect(() => {
@@ -190,7 +190,7 @@ export function CfoAnalytics({ isPro, seatsLeft, percentFull }: CfoAnalyticsProp
         Unlock performance trends, tax burden visualizations, and strategic expense analytics.
       </p>
       <Button 
-        onClick={() => setShowUpgrade(true)}
+        onClick={() => router.push('/upgrade')}
         className="bg-blue-600 hover:bg-blue-700 text-white font-bold px-8"
       >
         Upgrade to Pro
@@ -385,14 +385,6 @@ export function CfoAnalytics({ isPro, seatsLeft, percentFull }: CfoAnalyticsProp
         </CardContent>
       </Card>
 
-      {showUpgrade && (
-        <UpgradeModal 
-          isOpen={showUpgrade} 
-          onClose={() => setShowUpgrade(false)} 
-          seatsLeft={seatsLeft}
-          percentFull={percentFull}
-        />
-      )}
 
       {/* Sticky Legal Disclaimer */}
       <div className="flex items-center gap-2 px-4 py-3 bg-slate-900/5 rounded-xl border border-slate-900/10 border-dashed mt-6">

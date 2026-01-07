@@ -20,7 +20,7 @@ import {
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { createClient } from '@/utils/supabase/client'
-import { useRouter } from 'next/navigation'
+import { useRouter } from '@/navigation'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { TaxPdfSync } from './tax-pdf-sync'
 
@@ -40,7 +40,6 @@ interface CalculatorProps {
 import { getExchangeRate, SUPPORTED_CURRENCIES } from '@/lib/exchange-rates'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Lock } from 'lucide-react'
-import { UpgradeModal } from './upgrade-modal'
 
 export function SafeToSpendCalculator({ 
   initialTaxRate = 35,
@@ -68,7 +67,6 @@ export function SafeToSpendCalculator({
   const [exchangeRate, setExchangeRate] = useState(1.0)
   const [isFallback, setIsFallback] = useState(false)
   const [isFetchingRate, setIsFetchingRate] = useState(false)
-  const [showUpgradeModal, setShowUpgradeModal] = useState(false)
 
   // Fetch exchange rate when currency changes
   useEffect(() => {
@@ -248,53 +246,55 @@ export function SafeToSpendCalculator({
         </Card>
       )}
 
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-4 md:gap-6 md:grid-cols-2 lg:grid-cols-3">
         {/* Input Section */}
         <Card className="md:col-span-2 lg:col-span-3 border-none shadow-none bg-transparent">
           <CardContent className="p-0">
-            <div className="grid gap-6 md:grid-cols-2 items-start">
+            <div className="grid gap-4 md:gap-6 md:grid-cols-2 items-start">
               <div className="space-y-4 bg-white border rounded-xl p-6 shadow-sm flex flex-col">
-                <div className="flex items-center justify-between mb-2">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4 gap-4">
                   <div className="space-y-1">
-                    <h3 className="text-lg font-bold font-outfit flex items-center gap-2">
+                    <h3 className="text-lg font-bold font-outfit flex items-center gap-2 whitespace-nowrap">
                       <TrendingUp className="h-5 w-5 text-blue-600" />
                       {t('incomeEntry')}
                     </h3>
-                    <p className="text-xs text-slate-500">{t('grossIncomeDescription')}</p>
+                    <p className="text-xs text-slate-500 leading-tight">{t('grossIncomeDescription')}</p>
                   </div>
                   
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 w-full sm:w-auto">
                     <Button 
                       variant="ghost" 
                       size="sm" 
                       onClick={toggleManualMode}
-                      className={`gap-2 h-8 text-[10px] uppercase font-bold tracking-widest ${isManualMode ? 'text-blue-600 bg-blue-50' : 'text-slate-400'}`}
+                      className={`w-full sm:w-auto gap-2 h-auto py-2.5 text-[10px] uppercase font-bold tracking-widest px-4 ${isManualMode ? 'text-blue-600 bg-blue-50' : 'text-slate-500 bg-slate-50 group'}`}
                     >
-                      {isManualMode ? <SettingsIcon className="h-3 w-3" /> : <Zap className="h-3 w-3" />}
-                      {isManualMode ? t('useManualTax') : t('useEngine')}
+                      {isManualMode ? <SettingsIcon className="h-4 w-4" /> : <Zap className="h-4 w-4 text-blue-600 group-hover:scale-110 transition-transform" />}
+                      <span className="text-left">
+                        {isManualMode ? t('useManualTax') : t('useEngine')}
+                      </span>
                     </Button>
                   </div>
                 </div>
 
                 <div className="space-y-4">
-                  <div className="flex items-center justify-between">
+                  <div className="flex flex-row items-center justify-between gap-2">
                     <Label htmlFor="gross-income" className="text-slate-600 font-semibold">{t('grossIncomeLabel')}</Label>
                     <div className="flex items-center gap-2">
-                      <Label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">{t('currency')}</Label>
+                      <Label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider hidden xs:block">{t('currency')}</Label>
                       <Select 
                         value={currency} 
                         onValueChange={(v) => {
                           if (!isPro && v !== 'NOK') {
-                            setShowUpgradeModal(true)
+                            router.push('/upgrade')
                             return
                           }
                           setCurrency(v)
                         }}
                       >
-                        <SelectTrigger className="w-[100px] h-8 text-xs font-bold border-slate-200 bg-white">
+                        <SelectTrigger className="w-[90px] h-8 text-xs font-bold border-slate-200 bg-white">
                           <SelectValue />
                         </SelectTrigger>
-                        <SelectContent>
+                        <SelectContent className="z-[110]">
                           {SUPPORTED_CURRENCIES.map(c => (
                             <SelectItem key={c.code} value={c.code} className="text-xs font-medium">
                               <div className="flex items-center justify-between w-full gap-2">
@@ -508,12 +508,6 @@ export function SafeToSpendCalculator({
         </div>
       )}
 
-      <UpgradeModal 
-        isOpen={showUpgradeModal} 
-        onClose={() => setShowUpgradeModal(false)}
-        seatsLeft={seatsLeft}
-        percentFull={percentFull}
-      />
 
       {/* Sticky Legal Disclaimer */}
       <div className="flex items-center gap-2 px-4 py-3 bg-slate-900/5 rounded-xl border border-slate-900/10 border-dashed mt-6">
