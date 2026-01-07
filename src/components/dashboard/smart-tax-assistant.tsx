@@ -4,12 +4,11 @@ import { useState, useEffect, useMemo } from 'react'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { Sparkles, ArrowRight, Lightbulb, TrendingUp, AlertCircle, Info, Calculator } from 'lucide-react'
+import { Sparkles, ArrowRight, Lightbulb, TrendingUp, AlertCircle, Info, Calculator, Lock, Gavel } from 'lucide-react'
 import { useTranslations, useLocale } from 'next-intl'
 import { createClient } from '@/utils/supabase/client'
 import { Link } from '@/navigation'
 import { UpgradeModal } from './upgrade-modal'
-import { Lock } from 'lucide-react'
 
 interface Insight {
   id: string
@@ -23,6 +22,7 @@ interface Insight {
 
 export function SmartTaxAssistant({ isPro, seatsLeft, percentFull }: { isPro?: boolean, seatsLeft?: number, percentFull?: number }) {
   const t = useTranslations('taxInsights')
+  const tLegal = useTranslations('legal')
   const locale = useLocale()
   const [profile, setProfile] = useState<any>(null)
   const [transactions, setTransactions] = useState<any[]>([])
@@ -290,6 +290,12 @@ export function SmartTaxAssistant({ isPro, seatsLeft, percentFull }: { isPro?: b
           <p className="text-[10px] text-blue-400 font-bold uppercase tracking-widest">
             Privacy: Local scanning in browser • No data leaves your machine
           </p>
+          <div className="mt-2 pt-2 border-t border-blue-400/20 flex items-center gap-2 opacity-60">
+            <Gavel className="h-3 w-3 text-blue-300" />
+            <p className="text-[9px] text-blue-200 italic">
+              {tLegal('legalFootnote')}
+            </p>
+          </div>
         </div>
       </CardContent>
 

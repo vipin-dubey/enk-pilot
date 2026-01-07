@@ -26,7 +26,8 @@ import {
   Wallet,
   Building2,
   Receipt,
-  Info
+  Info,
+  Gavel
 } from 'lucide-react'
 import { useTranslations, useLocale } from 'next-intl'
 import { createClient } from '@/utils/supabase/client'
@@ -41,6 +42,7 @@ interface CfoAnalyticsProps {
 
 export function CfoAnalytics({ isPro, seatsLeft, percentFull }: CfoAnalyticsProps) {
   const t = useTranslations('cfo')
+  const tLegal = useTranslations('legal')
   const locale = useLocale()
   const [profile, setProfile] = useState<any>(null)
   const [transactions, setTransactions] = useState<any[]>([])
@@ -391,6 +393,14 @@ export function CfoAnalytics({ isPro, seatsLeft, percentFull }: CfoAnalyticsProp
           percentFull={percentFull}
         />
       )}
+
+      {/* Sticky Legal Disclaimer */}
+      <div className="flex items-center gap-2 px-4 py-3 bg-slate-900/5 rounded-xl border border-slate-900/10 border-dashed mt-6">
+        <Gavel className="h-4 w-4 text-slate-400" />
+        <p className="text-[10px] text-slate-500 font-medium italic">
+          {tLegal('legalFootnote')}
+        </p>
+      </div>
     </div>
   )
 }

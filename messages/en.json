@@ -322,6 +322,12 @@
     "box711": "Personal Allowance",
     "box440": "Net Business Result"
   },
+  "legal": {
+    "disclaimerTitle": "Legal Disclaimer & Limitation of Liability",
+    "disclaimerText": "ENK Pilot is a decision-support tool provided 'as-is' for informational and educational purposes only. It is not a substitute for professional accounting, tax, or legal advice. By using this service, you acknowledge and agree that you are solely responsible for your own financial decisions and tax compliance. The developer(s) of ENK Pilot assume zero liability for any errors, omissions, financial losses, or tax penalties resulting from the use of this software, nor for any service disruptions or data inaccuracies. Always verify calculations with a certified professional and officially cross-check with Skatteetaten before filing.",
+    "footerNote": "Educational tool only. Not professional advice.",
+    "legalFootnote": "Educational decision-support tool. Not professional tax advice. User assumes 100% financial and legal responsibility for all filings."
+  },
   "pricing": {
     "title": "Upgrade to Pro",
     "description": "Unlock international currencies, audit-ready exports, and smart tax insight.",

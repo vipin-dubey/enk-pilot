@@ -321,6 +321,12 @@
     "box711": "Personfradrag",
     "box440": "Netto næringsinntekt"
   },
+  "legal": {
+    "disclaimerTitle": "Ansvarsfraskrivelse og ansvarsbegrensninger",
+    "disclaimerText": "ENK Pilot er et beslutningsstøtteverktøy som leveres 'som det er' (as-is) kun for informasjons- og utdanningsformål. Det er ikke en erstatning for profesjonell regnskaps-, skatte- eller juridisk rådgivning. Ved å bruke denne tjenesten bekrefter og godtar du at du alene er ansvarlig for dine egne økonomiske beslutninger og etterlevelse av skatteregler. Utvikleren(e) av ENK Pilot påtar seg intet ansvar (null ansvar) for feil, mangler, økonomiske tap eller skattegebyrer som følge av bruk av denne programvaren, heller ikke for tjenesteavbrudd eller datamangler. Verifiser alltid beregninger med en autorisert regnskapsfører og dobbeltsjekk offisielt med Skatteetaten før innsending.",
+    "footerNote": "Kun et verktøy. Ikke profesjonell rådgivning.",
+    "legalFootnote": "Verktøy for beslutningsstøtte. Ikke profesjonell skatterådgivning. Bruker påtar seg 100 % økonomisk og juridisk ansvar for alle innsendinger."
+  },
   "pricing": {
     "title": "Oppgrader til Pro",
     "description": "Lås opp internasjonale valutaer, eksport for regnskapsfører og smarte skatteinnikter.",

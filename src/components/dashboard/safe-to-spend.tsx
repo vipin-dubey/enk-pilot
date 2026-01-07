@@ -7,7 +7,17 @@ import { Label } from '@/components/ui/label'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { calculateNorwegianTax } from '@/lib/tax-calculations'
 import { useTranslations, useLocale } from 'next-intl'
-import { Info, AlertTriangle, TrendingUp, Save, Loader2, CheckCircle2, Settings as SettingsIcon, Zap } from 'lucide-react'
+import { 
+  Info, 
+  AlertTriangle, 
+  TrendingUp, 
+  Save, 
+  Loader2, 
+  CheckCircle2, 
+  Settings as SettingsIcon, 
+  Zap,
+  Gavel
+} from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { createClient } from '@/utils/supabase/client'
 import { useRouter } from 'next/navigation'
@@ -45,6 +55,7 @@ export function SafeToSpendCalculator({
   percentFull = 37
 }: CalculatorProps) {
   const t = useTranslations('calculator')
+  const tLegal = useTranslations('legal')
   const locale = useLocale()
   const router = useRouter()
   const [grossInput, setGrossInput] = useState<string>('')
@@ -503,6 +514,14 @@ export function SafeToSpendCalculator({
         seatsLeft={seatsLeft}
         percentFull={percentFull}
       />
+
+      {/* Sticky Legal Disclaimer */}
+      <div className="flex items-center gap-2 px-4 py-3 bg-slate-900/5 rounded-xl border border-slate-900/10 border-dashed mt-6">
+        <Gavel className="h-4 w-4 text-slate-400" />
+        <p className="text-[10px] text-slate-500 font-medium italic">
+          {tLegal('legalFootnote')}
+        </p>
+      </div>
     </div>
   )
 }

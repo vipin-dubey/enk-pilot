@@ -12,6 +12,7 @@ import { NotificationCenter } from '@/components/dashboard/notification-center'
 import { getTranslations } from 'next-intl/server'
 import { MvaSummary } from '@/components/dashboard/mva-summary'
 import { DeductionOptimizer } from '@/components/dashboard/deduction-optimizer'
+import { LegalShield } from '@/components/dashboard/legal-shield'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { TransactionJournal } from '@/components/dashboard/transaction-journal'
 import { SmartTaxAssistant } from '@/components/dashboard/smart-tax-assistant'
@@ -210,6 +211,9 @@ export default async function DashboardPage({
             )
           }}
         </DashboardTabs>
+
+        {/* Global Legal Shield */}
+        <LegalShield />
       </main>
 
       <footer className="mt-20 pb-12 px-6">
