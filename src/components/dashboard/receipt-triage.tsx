@@ -10,7 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Upload, Camera, FileText, Loader2, Check, X, Search, Filter, Edit2, Save, ChevronDown, ChevronRight, Eye } from 'lucide-react'
 import { createClient } from '@/utils/supabase/client'
 import { createWorker } from 'tesseract.js'
-import { extractVendor, detectCategory, ALL_STORES } from '@/lib/norwegian-stores'
+import { extractVendor, detectCategory, ALL_STORES, CATEGORY_MVA_RATES } from '@/lib/norwegian-stores'
 import { extractReceiptDate, groupReceiptsByDate, getSortedYears, getSortedMonths, formatDateForDB } from '@/lib/receipt-grouping'
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
 import { CategoryBadge } from '@/components/ui/category-badge'
@@ -307,9 +307,26 @@ export function ReceiptTriage() {
       const receiptDate = extractedDate ? formatDateForDB(extractedDate) : formatDateForDB(new Date())
       console.log('Extracted receipt date:', receiptDate)
 
-      // 5. Auto-detect category based on vendor
-      const category = detectCategory(vendor)
-      console.log('Auto-detected category:', category)
+      // 5. Auto-detect category (1. History -> 2. Vendor -> 3. Keywords)
+      let category = 'Other'
+      if (vendor && vendor !== 'Unknown Vendor') {
+        const { data: historicalData } = await supabase
+          .from('receipts')
+          .select('category')
+          .eq('user_id', user.id)
+          .eq('vendor', vendor)
+          .limit(1)
+        
+        if (historicalData && historicalData.length > 0) {
+          category = historicalData[0].category
+          console.log('Using historical category for vendor:', category)
+        }
+      }
+
+      if (category === 'Other') {
+        category = detectCategory(vendor, text)
+        console.log('Auto-detected category (vendor/keyword):', category)
+      }
 
       console.log('3. Uploading to Storage...')
       const fileExt = file.name.split('.').pop()
@@ -323,11 +340,14 @@ export function ReceiptTriage() {
         throw storageError
       }
 
-      // Safety check for NaN
+      // Safety check for NaN and apply smart MVA rates
       const finalAmount = isNaN(amount) ? 0 : amount
-      const finalMva = isNaN(amount) ? 0 : (amount * 0.2)
+      
+      // Calculate MVA based on category-specific rates
+      const mvaRate = CATEGORY_MVA_RATES[category] || 0.25
+      const finalMva = isNaN(amount) ? 0 : (amount - (amount / (1 + mvaRate)))
 
-      console.log('4. Saving metadata to DB...', { vendor, amount: finalAmount, date: receiptDate })
+      console.log('4. Saving metadata to DB...', { vendor, amount: finalAmount, date: receiptDate, mvaRate })
       
       const insertData: any = {
         user_id: user.id,

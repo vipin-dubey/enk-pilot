@@ -176,6 +176,73 @@ export const NORWEGIAN_STORES = {
   ],
 }
 
+/**
+ * Multi-language Keyword Registry for Category Matching
+ * Scans entire receipt body for context
+ */
+export const CATEGORY_KEYWORDS = {
+  Food: [
+    // Norwegian
+    'mat', 'lunsj', 'middag', 'drikke', 'kaffe', 'meny', 'restaurant', 'servering', 'dagligvare',
+    // English
+    'lunch', 'dinner', 'breakfast', 'beverage', 'drink', 'grocery', 'meal',
+    // Swedish/Danish
+    'matvaror', 'frukost', 'måltid'
+  ],
+  Travel: [
+    // Norwegian
+    'reise', 'tog', 'trikk', 'taxi', 'buss', 'fly', 'parkering', 'hotell', 'fuel', 'drivstoff', 'bensin', 'diesel', 'overnatting',
+    // English
+    'transport', 'train', 'flight', 'hotel', 'parking', 'gas', 'gasoline', 'stay', 'commute',
+    // Swedish/Danish
+    'resa', 'tåg', 'færge', 'bränsle'
+  ],
+  Office: [
+    // Norwegian
+    'kontor', 'papir', 'penner', 'rekvisita', 'porto', 'frimerke', 'skrivesaker',
+    // English
+    'office', 'paper', 'pens', 'supplies', 'stationery', 'postage', 'stamp', 'administrative'
+  ],
+  Equipment: [
+    // Norwegian
+    'verktøy', 'utstyr', 'maskin', 'jernvare', 'bygg', 'elektronikk', 'møbel', 'interiør',
+    // English
+    'tools', 'hardware', 'machinery', 'building', 'electronics', 'furniture', 'interior', 'asset'
+  ],
+  IT: [
+    // Norwegian
+    'data', 'pc', 'skjerm', 'tastatur', 'mus', 'maskinvare', 'laptop', 'nettverk',
+    // English
+    'computer', 'monitor', 'keyboard', 'mouse', 'hardware', 'server', 'hosting', 'cloud'
+  ],
+  Software: [
+    // Norwegian
+    'programvare', 'lisens', 'abonnement', 'sky', 'tjeneste',
+    // English
+    'software', 'license', 'subscription', 'saas', 'billing', 'digital'
+  ],
+  Marketing: [
+    // Norwegian
+    'reklame', 'markedsføring', 'annonse', 'profile', 'domene', 'trykk',
+    // English
+    'ads', 'advertising', 'marketing', 'design', 'hosting', 'social media', 'print'
+  ]
+}
+
+/**
+ * Standard MVA rates by category for Norway (2026)
+ */
+export const CATEGORY_MVA_RATES: Record<string, number> = {
+  'Food': 0.15,      // 15% MVA for food and drink
+  'Travel': 0.12,    // 12% MVA for transport/hotels (mostly)
+  'Office': 0.25,    // Default 25%
+  'Equipment': 0.25,
+  'Marketing': 0.25,
+  'IT': 0.25,
+  'Software': 0.25,
+  'Other': 0.25,
+}
+
 // Flatten all stores into a single searchable array and ensure uniqueness
 export const ALL_STORES = [...new Set(Object.values(NORWEGIAN_STORES).flat())]
 
@@ -229,24 +296,32 @@ export function extractVendor(text: string): string | null {
 }
 
 /**
- * Auto-detect category based on vendor
+ * Auto-detect category based on vendor (Exact) AND full text keywords (Contextual)
  */
-export function detectCategory(vendor: string | null): string {
-  if (!vendor) return 'Other'
+export function detectCategory(vendor: string | null, fullText: string = ''): string {
+  const fullTextUpper = fullText.toUpperCase()
+  const vendorUpper = vendor?.toUpperCase() || ''
 
-  const vendorUpper = vendor.toUpperCase()
+  // 1. Vendor-based matching (Highest priority after DB history)
+  if (vendorUpper) {
+    if (NORWEGIAN_STORES.grocery.some(s => vendorUpper.includes(s))) return 'Food'
+    if (NORWEGIAN_STORES.electronics.some(s => vendorUpper.includes(s))) return 'IT'
+    if (NORWEGIAN_STORES.hardware.some(s => vendorUpper.includes(s))) return 'Equipment'
+    if (NORWEGIAN_STORES.fuel.some(s => vendorUpper.includes(s))) return 'Travel'
+    if (NORWEGIAN_STORES.transport.some(s => vendorUpper.includes(s))) return 'Travel'
+    if (NORWEGIAN_STORES.hotels.some(s => vendorUpper.includes(s))) return 'Travel'
+    if (NORWEGIAN_STORES.books.some(s => vendorUpper.includes(s))) return 'Office'
+    if (NORWEGIAN_STORES.coffee.some(s => vendorUpper.includes(s))) return 'Food'
+    if (NORWEGIAN_STORES.food.some(s => vendorUpper.includes(s))) return 'Food'
+    if (NORWEGIAN_STORES.online.some(s => vendorUpper.includes(s))) return 'Equipment'
+  }
 
-  // Check each category
-  if (NORWEGIAN_STORES.grocery.some(s => vendorUpper.includes(s))) return 'Food'
-  if (NORWEGIAN_STORES.electronics.some(s => vendorUpper.includes(s))) return 'Equipment'
-  if (NORWEGIAN_STORES.hardware.some(s => vendorUpper.includes(s))) return 'Equipment'
-  if (NORWEGIAN_STORES.fuel.some(s => vendorUpper.includes(s))) return 'Travel'
-  if (NORWEGIAN_STORES.transport.some(s => vendorUpper.includes(s))) return 'Travel'
-  if (NORWEGIAN_STORES.hotels.some(s => vendorUpper.includes(s))) return 'Travel'
-  if (NORWEGIAN_STORES.books.some(s => vendorUpper.includes(s))) return 'Office'
-  if (NORWEGIAN_STORES.coffee.some(s => vendorUpper.includes(s))) return 'Food'
-  if (NORWEGIAN_STORES.food.some(s => vendorUpper.includes(s))) return 'Food'
-  if (NORWEGIAN_STORES.online.some(s => vendorUpper.includes(s))) return 'Equipment'
+  // 2. Keyword-based matching (Scan entire text for categories)
+  for (const [category, keywords] of Object.entries(CATEGORY_KEYWORDS)) {
+    if (keywords.some(kw => fullTextUpper.includes(kw.toUpperCase()))) {
+      return category
+    }
+  }
 
   return 'Other'
 }
