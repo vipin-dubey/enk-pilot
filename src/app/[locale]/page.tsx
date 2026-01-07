@@ -6,13 +6,14 @@ import { ReceiptTriage } from '@/components/dashboard/receipt-triage'
 import { ReceiptAnalytics } from '@/components/dashboard/receipt-analytics'
 import { Button } from '@/components/ui/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { LogOut, LayoutDashboard, Calendar, Receipt, Settings, Sparkles, UserCircle } from 'lucide-react'
+import { LogOut, LayoutDashboard, Calendar, Receipt, Settings, Sparkles, UserCircle, History } from 'lucide-react'
 import { LanguageSwitcher } from '@/components/language-switcher'
 import { NotificationCenter } from '@/components/dashboard/notification-center'
 import { getTranslations } from 'next-intl/server'
 import { MvaSummary } from '@/components/dashboard/mva-summary'
 import { DeductionOptimizer } from '@/components/dashboard/deduction-optimizer'
 import { DashboardSummary } from '@/components/dashboard/dashboard-summary'
+import { TransactionJournal } from '@/components/dashboard/transaction-journal'
 
 export default async function DashboardPage({
   params,
@@ -114,6 +115,10 @@ export default async function DashboardPage({
                 <Receipt className="h-4 w-4" />
                 {tTabs('receipts')}
               </TabsTrigger>
+              <TabsTrigger value="history" className="gap-2 px-6 data-[state=active]:bg-slate-100 data-[state=active]:shadow-none">
+                <History className="h-4 w-4" />
+                {tTabs('history')}
+              </TabsTrigger>
             </TabsList>
             
             <Link href="/settings">
@@ -150,6 +155,10 @@ export default async function DashboardPage({
           <TabsContent value="receipts" className="mt-0 border-none p-0 focus-visible:ring-0 space-y-6">
             <ReceiptAnalytics />
             <ReceiptTriage />
+          </TabsContent>
+
+          <TabsContent value="history" className="mt-0 border-none p-0 focus-visible:ring-0">
+            <TransactionJournal />
           </TabsContent>
         </Tabs>
       </main>

@@ -9,7 +9,8 @@
     "close": "Lukk",
     "loading": "Laster...",
     "error": "Feil",
-    "success": "Suksess"
+    "success": "Suksess",
+    "search": "Søk..."
   },
   "dashboard": {
     "title": "Dashbord",
@@ -22,7 +23,8 @@
   "tabs": {
     "safeToSpend": "Trygt å bruke",
     "deadlines": "Frister",
-    "receipts": "Kvitteringer"
+    "receipts": "Kvitteringer",
+    "history": "Journal"
   },
   "receipts": {
     "title": "Last opp kvittering",
@@ -269,5 +271,19 @@
     "applied": "Lagt til i resultatet",
     "apply": "Bruk fradrag",
     "loading": "Sjekker for besparelser..."
+  },
+  "journal": {
+    "title": "Transaksjonsjournal",
+    "description": "En kronologisk oversikt over all registrert inntekt og alle utgifter. Bruk denne for å se over eller slette feil.",
+    "income": "Inntekt",
+    "expense": "Utgift",
+    "date": "Dato",
+    "vendor": "Butikk / Beskrivelse",
+    "amount": "Beløp",
+    "actions": "Handlinger",
+    "noTransactions": "Ingen transaksjoner funnet for denne perioden.",
+    "deleteConfirm": "Er du sikker på at du vil slette denne transaksjonen? Dette vil automatisk justere summen for året.",
+    "deleteSuccess": "Transaksjonen ble slettet og årsresultatet ble oppdatert.",
+    "deleteError": "Kunne ikke slette transaksjonen."
   }
 }

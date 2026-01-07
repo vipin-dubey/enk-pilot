@@ -9,7 +9,8 @@
     "close": "Close",
     "loading": "Loading...",
     "error": "Error",
-    "success": "Success"
+    "success": "Success",
+    "search": "Search..."
   },
   "dashboard": {
     "title": "Dashboard",
@@ -22,7 +23,8 @@
   "tabs": {
     "safeToSpend": "Safe-to-Spend",
     "deadlines": "Deadlines",
-    "receipts": "Receipts"
+    "receipts": "Receipts",
+    "history": "Journal"
   },
   "receipts": {
     "title": "Receipt Upload",
@@ -269,5 +271,19 @@
     "applied": "Applied to YTD",
     "apply": "Apply Deduction",
     "loading": "Checking for savings..."
+  },
+  "journal": {
+    "title": "Transaction Journal",
+    "description": "A chronological record of all recorded income and expenses. Use this to review or delete mistakes.",
+    "income": "Income",
+    "expense": "Expense",
+    "date": "Date",
+    "vendor": "Vendor / Description",
+    "amount": "Amount",
+    "actions": "Actions",
+    "noTransactions": "No transactions found for this period.",
+    "deleteConfirm": "Are you sure you want to delete this transaction? This will automatically adjust your YTD totals.",
+    "deleteSuccess": "Transaction deleted and YTD totals updated.",
+    "deleteError": "Failed to delete transaction."
   }
 }

@@ -527,3 +527,47 @@ With these features, the Deduction Optimizer, Tax Health Check, and Revenue Engi
 
 Would you like to review anything else, or are we ready to call this phase complete?
 
+
+Yes, lets go through the app again, and see if we are missing any features that may be necessary to put it to use by real people?
+
+
+That's a great question. Now that we've fixed the "brain" of the app (the math and the categorization), we need to look at the Day-to-Day Workflow for a real business owner.
+
+In my view, there are 4 key gaps we should address to make this 100% "Real People Ready":
+
+1. The "Transaction Journal" (Visibility & Control)
+Right now, when you record income in the "Safe-to-Spend" calculator, it goes into the database, but it "disappears" from the UI.
+
+The Gap: If you accidentally type 150,000 instead of 15,000, there is currently no way to delete or edit that income entry.
+The Fix: A combined "History" or "Journal" tab that lists all recorded Income and Expenses in one chronological list, with the ability to delete mistakes.
+2. Multi-Currency Support
+Many Norwegian freelancers (ENK) get paid in USD, EUR, or GBP from international clients.
+
+The Gap: You have to manually convert your rate to NOK before typing it into the app.
+The Fix: Add a currency selector to the "Safe-to-Spend" calculator that fetches the current Norges Bank rate (or allows manual entry) so you can record income in USD and see the tax in NOK.
+3. Account-Ready Export (Audit Trail)
+At the end of the year, a real business owner needs to give data to their accountant or provide an audit trail to Skatteetaten.
+
+The Gap: While we have a basic CSV export for receipts, we don't have a "Complete Package" export.
+The Fix: A button that generates a ZIP file containing:
+A single CSV file with all transactions (Income + Expenses) in an accountant-friendly format.
+All your scanned receipt images (PNG/PDF) renamed clearly (e.g., 2024-01-05_Kiwi_500NOK.png).
+4. Professional VAT Codes (Altinn Ready)
+Real bookkeeping in Norway uses codes like Code 1 (25%), Code 3 (15%), etc.
+
+The Gap: We just say "15%" or "25%".
+The Fix: Adding these official codes to our categorization logic so that when you export your report, it’s already mapped to the codes you need to type into Altinn.
+
+The Transaction Journal is now live and integrated into your dashboard! You can now fix mistakes and keep a clean audit trail without digging into the database.
+
+Key Features Implemented:
+Unified History View: A new "Journal" tab provides a chronological list of every Income allocation and Expense receipt you've recorded.
+Type Filtering: Quickly toggle between Total view, Income only, or Expenses only to audit your cash flow.
+Mistake Correction: I've added a "Delete" function to every row.
+Safeguard: It includes a confirmation dialog to prevent accidental clicks.
+Auto-Healing YTD: When you delete a transaction, the app's database triggers automatically subtract that amount from your YTD Gross Income or YTD Expenses, keeping all your dashboard KPIs (Safe-to-Spend, Tax Health, etc.) perfectly in sync.
+Premium UI: Uses a clean, paginated table structure with colorful indicators (Green for Income, Amber for Expenses) and real-time search.
+How to use it:
+Open your dashboard and look for the new "Journal" (or Journal in Norwegian) tab next to "Receipts."
+If you find a duplicate entry or a typo, simply click the trash icon at the end of the row.
+We've knocked out the first big "Real People Ready" gap! Would you like to move on to Multi-Currency support or the Audit-Ready Export next?
