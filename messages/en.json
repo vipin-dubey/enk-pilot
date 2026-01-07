@@ -96,7 +96,18 @@
     "paid": "Paid",
     "overdue": "Overdue",
     "upcoming": "Upcoming",
-    "future": "Future"
+    "future": "Future",
+    "healthCheck": {
+      "title": "Tax Health Check",
+      "projectedConflict": "You're earning more than expected.",
+      "projectedConflictSubtitle": "Based on your YTD profit, we project your annual profit will be {projected} NOK.",
+      "recommendation": "We recommend increasing your annual prepaid tax by {amount} NOK to avoid a back-tax penalty next year.",
+      "onTrack": "Your taxes are on track.",
+      "onTrackSubtitle": "Your projected earnings match your tax plan.",
+      "setupRequired": "Set up Tax Health Check",
+      "setupRequiredSubtitle": "Enter your expected profit in settings to enable real-time monitoring.",
+      "action": "Adjust in settings"
+    }
   },
   "months": {
     "january": "January",
@@ -198,6 +209,8 @@
     "ytdIncome": "YTD Gross Income",
     "ytdExpenses": "YTD Expenses",
     "externalSalary": "Annual External Salary (from other jobs)",
+    "estimatedAnnualProfit": "Expected Annual Profit (from Skattekort PDF)",
+    "annualPrepaidTax": "Annual Prepaid Tax (Total for the year)",
     "saveSuccess": "Business settings updated",
     "save": "Save Settings",
     "saveError": "Failed to update settings"

@@ -16,6 +16,8 @@ interface BusinessSettingsProps {
     ytdGrossIncome: number
     ytdExpenses: number
     externalSalary: number
+    estimatedAnnualProfit: number
+    annualPrepaidTaxAmount: number
   }
 }
 
@@ -25,6 +27,8 @@ export function BusinessSettings({ initialSettings }: BusinessSettingsProps) {
   const [ytdGrossIncome, setYtdGrossIncome] = useState(initialSettings.ytdGrossIncome.toString())
   const [ytdExpenses, setYtdExpenses] = useState(initialSettings.ytdExpenses.toString())
   const [externalSalary, setExternalSalary] = useState(initialSettings.externalSalary.toString())
+  const [estimatedAnnualProfit, setEstimatedAnnualProfit] = useState(initialSettings.estimatedAnnualProfit.toString())
+  const [annualPrepaidTaxAmount, setAnnualPrepaidTaxAmount] = useState(initialSettings.annualPrepaidTaxAmount.toString())
   const [isSaving, setIsSaving] = useState(false)
   const [status, setStatus] = useState<'idle' | 'success' | 'error'>('idle')
 
@@ -44,6 +48,8 @@ export function BusinessSettings({ initialSettings }: BusinessSettingsProps) {
           ytd_gross_income: parseFloat(ytdGrossIncome) || 0,
           ytd_expenses: parseFloat(ytdExpenses) || 0,
           external_salary_income: parseFloat(externalSalary) || 0,
+          estimated_annual_profit: parseFloat(estimatedAnnualProfit) || 0,
+          annual_prepaid_tax_amount: parseFloat(annualPrepaidTaxAmount) || 0,
           updated_at: new Date().toISOString(),
         })
         .eq('id', user.id)
@@ -123,6 +129,40 @@ export function BusinessSettings({ initialSettings }: BusinessSettingsProps) {
               className="font-mono"
             />
             <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-bold text-slate-400">NOK / YEAR</span>
+          </div>
+        </div>
+
+        <div className="grid gap-4 sm:grid-cols-2">
+          <div className="space-y-2">
+            <Label htmlFor="estimated-profit" className="text-xs font-bold uppercase tracking-wider text-slate-500">
+              {t('estimatedAnnualProfit')}
+            </Label>
+            <div className="relative">
+              <Input
+                id="estimated-profit"
+                type="number"
+                value={estimatedAnnualProfit}
+                onChange={(e) => setEstimatedAnnualProfit(e.target.value)}
+                className="font-mono"
+              />
+              <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-bold text-slate-400">NOK / YEAR</span>
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="annual-prepaid" className="text-xs font-bold uppercase tracking-wider text-slate-500">
+              {t('annualPrepaidTax')}
+            </Label>
+            <div className="relative">
+              <Input
+                id="annual-prepaid"
+                type="number"
+                value={annualPrepaidTaxAmount}
+                onChange={(e) => setAnnualPrepaidTaxAmount(e.target.value)}
+                className="font-mono"
+              />
+              <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-bold text-slate-400">NOK / YEAR</span>
+            </div>
           </div>
         </div>
 

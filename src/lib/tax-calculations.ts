@@ -152,3 +152,22 @@ function calculateIncrementalTrinnskatt(currentProfit: number, incrementalRevenu
 
   return totalTrinnskatt;
 }
+
+/**
+ * Calculates total annual tax for a given net profit (gross - expenses + external salary).
+ * Uses the 2026 tax rules.
+ */
+export function calculateAnnualTax(totalProfit: number): number {
+  if (totalProfit <= 0) return 0;
+
+  // Ordinary Tax (22%) respecting Personal Allowance
+  const ordinaryTax = calculateIncrementalOrdinaryTax(0, totalProfit);
+
+  // National Insurance (10.8% for ENK)
+  const nationalInsurance = totalProfit * TAX_CONSTANTS_2026.NATIONAL_INSURANCE_ENK;
+
+  // Trinnskatt
+  const trinnskatt = calculateIncrementalTrinnskatt(0, totalProfit);
+
+  return ordinaryTax + nationalInsurance + trinnskatt;
+}

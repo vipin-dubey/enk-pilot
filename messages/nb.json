@@ -96,7 +96,18 @@
     "paid": "Betalt",
     "overdue": "Forfalt",
     "upcoming": "Kommende",
-    "future": "Fremtidig"
+    "future": "Fremtidig",
+    "healthCheck": {
+      "title": "Sjekk av skattehelse",
+      "projectedConflict": "Du tjener mer enn forventet.",
+      "projectedConflictSubtitle": "Basert på resultatet hittil i år, beregner vi at ditt årsresultat vil bli {projected} kr.",
+      "recommendation": "Vi anbefaler å øke din årlige forskuddsskatt med {amount} kr for å unngå baksmell neste år.",
+      "onTrack": "Skatten din er i rute.",
+      "onTrackSubtitle": "Dine forventede inntekter samsvarer med skatteplanen din.",
+      "setupRequired": "Sett opp helsesjekk",
+      "setupRequiredSubtitle": "Legg inn din forventede inntekt i innstillinger for å aktivere sanntidsovervåking av skatt.",
+      "action": "Juster i innstillinger"
+    }
   },
   "months": {
     "january": "Januar",
@@ -197,7 +208,9 @@
     "mvaDescription": "Aktiver dette hvis bedriften din er registrert i MVA-registeret.",
     "ytdIncome": "Bruttoinntekt hittil i år",
     "ytdExpenses": "Utgifter hittil i år",
-    "externalSalary": "Ekstern lønnsinntekt (fra andre jobber)",
+    "externalSalary": "Årlig ekstern lønn (fra andre jobber)",
+    "estimatedAnnualProfit": "Forventet årsresultat (fra skattekortet)",
+    "annualPrepaidTax": "Årlig forskuddsskatt (totalbeløp for året)",
     "saveSuccess": "Bedriftsinnstillinger oppdatert",
     "save": "Lagre innstillinger",
     "saveError": "Kunne ikke oppdatere innstillinger"

@@ -75,7 +75,9 @@ export default async function SettingsPage({
                   isMvaRegistered: profile?.is_mva_registered ?? false,
                   ytdGrossIncome: profile?.ytd_gross_income ?? 0,
                   ytdExpenses: profile?.ytd_expenses ?? 0,
-                  externalSalary: profile?.external_salary_income ?? 0
+                  externalSalary: profile?.external_salary_income ?? 0,
+                  estimatedAnnualProfit: profile?.estimated_annual_profit ?? 0,
+                  annualPrepaidTaxAmount: profile?.annual_prepaid_tax_amount ?? 0
                 }} 
               />
             </div>

@@ -9,6 +9,7 @@ import { Calendar, CheckCircle2, AlertCircle, Clock, Filter } from 'lucide-react
 import { createClient } from '@/utils/supabase/client'
 import { getUpcomingDeadlines, formatDeadlineDate, type Deadline } from '@/lib/deadlines'
 import { useTranslations, useLocale } from 'next-intl'
+import { TaxHealthCheck } from './tax-health-check'
 
 type DeadlineFilter = 'all' | 'mva' | 'forskuddsskatt'
 
@@ -150,10 +151,13 @@ export function DeadlineTracker() {
           </Select>
         </div>
       </CardHeader>
-      <CardContent>
-        {isLoading ? (
-          <div className="text-center py-8 text-slate-400">{tCommon('loading')}</div>
-        ) : filteredDeadlines.length === 0 ? (
+      <CardContent className="space-y-6">
+        <TaxHealthCheck />
+        
+        <div className="border-t pt-6">
+          {isLoading ? (
+            <div className="text-center py-8 text-slate-400">{tCommon('loading')}</div>
+          ) : filteredDeadlines.length === 0 ? (
           <div className="text-center py-8 text-slate-400">{t('noDeadlines', { defaultValue: 'No deadlines found' })}</div>
         ) : (
           <div className="space-y-2">
@@ -188,6 +192,7 @@ export function DeadlineTracker() {
             ))}
           </div>
         )}
+        </div>
       </CardContent>
     </Card>
   )
