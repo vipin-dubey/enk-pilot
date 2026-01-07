@@ -1,11 +1,12 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
+import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Badge } from '@/components/ui/badge'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Calendar, CheckCircle2, AlertCircle, Clock, Filter } from 'lucide-react'
+import { Calendar, CheckCircle2, AlertCircle, Clock, Filter, ChevronDown, ChevronUp } from 'lucide-react'
 import { createClient } from '@/utils/supabase/client'
 import { getUpcomingDeadlines, formatDeadlineDate, type Deadline } from '@/lib/deadlines'
 import { useTranslations, useLocale } from 'next-intl'
@@ -21,6 +22,7 @@ export function DeadlineTracker() {
   const [deadlines, setDeadlines] = useState<Deadline[]>([])
   const [filter, setFilter] = useState<DeadlineFilter>('all')
   const [isLoading, setIsLoading] = useState(true)
+  const [showAllDeadlines, setShowAllDeadlines] = useState(false)
   const supabase = createClient()
 
   useEffect(() => {
@@ -97,6 +99,25 @@ export function DeadlineTracker() {
     return d.type === filter
   })
 
+  const groupedDeadlines = useMemo(() => {
+    const groups: Record<string, Deadline[]> = {}
+    
+    // Sort filtered deadlines by date first
+    const sorted = [...filteredDeadlines].sort((a, b) => a.date.getTime() - b.date.getTime())
+    
+    sorted.forEach(d => {
+      const month = d.date.getMonth()
+      const quarter = Math.floor(month / 3) + 1
+      const year = d.date.getFullYear()
+      const key = `${year}-Q${quarter}` 
+      
+      if (!groups[key]) groups[key] = []
+      groups[key].push(d)
+    })
+    
+    return groups
+  }, [filteredDeadlines])
+
   function getStatusBadge(deadline: Deadline) {
     if (deadline.isPaid) {
       return (
@@ -160,36 +181,94 @@ export function DeadlineTracker() {
           ) : filteredDeadlines.length === 0 ? (
           <div className="text-center py-8 text-slate-400">{t('noDeadlines', { defaultValue: 'No deadlines found' })}</div>
         ) : (
-          <div className="space-y-2">
-            {filteredDeadlines.map((deadline) => (
-              <div
-                key={deadline.id}
-                className={`flex items-center justify-between p-3 border rounded-lg transition-colors ${
-                  deadline.isPaid ? 'bg-green-50 border-green-200' : 'hover:bg-slate-50'
-                }`}
-              >
-                <div className="flex items-center gap-3 flex-1">
-                  <Checkbox
-                    checked={deadline.isPaid}
-                    onCheckedChange={() => toggleDeadline(deadline)}
-                    className="h-5 w-5"
-                  />
-                  <div className="flex-1">
-                    <p className={`font-medium ${deadline.isPaid ? 'line-through text-slate-500' : ''}`}>
-                      {deadline.type === 'mva' ? 'MVA' : 'Forskuddsskatt'} - {tMonths(deadline.date.toLocaleDateString('en-US', { month: 'long' }).toLowerCase())} {deadline.date.getFullYear()}
-                    </p>
-                    <p className="text-xs text-slate-500">
-                      {deadline.date.toLocaleDateString(locale === 'nb' ? 'nb-NO' : 'en-US', {
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric'
-                      })}
-                    </p>
+          <div className="space-y-8">
+            {(Object.entries(groupedDeadlines) as [string, Deadline[]][]).map(([key, quarterDeadlines]) => {
+              const [year, qPart] = key.split('-')
+              const qNumber = qPart.replace('Q', '')
+              
+              const currentMonth = new Date().getMonth()
+              const currentQuarter = Math.floor(currentMonth / 3) + 1
+              const currentYear = new Date().getFullYear()
+              
+              const isFuture = Number(year) > currentYear || (Number(year) === currentYear && Number(qNumber) > currentQuarter)
+              
+              if (isFuture && !showAllDeadlines) return null
+
+              return (
+                <div key={key} className="space-y-3">
+                  <div className="flex items-center justify-between border-b pb-2">
+                    <h3 className="text-sm font-bold text-slate-900 font-outfit uppercase tracking-wider flex items-center gap-2">
+                       <div className="w-1 h-4 bg-blue-600 rounded-full" />
+                       {t('quarter', { number: qNumber })} {year}
+                       {Number(year) === currentYear && Number(qNumber) === currentQuarter && (
+                         <Badge className="bg-blue-100 text-blue-700 border-blue-200 text-[8px] uppercase font-black px-1.5 h-4">
+                           Active
+                         </Badge>
+                       )}
+                    </h3>
+                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest bg-slate-100 px-2 py-0.5 rounded-full">
+                      {quarterDeadlines.length} {t('deadlinesSuffix')}
+                    </span>
+                  </div>
+                  <div className="space-y-2">
+                    {quarterDeadlines.map((deadline) => (
+                      <div
+                        key={deadline.id}
+                        className={`flex items-center justify-between p-3 border rounded-xl transition-all duration-200 ${
+                          deadline.isPaid 
+                            ? 'bg-slate-50 border-slate-200 opacity-70 grayscale-[0.5]' 
+                            : 'bg-white border-slate-200 hover:border-blue-200 hover:shadow-sm'
+                        }`}
+                      >
+                        <div className="flex items-center gap-3 flex-1">
+                          <Checkbox
+                            checked={deadline.isPaid}
+                            onCheckedChange={() => toggleDeadline(deadline)}
+                            className="h-5 w-5 rounded-md border-slate-300 data-[state=checked]:bg-green-600 data-[state=checked]:border-green-600"
+                          />
+                          <div className="flex-1">
+                            <p className={`text-sm font-bold font-outfit ${deadline.isPaid ? 'line-through text-slate-500' : 'text-slate-900'}`}>
+                              {deadline.type === 'mva' ? 'MVA' : 'Forskuddsskatt'} - {tMonths(deadline.date.toLocaleDateString('en-US', { month: 'long' }).toLowerCase())}
+                            </p>
+                            <p className="text-[10px] font-medium text-slate-400 uppercase tracking-tight">
+                              {deadline.date.toLocaleDateString(locale === 'nb' ? 'nb-NO' : 'en-US', {
+                                year: 'numeric',
+                                month: 'long',
+                                day: 'numeric'
+                              })}
+                            </p>
+                          </div>
+                        </div>
+                        {getStatusBadge(deadline)}
+                      </div>
+                    ))}
                   </div>
                 </div>
-                {getStatusBadge(deadline)}
-              </div>
-            ))}
+              )
+            })}
+          </div>
+        )}
+
+        {!isLoading && filteredDeadlines.length > 0 && (
+          <div className="flex justify-center pt-4">
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={() => setShowAllDeadlines(!showAllDeadlines)}
+              className="group h-10 px-6 rounded-xl font-bold bg-white text-slate-600 border-slate-200 hover:bg-slate-50 hover:text-blue-600 hover:border-blue-200 transition-all font-outfit uppercase tracking-wider text-[11px]"
+            >
+              {showAllDeadlines ? (
+                <>
+                  <ChevronUp className="h-3 w-3 mr-2 group-hover:-translate-y-0.5 transition-transform" />
+                  {t('hideFuture')}
+                </>
+              ) : (
+                <>
+                  <ChevronDown className="h-3 w-3 mr-2 group-hover:translate-y-0.5 transition-transform" />
+                  {t('showFuture')}
+                </>
+              )}
+            </Button>
           </div>
         )}
         </div>

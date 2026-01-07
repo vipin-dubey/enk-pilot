@@ -101,6 +101,10 @@
     "overdue": "Forfalt",
     "upcoming": "Kommende",
     "future": "Fremtidig",
+    "quarter": "{number}. kvartal",
+    "deadlinesSuffix": "Frister",
+    "showFuture": "Vis fremtidige frister",
+    "hideFuture": "Skjul fremtidige frister",
     "healthCheck": {
       "title": "Sjekk av skattehelse",
       "projectedConflict": "Skattegap oppdaget",

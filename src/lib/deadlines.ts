@@ -67,14 +67,11 @@ export function generateDeadlinesForYear(year: number): Omit<Deadline, 'isPaid'>
 }
 
 /**
- * Get upcoming deadlines for current and next year
+ * Get upcoming deadlines for current year
  */
 export function getUpcomingDeadlines(): Omit<Deadline, 'isPaid'>[] {
   const currentYear = new Date().getFullYear()
-  const currentDeadlines = generateDeadlinesForYear(currentYear)
-  const nextYearDeadlines = generateDeadlinesForYear(currentYear + 1)
-
-  return [...currentDeadlines, ...nextYearDeadlines]
+  return generateDeadlinesForYear(currentYear)
 }
 
 /**

@@ -101,6 +101,10 @@
     "overdue": "Overdue",
     "upcoming": "Upcoming",
     "future": "Future",
+    "quarter": "Quarter {number}",
+    "deadlinesSuffix": "Deadlines",
+    "showFuture": "Show Future Deadlines",
+    "hideFuture": "Hide Future Deadlines",
     "healthCheck": {
       "title": "Tax Health Check",
       "projectedConflict": "Tax Shortfall Detected",

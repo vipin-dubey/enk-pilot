@@ -103,19 +103,14 @@ export default async function DashboardPage({
             </p>
           </div>
           
-          {profile?.is_pro ? (
+          {profile?.is_pro && (
             <div className="flex items-center gap-2">
               <span className="inline-flex items-center rounded-full bg-blue-50 px-3 py-1 text-xs font-bold text-blue-700 ring-1 ring-inset ring-blue-700/10">
                 {t('proAccount')}
               </span>
-              {profile?.plan_type === 'founding' && (
-                <span className="inline-flex items-center gap-1 rounded-full bg-amber-50 px-3 py-1 text-xs font-bold text-amber-700 ring-1 ring-inset ring-amber-700/10 fill-amber-700">
-                  <Sparkles className="h-3 w-3" />
-                  {locale === 'nb' ? 'Grunnlegger' : 'Founding'}
-                </span>
-              )}
             </div>
-          ) : (
+          )}
+          {!profile?.is_pro && (
             <Card className="max-w-sm bg-gradient-to-br from-indigo-600 via-blue-600 to-blue-700 text-white border-none shadow-xl overflow-hidden relative group transition-all hover:shadow-2xl hover:-translate-y-0.5">
               <div className="absolute top-0 right-0 p-3 opacity-10 group-hover:opacity-20 transition-opacity">
                 <Sparkles className="h-12 w-12" />
