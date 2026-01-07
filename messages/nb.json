@@ -279,7 +279,13 @@
     "totalSaved": "Total skatt spart: {amount} kr",
     "applied": "Lagt til i resultatet",
     "apply": "Bruk fradrag",
-    "loading": "Sjekker for besparelser..."
+    "loading": "Sjekker etter sparing..."
+  },
+  "taxInsights": {
+    "title": "AI Skatteassistent",
+    "description": "Sanntidsoptimalisering og revisjon",
+    "proFeature": "Pro-funksjon",
+    "privacy": "Personvern: Lokal skanning i nettleseren • Ingen data sendes ut"
   },
   "journal": {
     "title": "Transaksjonsjournal",

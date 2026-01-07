@@ -14,6 +14,9 @@ import { MvaSummary } from '@/components/dashboard/mva-summary'
 import { DeductionOptimizer } from '@/components/dashboard/deduction-optimizer'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { TransactionJournal } from '@/components/dashboard/transaction-journal'
+import { SmartTaxAssistant } from '@/components/dashboard/smart-tax-assistant'
+import { DashboardHeaderActions } from '@/components/dashboard/header-actions'
+import { DashboardTabs } from '@/components/dashboard/dashboard-tabs'
 
 export default async function DashboardPage({
   params,
@@ -154,75 +157,47 @@ export default async function DashboardPage({
           )}
         </div>
 
-        <Tabs defaultValue="safe-to-spend" className="space-y-8">
-          <div className="flex items-center justify-between bg-white p-1.5 rounded-xl border shadow-sm sticky top-20 z-10">
-            <TabsList className="bg-transparent border-none">
-              <TabsTrigger value="safe-to-spend" className="gap-2 px-6 data-[state=active]:bg-slate-100 data-[state=active]:shadow-none">
-                <LayoutDashboard className="h-4 w-4" />
-                {tTabs('safeToSpend')}
-              </TabsTrigger>
-              <TabsTrigger value="deadlines" className="gap-2 px-6 data-[state=active]:bg-slate-100 data-[state=active]:shadow-none">
-                <Calendar className="h-4 w-4" />
-                {tTabs('deadlines')}
-              </TabsTrigger>
-              <TabsTrigger value="receipts" className="gap-2 px-6 data-[state=active]:bg-slate-100 data-[state=active]:shadow-none">
-                <Receipt className="h-4 w-4" />
-                {tTabs('receipts')}
-              </TabsTrigger>
-              <TabsTrigger value="history" className="gap-2 px-6 data-[state=active]:bg-slate-100 data-[state=active]:shadow-none">
-                <History className="h-4 w-4" />
-                {tTabs('history')}
-              </TabsTrigger>
-            </TabsList>
-            
-            <Link href="/settings">
-              <Button variant="outline" size="sm" className="hidden md:flex gap-2 mr-1">
-                <Settings className="h-4 w-4" />
-                {t('settings')}
-              </Button>
-            </Link>
-          </div>
-
-          <TabsContent value="safe-to-spend" className="mt-0 border-none p-0 focus-visible:ring-0">
-            <div className="space-y-6">
-              <SafeToSpendCalculator 
-                initialTaxRate={profile?.tax_rate_percent}
-                isMvaRegistered={profile?.is_mva_registered} 
-                ytdGrossIncome={profile?.ytd_gross_income}
-                ytdExpenses={profile?.ytd_expenses}
-                externalSalary={profile?.external_salary_income}
-                useManualTax={profile?.use_manual_tax}
-                isPro={profile?.is_pro}
+        <DashboardTabs>
+          {{
+            safeToSpend: (
+              <div className="space-y-6">
+                <SmartTaxAssistant />
+                <SafeToSpendCalculator 
+                  initialTaxRate={profile?.tax_rate_percent}
+                  isMvaRegistered={profile?.is_mva_registered} 
+                  ytdGrossIncome={profile?.ytd_gross_income}
+                  ytdExpenses={profile?.ytd_expenses}
+                  externalSalary={profile?.external_salary_income}
+                  useManualTax={profile?.use_manual_tax}
+                  isPro={profile?.is_pro}
+                  seatsLeft={seatsLeft}
+                  percentFull={percentFull}
+                  virtualDeductions={
+                    (profile?.has_home_office ? 2050 : 0) + 
+                    ((profile?.estimated_annual_mileage || 0) * 3.50)
+                  }
+                />
+                <DeductionOptimizer />
+                {profile?.is_mva_registered && <MvaSummary />}
+              </div>
+            ),
+            deadlines: <DeadlineTracker />,
+            receipts: (
+              <div className="space-y-6">
+                <ReceiptAnalytics />
+                <ReceiptTriage />
+              </div>
+            ),
+            history: (
+              <TransactionJournal 
+                isPro={profile?.is_pro} 
+                trialExportsUsed={profile?.trial_exports_used || 0}
                 seatsLeft={seatsLeft}
                 percentFull={percentFull}
-                virtualDeductions={
-                  (profile?.has_home_office ? 2050 : 0) + 
-                  ((profile?.estimated_annual_mileage || 0) * 3.50)
-                }
               />
-              <DeductionOptimizer />
-              {profile?.is_mva_registered && <MvaSummary />}
-            </div>
-          </TabsContent>
-
-          <TabsContent value="deadlines" className="mt-0 border-none p-0 focus-visible:ring-0">
-            <DeadlineTracker />
-          </TabsContent>
-
-          <TabsContent value="receipts" className="mt-0 border-none p-0 focus-visible:ring-0 space-y-6">
-            <ReceiptAnalytics />
-            <ReceiptTriage />
-          </TabsContent>
-
-          <TabsContent value="history" className="mt-0 border-none p-0 focus-visible:ring-0">
-            <TransactionJournal 
-              isPro={profile?.is_pro} 
-              trialExportsUsed={profile?.trial_exports_used || 0}
-              seatsLeft={seatsLeft}
-              percentFull={percentFull}
-            />
-          </TabsContent>
-        </Tabs>
+            )
+          }}
+        </DashboardTabs>
       </main>
 
       <footer className="mt-20 pb-12 px-6">
