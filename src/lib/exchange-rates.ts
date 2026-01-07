@@ -13,10 +13,10 @@ export async function getExchangeRate(from: string, to: string = 'NOK'): Promise
   if (from === to) return { rate: 1.0, isFallback: false };
 
   // Note: Norges Bank API provides rates AS 1 UNIT of foreign currency IN NOK.
-  // URL format: https://data.norges-bank.no/api/data/EXR/B.[CURRENCY].NOK.SP?lastNObservations=1&format=json
+  // URL format: https://data.norges-bank.no/api/data/EXR/B.[CURRENCY].NOK.SP?lastNObservations=1&format=sdmx-json
 
   try {
-    const url = `https://data.norges-bank.no/api/data/EXR/B.${from}.NOK.SP?lastNObservations=1&format=json`;
+    const url = `https://data.norges-bank.no/api/data/EXR/B.${from}.NOK.SP?lastNObservations=1&format=sdmx-json`;
 
     const response = await fetch(url, {
       headers: {
@@ -28,16 +28,26 @@ export async function getExchangeRate(from: string, to: string = 'NOK'): Promise
       throw new Error(`Norges Bank API returned ${response.status}`);
     }
 
-    const data = await response.json();
+    const json = await response.json();
 
     // Norges Bank SDMX-JSON structure:
-    // dataSets[0].series contains the data. The key is usually '0:0:0:0' but can vary.
-    // We take the first series and its first observation.
-    const series = data.dataSets[0].series;
+    // data.dataSets[0].series contains the data.
+    const dataSets = json.data?.dataSets;
+    if (!dataSets || !dataSets[0]) {
+      throw new Error('Invalid data structure from Norges Bank');
+    }
+
+    const series = dataSets[0].series;
+    if (!series) throw new Error('No series data found');
+
     const seriesKey = Object.keys(series)[0];
-    const observations = series[seriesKey].observations;
+    const observations = series[seriesKey]?.observations;
+    if (!observations) throw new Error('No observations found');
+
     const obsKey = Object.keys(observations)[0];
-    let rateValue = parseFloat(observations[obsKey][0]);
+    const obsValue = observations[obsKey][0];
+
+    let rateValue = parseFloat(obsValue);
 
     if (isNaN(rateValue)) throw new Error('Invalid rate value from Norges Bank');
 

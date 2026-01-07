@@ -241,8 +241,8 @@ export function SafeToSpendCalculator({
         {/* Input Section */}
         <Card className="md:col-span-2 lg:col-span-3 border-none shadow-none bg-transparent">
           <CardContent className="p-0">
-            <div className="grid gap-6 md:grid-cols-2 items-stretch">
-              <div className="space-y-4 bg-white border rounded-xl p-6 shadow-sm flex flex-col justify-center">
+            <div className="grid gap-6 md:grid-cols-2 items-start">
+              <div className="space-y-4 bg-white border rounded-xl p-6 shadow-sm flex flex-col">
                 <div className="flex items-center justify-between mb-2">
                   <div className="space-y-1">
                     <h3 className="text-lg font-bold font-outfit flex items-center gap-2">
@@ -304,9 +304,9 @@ export function SafeToSpendCalculator({
                       placeholder="0"
                       value={grossInput}
                       onChange={(e) => setGrossInput(e.target.value)}
-                      className="text-4xl h-20 font-outfit pr-20 font-bold focus:ring-blue-500"
+                      className="text-2xl h-14 font-outfit pr-16 font-bold focus:ring-blue-500"
                     />
-                    <span className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold text-xl uppercase tracking-wider">
+                    <span className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold text-lg uppercase tracking-wider">
                       {SUPPORTED_CURRENCIES.find(c => c.code === currency)?.symbol || 'kr'}
                     </span>
                   </div>
@@ -376,7 +376,7 @@ export function SafeToSpendCalculator({
               </div>
 
               {/* Context Summary Box */}
-              <div className="bg-slate-900 text-white border rounded-xl p-6 shadow-sm flex flex-col justify-center">
+              <div className="bg-slate-900 text-white border rounded-xl p-6 shadow-sm flex flex-col">
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-2 text-slate-400">
                     <Info className="h-4 w-4" />
