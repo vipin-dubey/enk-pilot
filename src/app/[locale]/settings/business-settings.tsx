@@ -8,7 +8,8 @@ import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { useTranslations } from 'next-intl'
 import { createClient } from '@/utils/supabase/client'
-import { Loader2, Save, CheckCircle2, AlertCircle } from 'lucide-react'
+import { Loader2, Save, CheckCircle2, AlertCircle, FileUp } from 'lucide-react'
+import { useRef } from 'react'
 
 interface BusinessSettingsProps {
   initialSettings: {
@@ -30,7 +31,9 @@ export function BusinessSettings({ initialSettings }: BusinessSettingsProps) {
   const [estimatedAnnualProfit, setEstimatedAnnualProfit] = useState(initialSettings.estimatedAnnualProfit.toString())
   const [annualPrepaidTaxAmount, setAnnualPrepaidTaxAmount] = useState(initialSettings.annualPrepaidTaxAmount.toString())
   const [isSaving, setIsSaving] = useState(false)
+  const [isScanning, setIsScanning] = useState(false)
   const [status, setStatus] = useState<'idle' | 'success' | 'error'>('idle')
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   const handleSave = async () => {
     setIsSaving(true)
@@ -63,6 +66,58 @@ export function BusinessSettings({ initialSettings }: BusinessSettingsProps) {
       setStatus('error')
     } finally {
       setIsSaving(false)
+    }
+  }
+
+  const handleScanPdf = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+    if (!file) return
+
+    setIsScanning(true)
+    try {
+      const pdfjs = await import('pdfjs-dist')
+      pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`
+
+      const arrayBuffer = await file.arrayBuffer()
+      const loadingTask = pdfjs.getDocument({ data: arrayBuffer })
+      const pdf = await loadingTask.promise
+      
+      let fullText = ''
+      for (let i = 1; i <= pdf.numPages; i++) {
+        const page = await pdf.getPage(i)
+        const textContent = await page.getTextContent()
+        fullText += textContent.items.map((item: any) => item.str).join(' ') + '\n'
+      }
+
+      // Look for Forskuddsskatt amounts
+      // Pattern: "Å betale" or "Beløp" followed by a number
+      const patterns = [
+        /(?:Å betale|Beløp|Total|Sum|Forskuddsskatt)\s*[:\-]?\s*(\d+[\s\d]*)/i,
+        /KR\s*(\d+[\s\d]*)/i
+      ]
+
+      let detected = null
+      for (const pattern of patterns) {
+        const match = fullText.match(pattern)
+        if (match && match[1]) {
+          detected = match[1].replace(/\s+/g, '')
+          // Usually prepaid tax is a round/large number, let's pick the first big one
+          if (parseInt(detected) > 100) break
+        }
+      }
+
+      if (detected) {
+        setAnnualPrepaidTaxAmount(detected)
+        setStatus('success')
+      } else {
+        alert(t('prepaidNotFound'))
+      }
+    } catch (error) {
+      console.error('Error scanning prepaid PDF:', error)
+      alert('Failed to scan PDF locally.')
+    } finally {
+      setIsScanning(false)
+      if (fileInputRef.current) fileInputRef.current.value = ''
     }
   }
 
@@ -150,9 +205,25 @@ export function BusinessSettings({ initialSettings }: BusinessSettingsProps) {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="annual-prepaid" className="text-xs font-bold uppercase tracking-wider text-slate-500">
-              {t('annualPrepaidTax')}
-            </Label>
+            <div className="flex items-center justify-between gap-2 flex-wrap min-h-[28px]">
+              <Label htmlFor="annual-prepaid" className="text-[10px] font-bold uppercase tracking-wider text-slate-500 py-1">
+                {t('annualPrepaidTax')}
+              </Label>
+              <div className="relative shrink-0">
+                <input
+                  type="file"
+                  accept="application/pdf"
+                  onChange={handleScanPdf}
+                  ref={fileInputRef}
+                  className="absolute inset-0 opacity-0 cursor-pointer w-full"
+                  disabled={isScanning}
+                />
+                <Button variant="ghost" size="sm" className="h-7 text-[10px] text-blue-600 font-bold hover:bg-blue-50 px-2 gap-1.5 whitespace-nowrap">
+                  {isScanning ? <Loader2 className="h-3 w-3 animate-spin" /> : <FileUp className="h-3 w-3" />}
+                  {t('scanPrepaid')}
+                </Button>
+              </div>
+            </div>
             <div className="relative">
               <Input
                 id="annual-prepaid"

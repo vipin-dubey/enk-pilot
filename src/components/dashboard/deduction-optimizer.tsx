@@ -101,7 +101,7 @@ export function DeductionOptimizer() {
   const smoothedDays = Math.max(14, daysPassed)
   
   const projectedProfitNoDeductions = (ytdProfit / smoothedDays) * 365
-  const projectedProfitWithDeductions = ((ytdProfit - virtualDeductions) / smoothedDays) * 365
+  const projectedProfitWithDeductions = Math.max(0, projectedProfitNoDeductions - virtualDeductions)
   
   const taxNoDeductions = calculateAnnualTax(projectedProfitNoDeductions)
   const taxWithDeductions = calculateAnnualTax(projectedProfitWithDeductions)

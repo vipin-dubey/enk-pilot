@@ -12,6 +12,7 @@ import { NotificationCenter } from '@/components/dashboard/notification-center'
 import { getTranslations } from 'next-intl/server'
 import { MvaSummary } from '@/components/dashboard/mva-summary'
 import { DeductionOptimizer } from '@/components/dashboard/deduction-optimizer'
+import { DashboardSummary } from '@/components/dashboard/dashboard-summary'
 
 export default async function DashboardPage({
   params,

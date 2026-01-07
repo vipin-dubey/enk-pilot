@@ -210,10 +210,26 @@
     "ytdExpenses": "Utgifter hittil i år",
     "externalSalary": "Årlig ekstern lønn (fra andre jobber)",
     "estimatedAnnualProfit": "Forventet årsresultat (fra skattekortet)",
-    "annualPrepaidTax": "Årlig forskuddsskatt (totalbeløp for året)",
+    "annualPrepaidTax": "Årlig forskuddsskatt",
     "saveSuccess": "Bedriftsinnstillinger oppdatert",
     "save": "Lagre innstillinger",
-    "saveError": "Kunne ikke oppdatere innstillinger"
+    "saveError": "Kunne ikke oppdatere innstillinger",
+    "scanPrepaid": "Skann bilag",
+    "prepaidDetected": "Fant {amount} kr i forskuddsskatt! Klikk lagre for å bruke.",
+    "prepaidNotFound": "Fant ingen beløp i PDF-en. Vennligst skriv inn manuelt."
+  },
+  "dashboardSummary": {
+    "title": "Bedriftsoversikt",
+    "netProfit": "Overskritt (YTD)",
+    "effectiveTax": "Effektiv skatt",
+    "liquidity": "Likviditet",
+    "pendingMva": "Ubetalt MVA",
+    "safeToSpend": "Trygt å bruke",
+    "taxSavings": "Skattebesparelse",
+    "profitMargin": "Margin",
+    "collectedMva": "Innkrevet MVA",
+    "totalLiquidity": "Total likviditet",
+    "growth": "vs forrige måned"
   },
   "notifications": {
     "title": "Varslinger",

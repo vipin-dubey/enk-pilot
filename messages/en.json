@@ -210,10 +210,26 @@
     "ytdExpenses": "YTD Expenses",
     "externalSalary": "Annual External Salary (from other jobs)",
     "estimatedAnnualProfit": "Expected Annual Profit (from Skattekort PDF)",
-    "annualPrepaidTax": "Annual Prepaid Tax (Total for the year)",
+    "annualPrepaidTax": "Annual Prepaid Tax",
+    "scanPrepaid": "Scan Receipt",
+    "prepaidDetected": "Detected {amount} NOK in prepaid tax! Click save to apply.",
+    "prepaidNotFound": "No amount found in PDF. Please enter manually.",
     "saveSuccess": "Business settings updated",
     "save": "Save Settings",
     "saveError": "Failed to update settings"
+  },
+  "dashboardSummary": {
+    "title": "Business Snapshot",
+    "netProfit": "Net Profit (YTD)",
+    "effectiveTax": "Effective Tax Rate",
+    "liquidity": "Liquidity",
+    "pendingMva": "Pending MVA",
+    "safeToSpend": "Safe to Spend",
+    "taxSavings": "Tax Savings",
+    "profitMargin": "Profit Margin",
+    "collectedMva": "Collected MVA",
+    "totalLiquidity": "Total Liquidity",
+    "growth": "vs last month"
   },
   "notifications": {
     "title": "Notifications",

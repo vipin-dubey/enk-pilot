@@ -68,16 +68,18 @@ export function TaxHealthCheck() {
   }
 
   // Calculate Health
-  const ytdProfit = (profile.ytd_gross_income || 0) + (profile.external_salary_income || 0) - (profile.ytd_expenses || 0)
+  const ytdBusinessProfit = (profile.ytd_gross_income || 0) - (profile.ytd_expenses || 0)
+  const annualExternalSalary = profile.external_salary_income || 0
   
   // Project annual profit based on how far we are into the year
-  // Smoothing: Early in the year (first 30 days), spikes can cause wild projections.
-  // We use a minimum divisor of 14 days to stabilize the early trend analysis.
   const now = new Date()
   const startOfYear = new Date(now.getFullYear(), 0, 1)
   const daysPassed = Math.max(1, Math.floor((now.getTime() - startOfYear.getTime()) / (1000 * 60 * 60 * 24)))
   const smoothedDaysPassed = daysPassed < 14 ? 14 : daysPassed
-  const projectedAnnualProfit = (ytdProfit / smoothedDaysPassed) * 365
+  
+  // Annualize ONLY the business part, then add the FIXED annual salary
+  const projectedAnnualBusinessProfit = (ytdBusinessProfit / smoothedDaysPassed) * 365
+  const projectedAnnualProfit = projectedAnnualBusinessProfit + annualExternalSalary
   
   const estimatedProfit = profile.estimated_annual_profit || 1
   const currentPrepaidTax = profile.annual_prepaid_tax_amount || 0
@@ -89,7 +91,7 @@ export function TaxHealthCheck() {
   const taxDifference = projectedAnnualTax - estimatedAnnualTax
   const isOverEarning = projectedAnnualProfit > estimatedProfit * 1.1 // Show warning if 10% higher
   
-  const progressPercent = Math.min(100, Math.round((ytdProfit / estimatedProfit) * 100))
+  const progressPercent = Math.min(100, Math.round((ytdBusinessProfit / estimatedProfit) * 100))
   
   // Check if settings need review (older than 90 days)
   const lastUpdated = new Date(profile.updated_at || profile.created_at)
@@ -125,8 +127,8 @@ export function TaxHealthCheck() {
       <CardContent className="space-y-4">
         <div className="space-y-1.5">
           <div className="flex justify-between text-xs font-bold uppercase tracking-wider text-slate-500">
-            <span>YTD Profit: {Math.round(ytdProfit).toLocaleString()} NOK</span>
-            <span>Target: {estimatedProfit.toLocaleString()} NOK</span>
+            <span>YTD Profit: {Math.round(ytdBusinessProfit).toLocaleString()} NOK</span>
+            <span>Est. Annual: {estimatedProfit.toLocaleString()} NOK</span>
           </div>
           <Progress value={progressPercent} className={`h-2 ${isOverEarning ? 'bg-amber-200' : 'bg-emerald-200'}`} />
         </div>
