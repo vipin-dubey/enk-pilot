@@ -11,6 +11,7 @@ import { LanguageSwitcher } from '@/components/language-switcher'
 import { NotificationCenter } from '@/components/dashboard/notification-center'
 import { getTranslations } from 'next-intl/server'
 import { MvaSummary } from '@/components/dashboard/mva-summary'
+import { DeductionOptimizer } from '@/components/dashboard/deduction-optimizer'
 
 export default async function DashboardPage({
   params,
@@ -131,7 +132,12 @@ export default async function DashboardPage({
                 ytdExpenses={profile?.ytd_expenses}
                 externalSalary={profile?.external_salary_income}
                 useManualTax={profile?.use_manual_tax}
+                virtualDeductions={
+                  (profile?.has_home_office ? 2050 : 0) + 
+                  ((profile?.estimated_annual_mileage || 0) * 3.50)
+                }
               />
+              <DeductionOptimizer />
               {profile?.is_mva_registered && <MvaSummary />}
             </div>
           </TabsContent>

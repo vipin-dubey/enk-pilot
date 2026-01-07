@@ -236,5 +236,19 @@
     "days": "{count} dager",
     "saveSuccess": "Innstillinger for påminnelser ble lagret",
     "saveError": "Kunne ikke lagre innstillinger"
+  },
+  "deductions": {
+    "title": "Fradragsoptimalisering",
+    "description": "Lås opp ekstra skattebesparelser med standard ENK-fradrag.",
+    "homeOffice": "Hjemmekontor-sats",
+    "homeOfficeDesc": "Jobber du fra et eget rom hjemme? Du kan kreve ~{amount} kr/år.",
+    "mileage": "Kjøregodtgjørelse",
+    "mileageDesc": "Bruker du din private bil i næring? Trekk fra per kilometer.",
+    "savings": "Estimert skattebesparelse",
+    "savingsDesc": "Ved å benytte disse fradragene reduserer du skattepliktig overskudd med {amount} kr.",
+    "totalSaved": "Total skatt spart: {amount} kr",
+    "applied": "Lagt til i resultatet",
+    "apply": "Bruk fradrag",
+    "loading": "Sjekker for besparelser..."
   }
 }

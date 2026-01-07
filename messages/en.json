@@ -236,5 +236,19 @@
     "days": "{count} days",
     "saveSuccess": "Reminder settings saved",
     "saveError": "Failed to save settings"
+  },
+  "deductions": {
+    "title": "Deduction Optimizer",
+    "description": "Unlock extra tax savings with standard Norwegian ENK deductions.",
+    "homeOffice": "Home Office Allowance",
+    "homeOfficeDesc": "Work from a dedicated room at home? You can claim ~{amount} NOK/year.",
+    "mileage": "Business Mileage",
+    "mileageDesc": "Drive your personal car for business? Deduct per kilometer.",
+    "savings": "Estimated Tax Savings",
+    "savingsDesc": "By claiming these deductions, you reduce your taxable profit by {amount} NOK.",
+    "totalSaved": "Total Tax Saved: {amount} NOK",
+    "applied": "Applied to YTD",
+    "apply": "Apply Deduction",
+    "loading": "Checking for savings..."
   }
 }

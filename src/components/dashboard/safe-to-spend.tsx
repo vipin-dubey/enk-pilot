@@ -21,6 +21,7 @@ interface CalculatorProps {
   ytdExpenses?: number
   externalSalary?: number
   useManualTax?: boolean
+  virtualDeductions?: number
 }
 
 export function SafeToSpendCalculator({ 
@@ -29,7 +30,8 @@ export function SafeToSpendCalculator({
   ytdGrossIncome = 0,
   ytdExpenses = 0,
   externalSalary = 0,
-  useManualTax = false
+  useManualTax = false,
+  virtualDeductions = 0
 }: CalculatorProps) {
   const t = useTranslations('calculator')
   const locale = useLocale()
@@ -50,12 +52,12 @@ export function SafeToSpendCalculator({
     return calculateNorwegianTax(
       amount,
       ytdGrossIncome,
-      ytdExpenses,
+      ytdExpenses + (virtualDeductions || 0),
       externalSalary,
       isMvaRegistered,
       isManualMode ? parseFloat(manualRate) : undefined
     )
-  }, [grossInput, ytdGrossIncome, ytdExpenses, externalSalary, isMvaRegistered, isManualMode, manualRate])
+  }, [grossInput, ytdGrossIncome, ytdExpenses, virtualDeductions, externalSalary, isMvaRegistered, isManualMode, manualRate])
 
   const toggleManualMode = async () => {
     const newMode = !isManualMode
