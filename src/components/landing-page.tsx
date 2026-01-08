@@ -15,7 +15,10 @@ import {
   Globe,
   ArrowRight,
   Menu,
-  X
+  X,
+  Activity,
+  Download,
+  BarChart3
 } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 import { useState, useEffect } from 'react'
@@ -53,6 +56,8 @@ export function LandingPage({ locale, host: serverHost }: { locale: string, host
   const loginUrl = mounted ? `${appBase}/${locale}/login` : `/${locale}/login`
   const signupUrl = mounted ? `${appBase}/${locale}/signup` : `/${locale}/signup`
 
+  const t = useTranslations('landing')
+
   return (
     <div className="min-h-screen bg-white text-slate-900 font-sans selection:bg-blue-100 selection:text-blue-900" suppressHydrationWarning>
       {/* Premium Header */}
@@ -64,20 +69,20 @@ export function LandingPage({ locale, host: serverHost }: { locale: string, host
           </Link>
 
           <nav className="hidden lg:flex items-center gap-8">
-            <a href="#features" className="text-xs font-bold text-slate-500 hover:text-slate-900 transition-colors uppercase tracking-wider">Features</a>
-            <a href="#security" className="text-xs font-bold text-slate-500 hover:text-slate-900 transition-colors uppercase tracking-wider">Security</a>
-            <a href="#pricing" className="text-xs font-bold text-slate-500 hover:text-slate-900 transition-colors uppercase tracking-wider">Pricing</a>
+            <a href="#features" className="text-xs font-bold text-slate-500 hover:text-slate-900 transition-colors uppercase tracking-wider">{t('nav.features')}</a>
+            <a href="#security" className="text-xs font-bold text-slate-500 hover:text-slate-900 transition-colors uppercase tracking-wider">{t('nav.security')}</a>
+            <a href="#pricing" className="text-xs font-bold text-slate-500 hover:text-slate-900 transition-colors uppercase tracking-wider">{t('nav.pricing')}</a>
           </nav>
 
           <div className="flex items-center gap-1 sm:gap-2">
             <a href={loginUrl}>
               <Button variant="ghost" className="hidden sm:flex text-xs font-bold text-slate-600 hover:text-slate-900 hover:bg-slate-50 rounded-xl px-4">
-                Login
+                {t('nav.login')}
               </Button>
             </a>
             <a href={signupUrl}>
               <Button size="sm" className="bg-slate-900 hover:bg-black text-white font-black px-5 rounded-xl shadow-lg shadow-slate-900/10 transition-all active:scale-[0.98] text-xs">
-                Start Free
+                {t('nav.startFree')}
               </Button>
             </a>
             {/* Mobile Menu Toggle */}
@@ -99,28 +104,28 @@ export function LandingPage({ locale, host: serverHost }: { locale: string, host
                 onClick={() => setIsMenuOpen(false)}
                 className="text-lg font-black font-outfit text-slate-900 uppercase tracking-tighter"
               >
-                Features
+                {t('nav.features')}
               </a>
               <a
                 href="#security"
                 onClick={() => setIsMenuOpen(false)}
                 className="text-lg font-black font-outfit text-slate-900 uppercase tracking-tighter"
               >
-                Security
+                {t('nav.security')}
               </a>
               <a
                 href="#pricing"
                 onClick={() => setIsMenuOpen(false)}
                 className="text-lg font-black font-outfit text-slate-900 uppercase tracking-tighter"
               >
-                Pricing
+                {t('nav.pricing')}
               </a>
               <hr className="border-slate-100" />
               <a
                 href={loginUrl}
                 className="text-lg font-black font-outfit text-blue-600 uppercase tracking-tighter"
               >
-                Login to App
+                {t('nav.login')}
               </a>
             </nav>
           </div>
@@ -137,25 +142,29 @@ export function LandingPage({ locale, host: serverHost }: { locale: string, host
         <div className="container mx-auto px-4 text-center">
           <div className="inline-flex items-center gap-2 px-3 py-1 bg-blue-50 text-blue-700 rounded-full border border-blue-100 mb-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
             <Sparkles className="h-3 w-3" />
-            <span className="text-[10px] font-black uppercase tracking-wider">Built for Norwegian Founders</span>
+            <span className="text-[10px] font-black uppercase tracking-wider">{t('hero.badge')}</span>
           </div>
 
           <h1 className="text-4xl lg:text-6xl font-black font-outfit tracking-tight text-slate-900 mb-4 leading-[1.1] animate-in fade-in slide-in-from-bottom-6 duration-1000">
-            Your ENK on <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">Autopilot.</span>
+            {t.rich('hero.title', {
+              highlight: (chunks) => <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">{chunks}</span>
+            })}
           </h1>
 
           <p className="max-w-xl mx-auto text-base lg:text-lg text-slate-500 font-medium mb-8 leading-relaxed animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-200">
-            Know exactly how much is <span className="text-slate-900 font-bold underline decoration-blue-500 decoration-2 underline-offset-4">safe to spend.</span> ENK Pilot handles MVA and taxes in real-time.
+            {t.rich('hero.description', {
+              highlight: (chunks) => <span className="text-slate-900 font-bold underline decoration-blue-500 decoration-2 underline-offset-4">{chunks}</span>
+            })}
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16 animate-in fade-in slide-in-from-bottom-10 duration-1000 delay-300">
             <a href={signupUrl}>
               <Button size="lg" className="h-14 px-8 bg-slate-900 hover:bg-black text-white font-black text-base rounded-2xl shadow-xl shadow-slate-900/20 transition-all hover:-translate-y-1 active:scale-95">
-                Join Now <ArrowRight className="ml-2 h-4 w-4" />
+                {t('hero.joinNow')} <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </a>
             <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest sm:ml-2">
-              Claim one of 100 Founding Seats
+              {t('hero.foundingSeats')}
             </p>
           </div>
 
@@ -210,18 +219,18 @@ export function LandingPage({ locale, host: serverHost }: { locale: string, host
 
                         {/* Needle / Value */}
                         <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
-                          <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Safe to Spend</span>
+                          <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">{t('hero.safeToSpend')}</span>
                           <span className="text-2xl lg:text-4xl font-black font-outfit text-slate-900 tracking-tighter">kr 12.450</span>
                           <div className="mt-2 flex items-center gap-1.5 px-2 py-0.5 bg-emerald-50 rounded-full border border-emerald-100">
                             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                            <span className="text-[9px] font-bold text-emerald-600 uppercase tracking-tighter">Updated Live</span>
+                            <span className="text-[9px] font-bold text-emerald-600 uppercase tracking-tighter">{t('hero.updatedLive')}</span>
                           </div>
                         </div>
                       </div>
 
                       <div className="w-full flex justify-between text-[10px] font-bold text-slate-400 tracking-widest uppercase">
-                        <span>Reserved for Tax: kr 4.560</span>
-                        <span>YTD Profit: 125k</span>
+                        <span>{t('hero.reservedForTax')}: kr 4.560</span>
+                        <span>{t('hero.ytdProfit')}: 125k</span>
                       </div>
                     </div>
 
@@ -251,9 +260,9 @@ export function LandingPage({ locale, host: serverHost }: { locale: string, host
 
                       <div className="flex-1 bg-gradient-to-br from-slate-900 to-slate-800 rounded-xl p-6 text-white overflow-hidden relative group">
                         <div className="relative z-10">
-                          <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Next Deadline</p>
+                          <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">{t('hero.nextDeadline')}</p>
                           <h4 className="text-lg font-black font-outfit tracking-tight">Forskuddsskatt</h4>
-                          <p className="text-xs text-slate-300 mt-1">Due in 14 days</p>
+                          <p className="text-xs text-slate-300 mt-1">{t('hero.dueIn', { days: 14 })}</p>
                         </div>
                         <div className="absolute right-[-20px] bottom-[-20px] opacity-10 group-hover:rotate-12 transition-transform duration-700">
                           <Target className="h-24 w-24" />
@@ -271,41 +280,67 @@ export function LandingPage({ locale, host: serverHost }: { locale: string, host
       {/* Features Grid */}
       <section id="features" className="py-16 lg:py-24 bg-slate-50/50">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl lg:text-4xl font-black font-outfit tracking-tight text-slate-900 mb-3">Everything in one place.</h2>
-            <p className="text-slate-500 font-medium max-w-lg mx-auto text-sm">Automated calculations and tools designed specifically for Norwegian sole proprietors.</p>
+          <div className="text-center mb-20">
+            <h2 className="text-4xl lg:text-5xl font-black font-outfit tracking-tighter text-slate-900 mb-6">
+              {t.rich('features.title', {
+                highlight: (chunks) => <span className="text-blue-600 bg-clip-text uppercase">{chunks}</span>
+              })}
+            </h2>
+            <p className="text-slate-500 font-medium max-w-2xl mx-auto text-base lg:text-lg leading-relaxed px-4">
+              {t.rich('features.description', {
+                highlight: (chunks) => <span className="text-slate-900 font-bold">{chunks}</span>
+              })}
+            </p>
           </div>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
             <FeatureCard
-              icon={<ShieldCheck className="h-5 w-5 text-blue-600" />}
-              title="Safe to Spend™"
-              description="Proprietary engine tracks MVA, trinnskatt, and personal allowances in real-time. Protect your profit."
+              icon={<ShieldCheck className="h-6 w-6 text-blue-600" />}
+              title={t('features.safeToSpend.title')}
+              description={t('features.safeToSpend.desc')}
+              gradient="from-blue-500/10 to-transparent"
             />
             <FeatureCard
-              icon={<Receipt className="h-5 w-5 text-indigo-600" />}
-              title="AI Receipt Scan"
-              description="Snap receipts with your phone. We extract vendor, MVA, and category automatically into your journal."
+              icon={<Sparkles className="h-6 w-6 text-indigo-600" />}
+              title={t('features.aiScan.title')}
+              description={t('features.aiScan.desc')}
+              gradient="from-indigo-500/10 to-transparent"
             />
             <FeatureCard
-              icon={<Target className="h-5 w-5 text-emerald-600" />}
-              title="Deadline Guard"
-              description="Never miss MVA or Forskuddsskatt. Smart reminders based on your business flow."
+              icon={<Activity className="h-6 w-6 text-emerald-600" />}
+              title={t('features.pulse.title')}
+              description={t('features.pulse.desc')}
+              gradient="from-emerald-500/10 to-transparent"
             />
             <FeatureCard
-              icon={<PieChart className="h-5 w-5 text-amber-600" />}
-              title="Real-time Analytics"
-              description="Visual summaries of growth, expenses, and tax health. Professional grade insights for your ENK."
+              icon={<Target className="h-6 w-6 text-amber-600" />}
+              title={t('features.deadline.title')}
+              description={t('features.deadline.desc')}
+              gradient="from-amber-500/10 to-transparent"
             />
             <FeatureCard
-              icon={<Globe className="h-5 w-5 text-purple-600" />}
-              title="Multi-Currency"
-              description="Selling in USD or EUR? We fetch live Norges Bank rates to calculate your exact NOK income."
+              icon={<BarChart3 className="h-6 w-6 text-cyan-600" />}
+              title={t('features.analysis.title')}
+              description={t('features.analysis.desc')}
+              gradient="from-cyan-500/10 to-transparent"
             />
             <FeatureCard
-              icon={<Zap className="h-5 w-5 text-red-600" />}
-              title="Tax Insights"
-              description=" suggerstions on forgotten deductions and warnings before you hit MVA thresholds."
+              icon={<Globe className="h-6 w-6 text-purple-600" />}
+              title={t('features.currency.title')}
+              description={t('features.currency.desc')}
+              gradient="from-purple-500/10 to-transparent"
+            />
+            <FeatureCard
+              icon={<Download className="h-6 w-6 text-slate-600" />}
+              title={t('features.exports.title')}
+              description={t('features.exports.desc')}
+              gradient="from-slate-500/10 to-transparent"
+            />
+            <FeatureCard
+              icon={<Zap className="h-6 w-6 text-red-600" />}
+              title={t('features.insights.title')}
+              description={t('features.insights.desc')}
+              gradient="from-red-500/10 to-transparent"
             />
           </div>
         </div>
@@ -318,24 +353,30 @@ export function LandingPage({ locale, host: serverHost }: { locale: string, host
             <div className="relative z-10 flex flex-col lg:flex-row items-center gap-10">
               <div className="flex-1 text-center lg:text-left">
                 <div className="inline-flex items-center gap-2 px-3 py-1 bg-blue-500/10 text-blue-400 rounded-full border border-blue-500/20 mb-4 font-bold text-[10px] uppercase tracking-widest">
-                  Enterprise-Grade Security
+                  {t('security.badge')}
                 </div>
-                <h2 className="text-3xl lg:text-4xl font-black font-outfit tracking-tight mb-4">Privacy first. <br /><span className="text-blue-400">Local-First Intelligence.</span></h2>
+                <h2 className="text-3xl lg:text-4xl font-black font-outfit tracking-tight mb-4">
+                  {t.rich('security.title', {
+                    highlight: (chunks) => <span className="text-blue-400">{chunks}</span>
+                  })}
+                </h2>
                 <p className="text-slate-400 font-medium mb-8 text-base leading-relaxed">
-                  Encryption for your data and mandatory GDPR compliance. Our <strong>Smart Scanning</strong> and AI tasks happen directly in your browser—we never send your sensitive financial documents to external servers for processing.
+                  {t.rich('security.description', {
+                    strong: (chunks) => <strong>{chunks}</strong>
+                  })}
                 </p>
                 <div className="flex flex-wrap justify-center lg:justify-start gap-3">
                   <div className="flex items-center gap-1.5 px-4 py-2 bg-white/5 rounded-xl border border-white/10 shrink-0">
                     <ShieldCheck className="h-3.5 w-3.5 text-blue-400" />
-                    <span className="text-xs font-bold tracking-tight">Local-Only AI Scan</span>
+                    <span className="text-xs font-bold tracking-tight">{t('security.localAI')}</span>
                   </div>
                   <div className="flex items-center gap-1.5 px-4 py-2 bg-white/5 rounded-xl border border-white/10 shrink-0">
                     <Lock className="h-3.5 w-3.5 text-blue-400" />
-                    <span className="text-xs font-bold tracking-tight">2FA Available</span>
+                    <span className="text-xs font-bold tracking-tight">{t('security.mfa')}</span>
                   </div>
                   <div className="flex items-center gap-1.5 px-4 py-2 bg-white/5 rounded-xl border border-white/10 shrink-0">
                     <ShieldCheck className="h-3.5 w-3.5 text-emerald-400" />
-                    <span className="text-xs font-bold tracking-tight">GDPR Compliant</span>
+                    <span className="text-xs font-bold tracking-tight">{t('security.gdpr')}</span>
                   </div>
                 </div>
               </div>
@@ -353,48 +394,48 @@ export function LandingPage({ locale, host: serverHost }: { locale: string, host
       <section id="pricing" className="py-16 lg:py-24 bg-white">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="text-3xl lg:text-4xl font-black font-outfit tracking-tight text-slate-900 mb-3">Ready to fly?</h2>
-            <p className="text-slate-500 font-medium max-w-md mx-auto text-sm font-bold uppercase tracking-widest">Pricing designed for every stage.</p>
+            <h2 className="text-3xl lg:text-4xl font-black font-outfit tracking-tight text-slate-900 mb-3">{t('pricing.title')}</h2>
+            <p className="text-slate-500 font-medium max-w-md mx-auto text-sm font-bold uppercase tracking-widest">{t('pricing.description')}</p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
             {/* Starter Plan */}
             <div className="p-8 rounded-[2rem] border-2 border-slate-100 bg-white flex flex-col h-full bg-slate-50/10">
-              <h3 className="text-lg font-black font-outfit text-slate-900 mb-1 uppercase tracking-tighter">Starter</h3>
+              <h3 className="text-lg font-black font-outfit text-slate-900 mb-1 uppercase tracking-tighter">{t('pricing.starter.title')}</h3>
               <div className="flex items-baseline gap-1 mb-6">
-                <span className="text-3xl font-black text-slate-900 tracking-tight">0</span>
-                <span className="text-slate-400 font-bold uppercase text-[10px] tracking-widest">kr / mo</span>
+                <span className="text-3xl font-black text-slate-900 tracking-tight">{t('pricing.starter.price')}</span>
+                <span className="text-slate-400 font-bold uppercase text-[10px] tracking-widest">{t('pricing.starter.unit')}</span>
               </div>
               <ul className="space-y-3 mb-8 flex-1">
-                <PricingItem text="Basic Tax Buffer Engine" />
-                <PricingItem text="Manual Expense Ledger" />
-                <PricingItem text="Standard Security" />
-                <PricingItem text="Limited MVA Tracking" />
+                <PricingItem text={t('pricing.starter.f1')} />
+                <PricingItem text={t('pricing.starter.f2')} />
+                <PricingItem text={t('pricing.starter.f3')} />
+                <PricingItem text={t('pricing.starter.f4')} />
               </ul>
               <a href={signupUrl} className="w-full">
                 <Button variant="outline" className="w-full h-12 rounded-xl border-2 border-slate-200 font-black hover:bg-slate-50 transition-all text-xs">
-                  Join Free
+                  {t('pricing.starter.cta')}
                 </Button>
               </a>
             </div>
 
             {/* Monthly Pro Plan */}
             <div className="p-8 rounded-[2rem] border-2 border-slate-200 bg-white flex flex-col h-full relative group hover:border-blue-400 transition-all">
-              <h3 className="text-lg font-black font-outfit text-slate-900 mb-1 uppercase tracking-tighter">Pro Monthly</h3>
+              <h3 className="text-lg font-black font-outfit text-slate-900 mb-1 uppercase tracking-tighter">{t('pricing.pro.title')}</h3>
               <div className="flex items-baseline gap-1 mb-6">
-                <span className="text-3xl font-black text-slate-900 tracking-tight">39</span>
-                <span className="text-slate-400 font-bold uppercase text-[10px] tracking-widest">kr / mo</span>
+                <span className="text-3xl font-black text-slate-900 tracking-tight">{t('pricing.pro.price')}</span>
+                <span className="text-slate-400 font-bold uppercase text-[10px] tracking-widest">{t('pricing.pro.unit')}</span>
               </div>
               <ul className="space-y-3 mb-8 flex-1">
-                <PricingItem text="Full Safe to Spend™ Engine" highlighted />
-                <PricingItem text="Unlimited AI Scans" />
-                <PricingItem text="Multi-Currency Support" />
-                <PricingItem text="Two-Factor Auth (2FA)" />
-                <PricingItem text="Priority Support" />
+                <PricingItem text={t('pricing.pro.f1')} highlighted />
+                <PricingItem text={t('pricing.pro.f2')} />
+                <PricingItem text={t('pricing.pro.f3')} />
+                <PricingItem text={t('pricing.pro.f4')} />
+                <PricingItem text={t('pricing.pro.f5')} />
               </ul>
               <a href={signupUrl} className="w-full">
                 <Button className="w-full h-12 rounded-xl bg-slate-900 hover:bg-black font-black shadow-lg shadow-slate-900/10 transition-all hover:-translate-y-0.5 active:scale-95 text-xs text-white">
-                  Get Pro
+                  {t('pricing.pro.cta')}
                 </Button>
               </a>
             </div>
@@ -402,26 +443,26 @@ export function LandingPage({ locale, host: serverHost }: { locale: string, host
             {/* Founding Pro Plan */}
             <div className="p-8 rounded-[2rem] border-2 border-amber-200 bg-amber-50/30 flex flex-col h-full relative shadow-sm">
               <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-amber-500 text-white px-3 py-0.5 rounded-full font-black text-[8px] uppercase tracking-widest">
-                Recommended
+                {t('pricing.recommended')}
               </div>
-              <h3 className="text-lg font-black font-outfit text-amber-900 mb-1 uppercase tracking-tighter">Founding Pro</h3>
+              <h3 className="text-lg font-black font-outfit text-amber-900 mb-1 uppercase tracking-tighter">{t('pricing.founding.title')}</h3>
               <div className="mb-6">
                 <div className="flex items-baseline gap-1">
-                  <span className="text-3xl font-black text-amber-900 tracking-tight">299</span>
-                  <span className="text-amber-600/70 font-bold uppercase text-[10px] tracking-widest">kr / first year</span>
+                  <span className="text-3xl font-black text-amber-900 tracking-tight">{t('pricing.founding.price')}</span>
+                  <span className="text-amber-600/70 font-bold uppercase text-[10px] tracking-widest">{t('pricing.founding.unit')}</span>
                 </div>
-                <p className="text-[9px] text-amber-700/60 font-bold uppercase tracking-widest mt-1">Renews at 349 kr / year</p>
+                <p className="text-[9px] text-amber-700/60 font-bold uppercase tracking-widest mt-1">{t('pricing.founding.renews')}</p>
               </div>
               <ul className="space-y-3 mb-8 flex-1">
-                <PricingItem text="All Pro Features" />
-                <PricingItem text="Limited to first 100 users" highlighted />
-                <PricingItem text="Founding Member Badge" />
-                <PricingItem text="Priority Roadmap Influence" />
-                <PricingItem text="Special 1-Year Rate" />
+                <PricingItem text={t('pricing.founding.f1')} />
+                <PricingItem text={t('pricing.founding.f2')} highlighted />
+                <PricingItem text={t('pricing.founding.f3')} />
+                <PricingItem text={t('pricing.founding.f4')} />
+                <PricingItem text={t('pricing.founding.f5')} />
               </ul>
               <a href={signupUrl} className="w-full">
                 <Button className="w-full h-12 rounded-xl bg-amber-900 hover:bg-amber-950 font-black shadow-lg shadow-amber-900/30 transition-all hover:-translate-y-0.5 active:scale-95 text-xs text-white">
-                  Join Founding
+                  {t('pricing.founding.cta')}
                 </Button>
               </a>
             </div>
@@ -432,13 +473,17 @@ export function LandingPage({ locale, host: serverHost }: { locale: string, host
       {/* CTA Final */}
       <section className="py-20 lg:py-24 bg-slate-100/50 text-slate-900">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl lg:text-5xl font-black font-outfit tracking-tight mb-6">Ready to fly?</h2>
+          <h2 className="text-3xl lg:text-5xl font-black font-outfit tracking-tight mb-6">
+            {t.rich('cta.title', {
+              highlight: (chunks) => <span className="text-blue-600">{chunks}</span>
+            })}
+          </h2>
           <p className="max-w-md mx-auto text-slate-500 font-medium text-base mb-10">
-            Join other Norwegian founders who have stopped stressing about taxes.
+            {t('cta.description')}
           </p>
           <a href={signupUrl}>
             <Button size="lg" className="h-16 px-12 bg-slate-900 text-white hover:bg-black font-black text-xl rounded-2xl shadow-xl transition-all hover:-translate-y-1 active:scale-95">
-              Join Now
+              {t('cta.button')}
             </Button>
           </a>
         </div>
@@ -449,16 +494,28 @@ export function LandingPage({ locale, host: serverHost }: { locale: string, host
   )
 }
 
-function FeatureCard({ icon, title, description }: { icon: React.ReactNode, title: string, description: string }) {
+function FeatureCard({ icon, title, description, gradient }: { icon: React.ReactNode, title: string, description: string, gradient?: string }) {
   return (
-    <div className="p-8 bg-white rounded-2xl border border-slate-100 shadow-sm transition-all hover:-translate-y-1 hover:shadow-md hover:border-blue-100 group">
-      <div className="h-10 w-10 bg-slate-50 rounded-xl flex items-center justify-center mb-6 border border-slate-100 group-hover:bg-blue-50 group-hover:border-blue-100 transition-colors">
-        {icon}
+    <div className="group relative p-8 bg-white rounded-[2rem] border border-slate-100 shadow-sm transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-blue-500/10 overflow-hidden">
+      {/* Dynamic Background Gradient */}
+      <div className={`absolute inset-0 bg-gradient-to-br ${gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
+
+      <div className="relative z-10">
+        <div className="h-14 w-14 bg-slate-50 rounded-2xl flex items-center justify-center mb-8 border border-slate-100 group-hover:scale-110 group-hover:bg-white group-hover:shadow-lg transition-all duration-500">
+          {icon}
+        </div>
+        <h3 className="text-xl font-black font-outfit text-slate-900 mb-3 tracking-tight group-hover:text-blue-600 transition-colors">
+          {title}
+        </h3>
+        <p className="text-slate-500 font-medium leading-relaxed text-sm">
+          {description}
+        </p>
       </div>
-      <h3 className="text-lg font-black font-outfit text-slate-900 mb-2 tracking-tight">{title}</h3>
-      <p className="text-slate-500 font-medium leading-relaxed text-xs">
-        {description}
-      </p>
+
+      {/* Decorative Corner Element */}
+      <div className="absolute top-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-all duration-500 translate-x-4 group-hover:translate-x-0">
+        <ArrowRight className="h-5 w-5 text-slate-300" />
+      </div>
     </div>
   )
 }

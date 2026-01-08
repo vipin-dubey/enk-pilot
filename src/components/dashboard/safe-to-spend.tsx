@@ -7,14 +7,14 @@ import { Label } from '@/components/ui/label'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { calculateNorwegianTax } from '@/lib/tax-calculations'
 import { useTranslations, useLocale } from 'next-intl'
-import { 
-  Info, 
-  AlertTriangle, 
-  TrendingUp, 
-  Save, 
-  Loader2, 
-  CheckCircle2, 
-  Settings as SettingsIcon, 
+import {
+  Info,
+  AlertTriangle,
+  TrendingUp,
+  Save,
+  Loader2,
+  CheckCircle2,
+  Settings as SettingsIcon,
   Zap,
   Gavel
 } from 'lucide-react'
@@ -41,7 +41,7 @@ import { getExchangeRate, SUPPORTED_CURRENCIES } from '@/lib/exchange-rates'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Lock } from 'lucide-react'
 
-export function SafeToSpendCalculator({ 
+export function SafeToSpendCalculator({
   initialTaxRate = 35,
   isMvaRegistered = false,
   ytdGrossIncome = 0,
@@ -62,6 +62,7 @@ export function SafeToSpendCalculator({
   const [showSuccess, setShowSuccess] = useState(false)
   const [isManualMode, setIsManualMode] = useState(useManualTax)
   const [manualRate, setManualRate] = useState<string>(initialTaxRate.toString())
+  const [incomeDate, setIncomeDate] = useState<string>(new Date().toISOString().split('T')[0])
 
   const [currency, setCurrency] = useState('NOK')
   const [exchangeRate, setExchangeRate] = useState(1.0)
@@ -93,7 +94,7 @@ export function SafeToSpendCalculator({
   const calculations = useMemo(() => {
     const originalAmount = parseFloat(grossInput) || 0
     const amountInNok = originalAmount * exchangeRate
-    
+
     return calculateNorwegianTax(
       amountInNok,
       ytdGrossIncome,
@@ -116,8 +117,8 @@ export function SafeToSpendCalculator({
   }
 
   const formatCurrency = (val: number, curr: string = 'NOK') => {
-    return val.toLocaleString(locale === 'nb' ? 'nb-NO' : 'en-US', { 
-      style: 'currency', 
+    return val.toLocaleString(locale === 'nb' ? 'nb-NO' : 'en-US', {
+      style: 'currency',
       currency: curr,
       maximumFractionDigits: 0
     })
@@ -128,7 +129,7 @@ export function SafeToSpendCalculator({
 
     setIsRecording(true)
     const supabase = createClient()
-    
+
     try {
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) throw new Error('Not authenticated')
@@ -137,9 +138,9 @@ export function SafeToSpendCalculator({
       if (isManualMode) {
         const rateVal = parseFloat(manualRate)
         if (!isNaN(rateVal) && rateVal !== initialTaxRate) {
-          await supabase.from('profiles').update({ 
+          await supabase.from('profiles').update({
             tax_rate_percent: rateVal,
-            use_manual_tax: true 
+            use_manual_tax: true
           }).eq('id', user.id)
         }
       }
@@ -154,17 +155,18 @@ export function SafeToSpendCalculator({
         marginal_rate_applied: calculations.marginalRate,
         original_currency: currency,
         original_amount: parseFloat(grossInput),
-        exchange_rate: exchangeRate
+        exchange_rate: exchangeRate,
+        date: incomeDate ? new Date(incomeDate).toISOString() : new Date().toISOString()
       })
 
       if (error) throw error
 
       setShowSuccess(true)
       setGrossInput('')
-      
+
       // Refresh to update the YTD profile data
       router.refresh()
-      
+
       setTimeout(() => setShowSuccess(false), 3000)
     } catch (err) {
       console.error('Failed to record allocation:', err)
@@ -195,7 +197,7 @@ export function SafeToSpendCalculator({
               <div className="h-12 w-12 rounded-2xl bg-amber-100 flex items-center justify-center shrink-0">
                 <AlertTriangle className="h-6 w-6 text-amber-600" />
               </div>
-              
+
               <div className="flex-1 space-y-4">
                 <div className="space-y-1">
                   <h3 className="text-xl font-bold font-outfit text-amber-900 leading-tight">
@@ -222,7 +224,7 @@ export function SafeToSpendCalculator({
                 </div>
 
                 <div className="flex flex-wrap items-center gap-4 pt-2">
-                  <Button 
+                  <Button
                     asChild
                     className="bg-amber-600 hover:bg-amber-700 text-white font-bold h-10 px-6 rounded-xl shadow-lg shadow-amber-600/10 active:scale-95 transition-all"
                   >
@@ -230,7 +232,7 @@ export function SafeToSpendCalculator({
                       {t('mvaAction')}
                     </a>
                   </Button>
-                  <Button 
+                  <Button
                     variant="ghost"
                     size="sm"
                     onClick={handleMarkAsMvaRegistered}
@@ -260,11 +262,11 @@ export function SafeToSpendCalculator({
                     </h3>
                     <p className="text-xs text-slate-500 leading-tight">{t('grossIncomeDescription')}</p>
                   </div>
-                  
+
                   <div className="flex items-center gap-2 w-full sm:w-auto">
-                    <Button 
-                      variant="ghost" 
-                      size="sm" 
+                    <Button
+                      variant="ghost"
+                      size="sm"
                       onClick={toggleManualMode}
                       className={`w-full sm:w-auto gap-2 h-auto py-2.5 text-[10px] uppercase font-bold tracking-widest px-4 ${isManualMode ? 'text-blue-600 bg-blue-50' : 'text-slate-500 bg-slate-50 group'}`}
                     >
@@ -277,12 +279,23 @@ export function SafeToSpendCalculator({
                 </div>
 
                 <div className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="income-date" className="text-xs text-slate-500 font-bold uppercase tracking-wider">{t('dateLabel')}</Label>
+                    <Input
+                      id="income-date"
+                      type="date"
+                      value={incomeDate}
+                      onChange={(e) => setIncomeDate(e.target.value)}
+                      className="h-10 font-medium border-slate-200 focus:ring-blue-500"
+                    />
+                  </div>
+
                   <div className="flex flex-row items-center justify-between gap-2">
                     <Label htmlFor="gross-income" className="text-slate-600 font-semibold">{t('grossIncomeLabel')}</Label>
                     <div className="flex items-center gap-2">
                       <Label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider hidden xs:block">{t('currency')}</Label>
-                      <Select 
-                        value={currency} 
+                      <Select
+                        value={currency}
                         onValueChange={(v) => {
                           if (!isPro && v !== 'NOK') {
                             router.push('/upgrade')
@@ -307,7 +320,7 @@ export function SafeToSpendCalculator({
                       </Select>
                     </div>
                   </div>
-                  
+
                   <div className="relative">
                     <Input
                       id="gross-income"
@@ -338,7 +351,7 @@ export function SafeToSpendCalculator({
                           </p>
                         </div>
                       </div>
-                      
+
                       {isFallback && (
                         <div className="flex items-center gap-2 px-3 py-1.5 bg-amber-50 rounded-md border border-amber-200">
                           <AlertTriangle className="h-3 w-3 text-amber-600" />
@@ -375,9 +388,9 @@ export function SafeToSpendCalculator({
                           <DialogHeader>
                             <DialogTitle>{t('configureTax')}</DialogTitle>
                           </DialogHeader>
-                          <TaxPdfSync 
-                            initialTaxRate={parseFloat(manualRate)} 
-                            onTaxRateChange={(rate) => setManualRate(rate)} 
+                          <TaxPdfSync
+                            initialTaxRate={parseFloat(manualRate)}
+                            onTaxRateChange={(rate) => setManualRate(rate)}
                           />
                         </DialogContent>
                       </Dialog>
@@ -404,9 +417,9 @@ export function SafeToSpendCalculator({
                         <DialogHeader>
                           <DialogTitle>{t('configureTax')}</DialogTitle>
                         </DialogHeader>
-                        <TaxPdfSync 
-                          initialTaxRate={initialTaxRate} 
-                          onTaxRateChange={(rate) => setManualRate(rate)} 
+                        <TaxPdfSync
+                          initialTaxRate={initialTaxRate}
+                          onTaxRateChange={(rate) => setManualRate(rate)}
                         />
                       </DialogContent>
                     </Dialog>
@@ -483,30 +496,34 @@ export function SafeToSpendCalculator({
       </div>
 
       {/* Success Notification */}
-      {showSuccess && (
-        <div className="flex items-center gap-2 text-green-600 bg-green-50 p-4 rounded-xl border border-green-100 animate-in fade-in slide-in-from-bottom-2 duration-300">
-          <CheckCircle2 className="h-5 w-5" />
-          <p className="font-bold">Allocation recorded successfully! Your YTD profit has been updated.</p>
-        </div>
-      )}
+      {
+        showSuccess && (
+          <div className="flex items-center gap-2 text-green-600 bg-green-50 p-4 rounded-xl border border-green-100 animate-in fade-in slide-in-from-bottom-2 duration-300">
+            <CheckCircle2 className="h-5 w-5" />
+            <p className="font-bold">Allocation recorded successfully! Your YTD profit has been updated.</p>
+          </div>
+        )
+      }
 
       {/* Action Button */}
-      {parseFloat(grossInput) > 0 && !showSuccess && (
-        <div className="flex justify-end">
-          <Button 
-            onClick={handleRecordAllocation}
-            disabled={isRecording}
-            className="gap-2 bg-blue-600 hover:bg-blue-700 text-white font-bold px-8 h-12 rounded-xl shadow-lg shadow-blue-500/20 active:scale-95 transition-all"
-          >
-            {isRecording ? (
-              <Loader2 className="h-4 w-4 animate-spin" />
-            ) : (
-              <Save className="h-4 w-4" />
-            )}
-            {t('recordAllocation')}
-          </Button>
-        </div>
-      )}
+      {
+        parseFloat(grossInput) > 0 && !showSuccess && (
+          <div className="flex justify-end">
+            <Button
+              onClick={handleRecordAllocation}
+              disabled={isRecording}
+              className="gap-2 bg-blue-600 hover:bg-blue-700 text-white font-bold px-8 h-12 rounded-xl shadow-lg shadow-blue-500/20 active:scale-95 transition-all"
+            >
+              {isRecording ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <Save className="h-4 w-4" />
+              )}
+              {t('recordAllocation')}
+            </Button>
+          </div>
+        )
+      }
 
 
       {/* Sticky Legal Disclaimer */}
@@ -516,7 +533,7 @@ export function SafeToSpendCalculator({
           {tLegal('legalFootnote')}
         </p>
       </div>
-    </div>
+    </div >
   )
 }
 

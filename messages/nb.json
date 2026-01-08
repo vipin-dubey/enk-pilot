@@ -193,6 +193,8 @@
     "incomeEntry": "Inntekt",
     "grossIncomeDescription": "Skriv inn din bruttoinntekt for denne transaksjonen.",
     "grossIncomeLabel": "Bruttoinntekt",
+    "dateLabel": "Inntektsdato",
+    "datePlaceholder": "Velg dato",
     "taxRulesHint": "Beregning basert på skatteregler for 2026",
     "mvaReserve": "MVA-reserve",
     "taxReserve": "Skattereserve",
@@ -422,5 +424,114 @@
     "challengeButton": "Bekreft",
     "challengePlaceholder": "123456",
     "upgradeNow": "Oppgrader for å aktivere"
+  },
+  "landing": {
+    "nav": {
+      "features": "Funksjoner",
+      "security": "Sikkerhet",
+      "pricing": "Priser",
+      "login": "Logg inn",
+      "startFree": "Start gratis"
+    },
+    "hero": {
+      "badge": "Bygd for norske gründere",
+      "title": "Ditt ENK på <highlight>Autopilot</highlight>.",
+      "description": "Vit nøyaktig hvor mye som er <highlight>trygt å bruke</highlight>. ENK Pilot håndterer MVA og skatt i sanntid.",
+      "safeToSpend": "Trygt å bruke",
+      "joinNow": "Bli med nå",
+      "foundingSeats": "Sikre deg en av 100 plasser som Grunnlegger",
+      "updatedLive": "Oppdatert live",
+      "reservedForTax": "Satt av til skatt",
+      "ytdProfit": "Overskudd hittil i år",
+      "nextDeadline": "Neste frist",
+      "dueIn": "Forfaller om {days} dager"
+    },
+    "features": {
+      "title": "Alt på <highlight>ett sted.</highlight>",
+      "description": "Automatiserte beregninger og verktøy designet spesifikt for <highlight>norske enkeltpersonforetak</highlight> (ENK).",
+      "safeToSpend": {
+        "title": "Trygt å bruke™",
+        "desc": "Eget beregningsverktøy som sporer MVA, trinnskatt og personfradrag i sanntid. Beskytt overskuddet ditt."
+      },
+      "aiScan": {
+        "title": "AI-skanning av kvitteringer",
+        "desc": "Ta bilde av kvitteringer med mobilen. Vi henter ut selger, MVA og kategori automatisk til journalen din."
+      },
+      "pulse": {
+        "title": "Bedriftspuls",
+        "desc": "Et live dashbord som viser din økonomiske helse, overskuddstrender og sikkerhetsmarginer ved et blikk."
+      },
+      "deadline": {
+        "title": "Fristvakt",
+        "desc": "Gå aldri glipp av MVA eller forskuddsskatt. Smarte påminnelser basert på din bedriftsflyt."
+      },
+      "analysis": {
+        "title": "Smart analyse",
+        "desc": "Visuelle oppsummeringer av vekst, utgifter og skattehelse. Profesjonell innsikt for ditt ENK."
+      },
+      "currency": {
+        "title": "Flere valutaer",
+        "desc": "Selger du i USD eller EUR? Vi henter live kurser fra Norges Bank for å beregne nøyaktig inntekt i NOK."
+      },
+      "exports": {
+        "title": "Eksport til regnskap",
+        "desc": "Generer perfekte SAF-T-filer og filer klare for regnskapsfører på sekunder. Hold deg ajour uten innsats."
+      },
+      "insights": {
+        "title": "Skatteinnsikt",
+        "desc": "Smarte forslag til glemte fradrag og advarsler før du når MVA-grensen."
+      }
+    },
+    "security": {
+      "badge": "Sikkerhet i toppklasse",
+      "title": "Personvern først. <highlight>Lokalt fokusert intelligens</highlight>.",
+      "description": "Kryptering av dine data og full GDPR-etterlevelse. Vår <strong>Smarte skanning</strong> og AI-oppgaver skjer direkte i din nettleser—vi sender aldri dine sensitive dokumenter til eksterne servere for behandling.",
+      "localAI": "Lokal AI-skanning",
+      "mfa": "2FA tilgjengelig",
+      "gdpr": "GDPR-kompatibel"
+    },
+    "pricing": {
+      "title": "Planer som vokser med deg.",
+      "description": "Gjennomsiktige priser for alle stadier.",
+      "recommended": "Anbefalt",
+      "starter": {
+        "title": "Starter",
+        "price": "0",
+        "unit": "kr / mnd",
+        "cta": "Start gratis",
+        "f1": "Grunnleggende skatteberegning",
+        "f2": "Manuell utgiftsføring",
+        "f3": "Standard sikkerhet",
+        "f4": "Begrenset MVA-sporing"
+      },
+      "pro": {
+        "title": "Pro Månedlig",
+        "price": "39",
+        "unit": "kr / mnd",
+        "cta": "Få Pro",
+        "f1": "Full Trygt å bruke™-motor",
+        "f2": "Ubegrenset AI-skanning",
+        "f3": "Støtte for flere valutaer",
+        "f4": "To-faktor autentisering (2FA)",
+        "f5": "Prioritert støtte"
+      },
+      "founding": {
+        "title": "Grunnlegger Pro",
+        "price": "299",
+        "unit": "kr / første år",
+        "cta": "Bli Grunnlegger",
+        "renews": "Fornyes til 349 kr / år",
+        "f1": "Alle Pro-funksjoner",
+        "f2": "Begrenset til første 100 brukere",
+        "f3": "Grunnlegger-merke",
+        "f4": "Påvirkning på veikart",
+        "f5": "Spesialpris for 1 år"
+      }
+    },
+    "cta": {
+      "title": "Klar for å fly på <highlight>Autopilot</highlight>?",
+      "description": "Bli med andre norske gründere som har sluttet å stresse med skatten.",
+      "button": "Bli med nå"
+    }
   }
 }

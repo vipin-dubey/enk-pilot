@@ -78,7 +78,7 @@ export function TransactionJournal({ isPro = false, trialExportsUsed = 0, seatsL
   const [isExporting, setIsExporting] = useState(false)
   const [exportSuccess, setExportSuccess] = useState(false)
   const [showAccountantView, setShowAccountantView] = useState(false)
-  
+
   const currentMonthKey = useMemo(() => {
     const d = new Date()
     return `${d.getFullYear()}-${d.toLocaleString('en-US', { month: 'long' }).toLowerCase()}`
@@ -114,8 +114,8 @@ export function TransactionJournal({ isPro = false, trialExportsUsed = 0, seatsL
       const income: Transaction[] = (allocations || []).map(a => ({
         id: a.id,
         type: 'income',
-        date: a.created_at,
-        vendor: 'Income Allocation',
+        date: a.date || a.created_at,
+        vendor: t('income'),
         amount: Number(a.gross_amount),
         mva: Number(a.mva_reserved || 0),
         category: 'Revenue',
@@ -133,7 +133,7 @@ export function TransactionJournal({ isPro = false, trialExportsUsed = 0, seatsL
         category: r.category
       }))
 
-      const combined: Transaction[] = [...income, ...expenses].sort((a, b) => 
+      const combined: Transaction[] = [...income, ...expenses].sort((a, b) =>
         new Date(b.date).getTime() - new Date(a.date).getTime()
       )
 
@@ -159,24 +159,24 @@ export function TransactionJournal({ isPro = false, trialExportsUsed = 0, seatsL
     setIsExporting(true)
     try {
       const headers = [
-        'Date', 
-        'Type', 
-        'Vendor', 
-        'Category', 
-        'Account #', 
-        'MVA Code', 
+        'Date',
+        'Type',
+        'Vendor',
+        'Category',
+        'Account #',
+        'MVA Code',
         'MVA Period',
-        'Original Amount', 
-        'Currency', 
-        'NOK Gross', 
-        'NOK Net', 
+        'Original Amount',
+        'Currency',
+        'NOK Gross',
+        'NOK Net',
         'MVA Amount'
       ]
 
       const rows = transactions.map(tr => {
         const transDate = new Date(tr.date)
         const mapping = ACCOUNTING_MAPPINGS[tr.category || 'Other']?.[tr.type] || ACCOUNTING_MAPPINGS['Other'][tr.type]
-        
+
         return [
           transDate.toISOString().split('T')[0],
           tr.type === 'income' ? (locale === 'nb' ? 'Inntekt' : 'Income') : (locale === 'nb' ? 'Utgift' : 'Expense'),
@@ -194,7 +194,7 @@ export function TransactionJournal({ isPro = false, trialExportsUsed = 0, seatsL
       })
 
       const csvContent = [headers, ...rows].map(e => e.join(';')).join('\n')
-      
+
       const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' })
       const url = URL.createObjectURL(blob)
       const link = document.createElement('a')
@@ -212,7 +212,7 @@ export function TransactionJournal({ isPro = false, trialExportsUsed = 0, seatsL
             .from('profiles')
             .update({ trial_exports_used: trialExportsUsed + 1 })
             .eq('id', user.id)
-          
+
           // Refresh session to update UI state
           router.refresh()
         }
@@ -231,8 +231,8 @@ export function TransactionJournal({ isPro = false, trialExportsUsed = 0, seatsL
   const filteredTransactions = useMemo(() => {
     return transactions.filter(t => {
       const matchesSearch = t.vendor.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                           t.amount.toString().includes(searchQuery) ||
-                           (t.category?.toLowerCase().includes(searchQuery.toLowerCase()))
+        t.amount.toString().includes(searchQuery) ||
+        (t.category?.toLowerCase().includes(searchQuery.toLowerCase()))
       const matchesType = typeFilter === 'all' || t.type === typeFilter
       return matchesSearch && matchesType
     })
@@ -266,7 +266,7 @@ export function TransactionJournal({ isPro = false, trialExportsUsed = 0, seatsL
   }
 
   const toggleGroup = (key: string) => {
-    setExpandedGroups(prev => 
+    setExpandedGroups(prev =>
       prev.includes(key) ? prev.filter(k => k !== key) : [...prev, key]
     )
   }
@@ -299,8 +299,8 @@ export function TransactionJournal({ isPro = false, trialExportsUsed = 0, seatsL
   }
 
   const formatCurrency = (val: number) => {
-    return val.toLocaleString(locale === 'nb' ? 'nb-NO' : 'en-US', { 
-      style: 'currency', 
+    return val.toLocaleString(locale === 'nb' ? 'nb-NO' : 'en-US', {
+      style: 'currency',
       currency: 'NOK',
       maximumFractionDigits: 0
     })
@@ -326,9 +326,9 @@ export function TransactionJournal({ isPro = false, trialExportsUsed = 0, seatsL
             <CardDescription className="text-slate-500">{t('description')}</CardDescription>
           </div>
           <div className="flex flex-col items-end gap-1.5">
-            <Button 
+            <Button
               variant={(!isPro && trialExportsUsed >= 1) ? "secondary" : "default"}
-              size="sm" 
+              size="sm"
               className={`gap-2 font-bold shadow-md transition-all h-10 ${(!isPro && trialExportsUsed >= 1) ? 'bg-slate-100 text-slate-500 hover:bg-slate-200' : 'bg-slate-900 hover:bg-black text-white'}`}
               onClick={handleExport}
               disabled={isExporting}
@@ -352,15 +352,15 @@ export function TransactionJournal({ isPro = false, trialExportsUsed = 0, seatsL
             {!isPro && trialExportsUsed >= 1 && (
               <p className="text-[10px] text-slate-400 font-bold uppercase tracking-tight text-right flex items-center gap-1">
                 <FileBox className="h-3 w-3" />
-                {locale === 'nb' 
-                  ? 'Lås opp SAF-T koder & regnskapsformater' 
+                {locale === 'nb'
+                  ? 'Lås opp SAF-T koder & regnskapsformater'
                   : 'Unlock SAF-T codes & Accountant formats'}
               </p>
             )}
           </div>
         </div>
       </CardHeader>
-      
+
       <CardContent className="p-0">
         <div className="p-4 border-b flex flex-col md:flex-row gap-4">
           <div className="relative flex-1">
@@ -375,26 +375,23 @@ export function TransactionJournal({ isPro = false, trialExportsUsed = 0, seatsL
           <div className="flex bg-slate-100 rounded-lg p-1 border shadow-inner self-start">
             <button
               onClick={() => setTypeFilter('all')}
-              className={`px-4 py-1.5 text-xs font-bold rounded-md transition-all ${
-                typeFilter === 'all' ? "bg-white text-slate-900 shadow-sm" : "text-slate-500 hover:text-slate-900"
-              }`}
+              className={`px-4 py-1.5 text-xs font-bold rounded-md transition-all ${typeFilter === 'all' ? "bg-white text-slate-900 shadow-sm" : "text-slate-500 hover:text-slate-900"
+                }`}
             >
               All
             </button>
             <button
               onClick={() => setTypeFilter('income')}
-              className={`px-4 py-1.5 text-xs font-bold rounded-md transition-all flex items-center gap-1.5 ${
-                typeFilter === 'income' ? "bg-emerald-600 text-white shadow-sm" : "text-slate-500 hover:text-emerald-600"
-              }`}
+              className={`px-4 py-1.5 text-xs font-bold rounded-md transition-all flex items-center gap-1.5 ${typeFilter === 'income' ? "bg-emerald-600 text-white shadow-sm" : "text-slate-500 hover:text-emerald-600"
+                }`}
             >
               <ArrowUpRight className="h-3 w-3" />
               {t('income')}
             </button>
             <button
               onClick={() => setTypeFilter('expense')}
-              className={`px-4 py-1.5 text-xs font-bold rounded-md transition-all flex items-center gap-1.5 ${
-                typeFilter === 'expense' ? "bg-amber-600 text-white shadow-sm" : "text-slate-500 hover:text-amber-600"
-              }`}
+              className={`px-4 py-1.5 text-xs font-bold rounded-md transition-all flex items-center gap-1.5 ${typeFilter === 'expense' ? "bg-amber-600 text-white shadow-sm" : "text-slate-500 hover:text-amber-600"
+                }`}
             >
               <ArrowDownRight className="h-3 w-3" />
               {t('expense')}
@@ -414,8 +411,8 @@ export function TransactionJournal({ isPro = false, trialExportsUsed = 0, seatsL
             </Button>
             {showAccountantView && (
               <p className="text-[9px] text-blue-600/60 font-medium tracking-tight animate-in fade-in slide-in-from-right-1">
-                {locale === 'nb' 
-                  ? 'Viser offisielle SAF-T koder for Skatteetaten' 
+                {locale === 'nb'
+                  ? 'Viser offisielle SAF-T koder for Skatteetaten'
                   : 'Showing official SAF-T codes for Tax Authorities'}
               </p>
             )}
@@ -436,7 +433,7 @@ export function TransactionJournal({ isPro = false, trialExportsUsed = 0, seatsL
                     const groupKey = `${year}-${month}`
                     const isExpanded = expandedGroups.includes(groupKey)
                     const monthTransactions = groupedTransactions[year][month]
-                    const monthTotal = monthTransactions.reduce((acc, curr) => 
+                    const monthTotal = monthTransactions.reduce((acc, curr) =>
                       acc + (curr.type === 'income' ? curr.amount : -curr.amount), 0
                     )
 
@@ -488,8 +485,8 @@ export function TransactionJournal({ isPro = false, trialExportsUsed = 0, seatsL
                               <TableBody>
                                 {monthTransactions.map((tr) => (
                                   <TableRow key={`${tr.type}-${tr.id}`} className="hover:bg-slate-50/30 transition-colors border-b last:border-b-0">
-                                    <TableCell className="text-xs font-medium text-slate-400 w-[80px]">
-                                      {new Date(tr.date).toLocaleDateString(locale === 'nb' ? 'nb-NO' : 'en-US', { day: 'numeric' })}
+                                    <TableCell className="text-xs font-medium text-slate-400 w-[100px]">
+                                      {new Date(tr.date).toLocaleDateString(locale === 'nb' ? 'nb-NO' : 'en-US', { day: '2-digit', month: 'short' })}
                                     </TableCell>
                                     <TableCell>
                                       <div className="space-y-0.5">
@@ -580,7 +577,7 @@ export function TransactionJournal({ isPro = false, trialExportsUsed = 0, seatsL
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel disabled={isDeleting}>{tCommon('cancel')}</AlertDialogCancel>
-            <AlertDialogAction 
+            <AlertDialogAction
               onClick={(e: React.MouseEvent) => {
                 e.preventDefault()
                 handleDelete()

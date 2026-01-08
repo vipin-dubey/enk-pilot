@@ -193,6 +193,8 @@
     "incomeEntry": "Income Entry",
     "grossIncomeDescription": "Enter your gross income for this transaction.",
     "grossIncomeLabel": "Gross Income",
+    "dateLabel": "Income Date",
+    "datePlaceholder": "Select date",
     "taxRulesHint": "Calculation based on 2026 tax rules",
     "mvaReserve": "MVA Reserve",
     "taxReserve": "Tax Reserve",
@@ -423,5 +425,114 @@
     "challengeButton": "Verify",
     "challengePlaceholder": "123456",
     "upgradeNow": "Upgrade to Enable"
+  },
+  "landing": {
+    "nav": {
+      "features": "Features",
+      "security": "Security",
+      "pricing": "Pricing",
+      "login": "Login",
+      "startFree": "Start Free"
+    },
+    "hero": {
+      "badge": "Built for Norwegian Founders",
+      "title": "Your ENK on <highlight>Autopilot</highlight>.",
+      "description": "Know exactly how much is <highlight>safe to spend</highlight>. ENK Pilot handles MVA and taxes in real-time.",
+      "safeToSpend": "Safe to Spend",
+      "joinNow": "Join Now",
+      "foundingSeats": "Claim one of 100 Founding Seats",
+      "updatedLive": "Updated Live",
+      "reservedForTax": "Reserved for Tax",
+      "ytdProfit": "YTD Profit",
+      "nextDeadline": "Next Deadline",
+      "dueIn": "Due in {days} days"
+    },
+    "features": {
+      "title": "Everything in <highlight>one place.</highlight>",
+      "description": "Automated calculations and tools designed specifically for <highlight>Norwegian sole proprietors</highlight> (ENK).",
+      "safeToSpend": {
+        "title": "Safe to Spend™",
+        "desc": "Proprietary engine tracks MVA, trinnskatt, and personal allowances in real-time. Protect your profit."
+      },
+      "aiScan": {
+        "title": "AI Receipt Scan",
+        "desc": "Snap receipts with your phone. We extract vendor, MVA, and category automatically into your journal."
+      },
+      "pulse": {
+        "title": "Business Pulse",
+        "desc": "A live dashboard showing your business health, profit trends, and safety margins at a glance."
+      },
+      "deadline": {
+        "title": "Deadline Guard",
+        "desc": "Never miss MVA or Forskuddsskatt. Smart reminders based on your business flow."
+      },
+      "analysis": {
+        "title": "Smart Analysis",
+        "desc": "Deep visual summaries of growth, expenses, and tax health. Professional grade insights for your ENK."
+      },
+      "currency": {
+        "title": "Multi-Currency",
+        "desc": "Selling in USD or EUR? We fetch live Norges Bank rates to calculate your exact NOK income."
+      },
+      "exports": {
+        "title": "Audit-Ready Exports",
+        "desc": "Generate perfect SAF-T and accountant-ready files in seconds. Stay compliant with zero effort."
+      },
+      "insights": {
+        "title": "Tax Insights",
+        "desc": "Smart suggestions on forgotten deductions and warnings before you hit MVA thresholds."
+      }
+    },
+    "security": {
+      "badge": "Enterprise-Grade Security",
+      "title": "Privacy first. <highlight>Local-First Intelligence</highlight>.",
+      "description": "Encryption for your data and mandatory GDPR compliance. Our <strong>Smart Scanning</strong> and AI tasks happen directly in your browser—we never send your sensitive financial documents to external servers for processing.",
+      "localAI": "Local-Only AI Scan",
+      "mfa": "2FA Available",
+      "gdpr": "GDPR Compliant"
+    },
+    "pricing": {
+      "title": "Plans that grow with you.",
+      "description": "Transparent pricing for every stage.",
+      "recommended": "Recommended",
+      "starter": {
+        "title": "Starter",
+        "price": "0",
+        "unit": "kr / mo",
+        "cta": "Join Free",
+        "f1": "Basic Tax Buffer Engine",
+        "f2": "Manual Expense Ledger",
+        "f3": "Standard Security",
+        "f4": "Limited MVA Tracking"
+      },
+      "pro": {
+        "title": "Pro Monthly",
+        "price": "39",
+        "unit": "kr / mo",
+        "cta": "Get Pro",
+        "f1": "Full Safe to Spend™ Engine",
+        "f2": "Unlimited AI Scans",
+        "f3": "Multi-Currency Support",
+        "f4": "Two-Factor Auth (2FA)",
+        "f5": "Priority Support"
+      },
+      "founding": {
+        "title": "Founding Pro",
+        "price": "299",
+        "unit": "kr / first year",
+        "cta": "Join Founding",
+        "renews": "Renews at 349 kr / year",
+        "f1": "All Pro Features",
+        "f2": "Limited to first 100 users",
+        "f3": "Founding Member Badge",
+        "f4": "Priority Roadmap Influence",
+        "f5": "Special 1-Year Rate"
+      }
+    },
+    "cta": {
+      "title": "Ready to fly on <highlight>Autopilot</highlight>?",
+      "description": "Join other Norwegian founders who have stopped stressing about taxes.",
+      "button": "Join Now"
+    }
   }
 }

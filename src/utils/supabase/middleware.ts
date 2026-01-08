@@ -74,8 +74,9 @@ export async function updateSession(request: NextRequest, response?: NextRespons
 
   // LOCALHOST DEV MODE: Skip subdomain routing entirely
   if (isLocalhost) {
-    // Just protect auth routes
-    if (!user && !isAuthPath && pathname !== '/') {
+    // Just protect auth routes - Allow /, /en, and /nb as landing pages
+    const isLandingPage = pathname === '/' || pathname === '/en' || pathname === '/nb'
+    if (!user && !isAuthPath && !isLandingPage) {
       const target = request.nextUrl.clone()
       target.pathname = '/login'
       return syncRedirect(target)
