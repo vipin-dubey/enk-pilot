@@ -41,11 +41,12 @@ export function OverviewPulse({
     const locale = useLocale()
 
     const formatCurrency = (val: number) => {
-        return val.toLocaleString(locale === 'nb' ? 'nb-NO' : 'en-US', {
+        return new Intl.NumberFormat(locale === 'nb' ? 'nb-NO' : 'en-US', {
             style: 'currency',
             currency: 'NOK',
-            maximumFractionDigits: 0
-        })
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 0,
+        }).format(val)
     }
 
     // Calculate percentage for gauge (Safe to spend vs YTD Profit)
@@ -64,7 +65,7 @@ export function OverviewPulse({
                     <CardContent className="p-8 lg:p-12">
                         <div className="flex flex-col md:flex-row items-center gap-12">
                             <div className="relative w-64 h-64 shrink-0">
-                                {/* Gauge SVG */}
+                                {/* Gauge SVG - Restored to original exactly */}
                                 <svg className="w-full h-full transform -rotate-90 drop-shadow-sm">
                                     <circle
                                         cx="50%" cy="50%" r="45%"
@@ -79,14 +80,14 @@ export function OverviewPulse({
                                     />
                                 </svg>
 
-                                <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
-                                    <span className="text-xs font-black text-slate-400 uppercase tracking-widest mb-1">{t('safeToSpend')}</span>
-                                    <span className="text-4xl font-black font-outfit text-slate-900 tracking-tighter">
+                                <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-14">
+                                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">{t('safeToSpend')}</span>
+                                    <span className="text-lg sm:text-xl lg:text-2xl font-black font-outfit text-slate-900 tracking-tighter leading-none whitespace-nowrap">
                                         {formatCurrency(totalSafeToSpend)}
                                     </span>
-                                    <div className="mt-3 flex items-center gap-2 px-3 py-1 bg-emerald-50 rounded-full border border-emerald-100 shadow-sm">
+                                    <div className="mt-4 flex items-center gap-2 px-3 py-1 bg-emerald-50 rounded-full border border-emerald-100 shadow-sm">
                                         <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                                        <span className="text-[10px] font-bold text-emerald-600 uppercase tracking-tighter">Real-time Data</span>
+                                        <span className="text-[10px] font-bold text-emerald-600 uppercase tracking-tighter">Real-time</span>
                                     </div>
                                 </div>
                             </div>
