@@ -52,11 +52,21 @@ export async function signup(formData: FormData) {
   const protocol = isLocal ? 'http' : 'https'
   const origin = isLocal ? `${protocol}://${host}` : 'https://app.enkpilot.com'
 
+  const termsAccepted = formData.get('termsAccepted') === 'on'
+
+  if (!termsAccepted) {
+    redirect({ href: '/signup?error=Du må godta vilkårene for å fortsette', locale: 'nb' })
+    return
+  }
+
   const data = {
     email: formData.get('email') as string,
     password: formData.get('password') as string,
     options: {
       emailRedirectTo: `${origin}/auth/callback`,
+      data: {
+        terms_accepted_at: new Date().toISOString(),
+      }
     },
   }
 

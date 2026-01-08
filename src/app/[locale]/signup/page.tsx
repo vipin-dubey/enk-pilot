@@ -6,6 +6,7 @@ import { signup } from '../login/actions'
 import { Link } from '@/navigation'
 import { getTranslations } from 'next-intl/server'
 import { PublicFooter } from '@/components/layout/footer'
+import { SignupForm } from '@/components/auth/signup-form'
 
 export default async function SignupPage({
     params,
@@ -49,34 +50,7 @@ export default async function SignupPage({
                                 {message}
                             </div>
                         )}
-                        <form className="space-y-4">
-                            <div className="space-y-2">
-                                <Label htmlFor="email" className="text-slate-600 font-semibold">E-post</Label>
-                                <Input
-                                    id="email"
-                                    name="email"
-                                    type="email"
-                                    placeholder="ola@norman.no"
-                                    required
-                                    className="h-11 border-slate-200"
-                                />
-                            </div>
-                            <div className="space-y-2">
-                                <Label htmlFor="password" className="text-slate-600 font-semibold">Passord</Label>
-                                <Input
-                                    id="password"
-                                    name="password"
-                                    type="password"
-                                    required
-                                    className="h-11 border-slate-200"
-                                />
-                            </div>
-                            <div className="pt-2">
-                                <Button formAction={signup} className="w-full bg-blue-600 hover:bg-blue-700 h-11 font-bold">
-                                    {t('submit')}
-                                </Button>
-                            </div>
-                        </form>
+                        <SignupForm locale={locale} />
                     </CardContent>
                     <CardFooter className="flex flex-col space-y-4 p-8 bg-white rounded-b-xl border-t border-slate-50">
                         <div className="text-center text-sm text-slate-600">

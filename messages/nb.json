@@ -30,7 +30,14 @@
       "hasAccount": "Har du allerede en konto?",
       "loginLink": "Logg inn her",
       "submit": "Registrer deg",
-      "success": "Sjekk e-posten din for å fullføre registreringen"
+      "success": "Sjekk e-posten din for å fullføre registreringen",
+      "termsLabel": "Jeg godtar",
+      "termsLink": "vilkårene for bruk",
+      "termsRequired": "Du må godta vilkårene for å fortsette",
+      "termsDialogTitle": "Vilkår for bruk",
+      "termsDialogDescription": "Vennligst les gjennom og scroll til bunnen for å godta.",
+      "readTerms": "Les vilkår",
+      "accept": "Godta"
     },
     "forgotPassword": {
       "title": "Glemt passord",

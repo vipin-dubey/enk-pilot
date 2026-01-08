@@ -30,7 +30,14 @@
       "hasAccount": "Already have an account?",
       "loginLink": "Log in here",
       "submit": "Sign up",
-      "success": "Check your email to complete your registration"
+      "success": "Check your email to complete your registration",
+      "termsLabel": "I accept the",
+      "termsLink": "terms and conditions",
+      "termsRequired": "You must accept the terms to proceed",
+      "termsDialogTitle": "Terms and Conditions",
+      "termsDialogDescription": "Please read through and scroll to the bottom to accept.",
+      "readTerms": "Read Terms",
+      "accept": "Accept"
     },
     "forgotPassword": {
       "title": "Forgot Password",
