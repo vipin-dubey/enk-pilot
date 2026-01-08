@@ -5,6 +5,7 @@ if (process.env.NODE_ENV === 'development') {
 
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
+import { locales, defaultLocale } from '@/i18n'
 
 export async function updateSession(request: NextRequest, response?: NextResponse) {
   let supabaseResponse = response || NextResponse.next({
@@ -47,6 +48,9 @@ export async function updateSession(request: NextRequest, response?: NextRespons
   const { data: { user } } = await supabase.auth.getUser()
 
   const pathname = request.nextUrl.pathname
+  const segments = pathname.split('/')
+  const currentLocale = locales.includes(segments[1] as any) ? segments[1] : defaultLocale
+
   const isAppSubdomain = host.startsWith('app.')
   const isMarketingHost = !isAppSubdomain
   const isAuthPath = pathname.startsWith('/login') ||
@@ -78,7 +82,9 @@ export async function updateSession(request: NextRequest, response?: NextRespons
     const isLandingPage = pathname === '/' || pathname === '/en' || pathname === '/nb'
     if (!user && !isAuthPath && !isLandingPage) {
       const target = request.nextUrl.clone()
-      target.pathname = '/login'
+      // Construct locale-aware login path
+      const loginPath = currentLocale === defaultLocale ? '/login' : `/${currentLocale}/login`
+      target.pathname = loginPath
       return syncRedirect(target)
     }
 
