@@ -9,6 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { LogOut, LayoutDashboard, Calendar, Receipt, Settings, Sparkles, UserCircle, History, ShieldCheck, Globe } from 'lucide-react'
 import { LanguageSwitcher } from '@/components/language-switcher'
 import { NotificationCenter } from '@/components/dashboard/notification-center'
+import { PublicFooter } from '@/components/layout/footer'
 import { getTranslations } from 'next-intl/server'
 import { MvaSummary } from '@/components/dashboard/mva-summary'
 import { DeductionOptimizer } from '@/components/dashboard/deduction-optimizer'
@@ -244,26 +245,7 @@ export default async function DashboardPage({
         <LegalShield />
       </main>
 
-      <footer className="mt-8 pb-12 px-6">
-        <div className="max-w-7xl mx-auto pt-8 border-t border-slate-200">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-6 opacity-60 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-500">
-            <div className="flex items-center gap-6">
-              <div className="flex items-center gap-2">
-                <ShieldCheck className="h-4 w-4 text-emerald-600" />
-                <span className="text-[10px] font-black uppercase tracking-widest text-slate-600">GDPR Compliant</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Globe className="h-4 w-4 text-blue-600" />
-                <span className="text-[10px] font-black uppercase tracking-widest text-slate-600">Stored in EU</span>
-              </div>
-            </div>
-            <div className="flex flex-col items-center md:items-end gap-1">
-              <p className="text-[10px] font-black uppercase tracking-widest text-slate-600">Built with 🇳🇴 in Norway</p>
-              <p className="text-[9px] text-slate-400 font-medium">ENK Pilot • No data tracking, no external AI exposure.</p>
-            </div>
-          </div>
-        </div>
-      </footer>
+      <PublicFooter />
     </div>
   )
 }

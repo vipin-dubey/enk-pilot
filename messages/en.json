@@ -13,7 +13,8 @@
     "search": "Search...",
     "foundingUser": "Founding Supporter",
     "freePlan": "Free",
-    "settings": "Settings"
+    "settings": "Settings",
+    "backToDashboard": "Back to Dashboard"
   },
   "dashboard": {
     "title": "Dashboard",

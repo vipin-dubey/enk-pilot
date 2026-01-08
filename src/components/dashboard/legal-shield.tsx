@@ -1,11 +1,14 @@
 'use client'
 
-import { AlertTriangle, Gavel } from 'lucide-react'
+import { AlertTriangle, Gavel, ShieldCheck } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 import { Card, CardContent } from '@/components/ui/card'
+import { Link } from '@/navigation'
+import { useParams } from 'next/navigation'
 
 export function LegalShield() {
   const t = useTranslations('legal')
+  const { locale } = useParams() as { locale: string }
 
   return (
     <Card className="border-none shadow-premium bg-slate-50 border border-slate-200 mt-8 mb-4 overflow-hidden">
@@ -43,6 +46,20 @@ export function LegalShield() {
                 <AlertTriangle className="h-3 w-3" />
                 <span>AS-IS SERVICE</span>
               </div>
+              <div className="flex items-center gap-1.5 text-[9px] font-bold text-slate-400 uppercase tracking-widest">
+                <ShieldCheck className="h-3 w-3 text-emerald-500" />
+                <span>RIGHT TO ERASURE</span>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-4 pt-4">
+              <Link href="/privacy" className="text-[10px] font-black uppercase tracking-widest text-blue-600 hover:text-blue-700 transition-colors">
+                {locale === 'en' ? 'Read full privacy policy' : 'Les full personvernserklæring'}
+              </Link>
+              <span className="text-slate-300">•</span>
+              <Link href="/terms" className="text-[10px] font-black uppercase tracking-widest text-blue-600 hover:text-blue-700 transition-colors">
+                {locale === 'en' ? 'Read full terms' : 'Les fullstendige vilkår'}
+              </Link>
             </div>
           </div>
         </div>

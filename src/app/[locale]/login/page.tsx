@@ -6,6 +6,7 @@ import { login, signup, resendVerification } from './actions'
 import { Link } from '@/navigation'
 import { getTranslations } from 'next-intl/server'
 import AuthHashHandler from './auth-hash-handler'
+import { PublicFooter } from '@/components/layout/footer'
 
 export default async function LoginPage({
   params,
@@ -101,6 +102,9 @@ export default async function LoginPage({
           </Link>
         </CardFooter>
       </Card>
+      <div className="fixed bottom-0 left-0 right-0 p-6 sm:p-8">
+        <PublicFooter />
+      </div>
     </div>
   )
 }

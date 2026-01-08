@@ -13,7 +13,8 @@
     "search": "Søk...",
     "foundingUser": "Grunnlegger",
     "freePlan": "Gratis",
-    "settings": "Innstillinger"
+    "settings": "Innstillinger",
+    "backToDashboard": "Tilbake til dashbord"
   },
   "dashboard": {
     "title": "Dashbord",
