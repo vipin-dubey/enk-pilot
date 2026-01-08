@@ -94,8 +94,9 @@ export function MobileMenu({ isPro, profile }: { isPro?: boolean, profile?: any 
 
         {/* Top Bar - Tightened */}
         <div className="flex items-center justify-between p-4 border-b border-slate-50">
-          <Link href="/" onClick={() => setIsOpen(false)} className="font-outfit font-black text-xl tracking-tighter">
-            <span className="text-blue-600">ENK</span> Pilot
+          <Link href="/" onClick={() => setIsOpen(false)} className="flex items-center">
+            <img src="/logo.png" alt="ENK Pilot" className="h-7 w-auto object-contain" />
+            <span className="sr-only">ENK Pilot</span>
           </Link>
           <Button 
             variant="ghost" 

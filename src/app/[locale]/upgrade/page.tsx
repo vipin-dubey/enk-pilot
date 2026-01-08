@@ -22,7 +22,11 @@ export default function UpgradePage() {
         <button onClick={() => router.back()} className="p-2 -ml-2 text-slate-400 hover:text-white transition-colors">
           <ArrowLeft className="h-6 w-6" />
         </button>
-        <span className="font-outfit font-black text-lg tracking-tight">ENK Pilot <span className="text-blue-400">Pro</span></span>
+        <Link href="/" className="flex items-center">
+          <img src="/logo.png" alt="ENK Pilot" className="h-6 w-auto brightness-0 invert" />
+          <span className="sr-only">ENK Pilot Pro</span>
+          <span className="ml-2 font-outfit font-black text-lg tracking-tight text-blue-400">Pro</span>
+        </Link>
         <div className="w-10"></div> {/* Spacer */}
       </div>
 
@@ -33,10 +37,11 @@ export default function UpgradePage() {
             {/* Left Panel: Features */}
             <div className="md:col-span-2 bg-slate-900 p-8 md:p-10 text-white flex flex-col justify-between">
               <div className="hidden md:block">
-                <div className="flex items-center gap-3 mb-8">
-                  <div className="h-10 w-10 rounded-xl bg-blue-600 flex items-center justify-center font-bold text-xl shadow-lg shadow-blue-600/20">P</div>
-                  <span className="font-outfit font-black text-2xl tracking-tight">ENK Pilot <span className="text-blue-400">Pro</span></span>
-                </div>
+                <Link href="/" className="flex items-center gap-3 mb-8">
+                  <img src="/logo.png" alt="ENK Pilot" className="h-10 w-auto brightness-0 invert" />
+                  <span className="sr-only">ENK Pilot Pro</span>
+                  <span className="font-outfit font-black text-2xl tracking-tight text-blue-400">Pro</span>
+                </Link>
                 
                 <h3 className="text-2xl font-bold mb-6 leading-tight">
                   {locale === 'nb' ? 'Gjør regnskapet ditt skuddsikkert' : 'Make your accounting bulletproof'}
@@ -106,7 +111,12 @@ export default function UpgradePage() {
             {/* Right Panel: Pricing */}
             <div className="md:col-span-3 bg-white p-6 md:p-8 flex flex-col justify-center">
               <div className="mb-6 text-center md:text-left">
-                <h2 className="text-2xl md:text-4xl font-black font-outfit text-slate-900 tracking-tight mb-1">{t('title')}</h2>
+                <h2 className="text-2xl md:text-4xl font-black font-outfit text-slate-900 tracking-tight mb-1 flex flex-wrap items-center justify-center md:justify-start gap-x-2">
+                  {locale === 'nb' ? 'Oppgrader til' : 'Upgrade to'}
+                  <img src="/logo.png" alt="ENK Pilot" className="h-8 md:h-10 w-auto object-contain inline-block" />
+                  <span className="sr-only">ENK Pilot</span>
+                  Pro
+                </h2>
                 <p className="text-slate-500 text-sm font-medium leading-normal max-w-md mx-auto md:mx-0">{t('description')}</p>
               </div>
 

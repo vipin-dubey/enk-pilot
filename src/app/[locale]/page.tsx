@@ -67,8 +67,9 @@ export default async function DashboardPage({
       <header className="sticky top-0 z-10 w-full border-b bg-white/80 backdrop-blur-md">
         <div className="container mx-auto px-4 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Link href="/" className="flex items-center gap-2 font-bold text-xl font-outfit">
-              <span className="text-blue-600">ENK</span> Pilot
+            <Link href="/" className="flex items-center">
+              <img src="/logo.png" alt="ENK Pilot" className="h-8 w-auto object-contain" />
+              <span className="sr-only">ENK Pilot</span>
             </Link>
           </div>
           

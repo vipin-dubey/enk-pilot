@@ -35,9 +35,12 @@ export function PublicFooter() {
               </a>
             </div>
             <div className="flex flex-col items-center md:items-end gap-1">
-              <p className="text-[9px] font-black uppercase tracking-widest text-slate-400">
-                ENK Pilot &copy; 2026 • Norway
-              </p>
+              <div className="flex items-center gap-2">
+                <img src="/logo.png" alt="" className="h-3 w-auto grayscale opacity-50" />
+                <p className="text-[9px] font-black uppercase tracking-widest text-slate-400">
+                  ENK Pilot &copy; 2026 • Norway
+                </p>
+              </div>
               <p className="text-[8px] text-slate-400 opacity-60">
                 {locale === 'en' ? 'A modern tax tool for sole proprietors' : 'Et moderne skatteverktøy for enkeltpersonforetak'}
               </p>
