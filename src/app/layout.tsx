@@ -20,7 +20,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="nb">
+    <html lang="nb" suppressHydrationWarning>
       <PHProvider>
         <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
           <Suspense fallback={null}>

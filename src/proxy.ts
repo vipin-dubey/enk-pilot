@@ -1,13 +1,25 @@
 import createMiddleware from 'next-intl/middleware';
 import { locales, defaultLocale } from './i18n';
+import { type NextRequest } from 'next/server';
+import { updateSession } from '@/utils/supabase/middleware';
 
-const middleware = createMiddleware({
+const intlMiddleware = createMiddleware({
   locales,
   defaultLocale,
   localePrefix: 'as-needed'
 });
 
-export default middleware;
+export default async function middleware(request: NextRequest) {
+  const pathname = request.nextUrl.pathname;
+
+  // Skip intl for auth routes and public assets
+  if (pathname.startsWith('/auth') || pathname.startsWith('/api')) {
+    return await updateSession(request);
+  }
+
+  const response = intlMiddleware(request);
+  return await updateSession(request, response);
+}
 
 export const config = {
   // Match all pathnames except for

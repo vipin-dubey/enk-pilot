@@ -24,10 +24,13 @@ import { MobileMenu } from '@/components/dashboard/mobile-menu'
 
 export default async function DashboardPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ locale: string }>
+  searchParams: Promise<{ message?: string }>
 }) {
   const { locale } = await params
+  const { message } = await searchParams
   const t = await getTranslations('dashboard')
   const tTabs = await getTranslations('tabs')
   const tCommon = await getTranslations('common')
@@ -102,6 +105,12 @@ export default async function DashboardPage({
       </header>
 
       <main className="container mx-auto px-4 pt-8 pb-4 max-w-6xl">
+        {message && (
+          <div className="mb-6 p-4 bg-emerald-50 border border-emerald-200 rounded-xl flex items-center gap-3 text-emerald-700 animate-in fade-in slide-in-from-top-4 duration-500">
+            <ShieldCheck className="h-5 w-5" />
+            <p className="font-bold text-sm tracking-tight">{message}</p>
+          </div>
+        )}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-6">
           <div className="flex items-start justify-between w-full md:w-auto gap-4">
             <div className="space-y-1">

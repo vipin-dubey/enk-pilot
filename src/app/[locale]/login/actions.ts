@@ -15,7 +15,8 @@ export async function login(formData: FormData) {
   const { error } = await supabase.auth.signInWithPassword(data)
 
   if (error) {
-    redirect({ href: '/error', locale: 'nb' })
+    console.error('Login error:', error.message)
+    redirect({ href: `/login?error=${encodeURIComponent(error.message)}`, locale: 'nb' })
     return
   }
 
@@ -34,21 +35,55 @@ export async function login(formData: FormData) {
 
 export async function signup(formData: FormData) {
   const supabase = await createClient()
+  const headersList = await (await import('next/headers')).headers()
+  const origin = headersList.get('origin')
 
   const data = {
     email: formData.get('email') as string,
     password: formData.get('password') as string,
+    options: {
+      emailRedirectTo: `${origin}/auth/callback`,
+    },
   }
 
   const { error } = await supabase.auth.signUp(data)
 
   if (error) {
-    redirect({ href: '/error', locale: 'nb' })
+    console.error('Signup error:', error.message)
+    redirect({ href: `/login?error=${encodeURIComponent(error.message)}`, locale: 'nb' })
     return
   }
 
-  revalidatePath('/', 'layout')
-  redirect({ href: '/', locale: 'nb' })
+  // Supabase signUp returns a user object even if email confirmation is required.
+  // We should check if the user is "pending" or just tell them to check their email.
+  redirect({ href: '/login?message=Check your email to continue', locale: 'nb' })
+}
+
+export async function resendVerification(formData: FormData) {
+  const supabase = await createClient()
+  const headersList = await (await import('next/headers')).headers()
+  const origin = headersList.get('origin')
+  const email = formData.get('email') as string
+
+  if (!email) {
+    redirect({ href: '/login?error=Vennligst skriv inn e-postadressen din først', locale: 'nb' })
+    return
+  }
+
+  const { error } = await supabase.auth.resend({
+    type: 'signup',
+    email: email,
+    options: {
+      emailRedirectTo: `${origin}/auth/callback`,
+    },
+  })
+
+  if (error) {
+    redirect({ href: `/login?error=${encodeURIComponent(error.message)}`, locale: 'nb' })
+    return
+  }
+
+  redirect({ href: '/login?message=Ny link er sendt til din e-post', locale: 'nb' })
 }
 
 export async function signout() {

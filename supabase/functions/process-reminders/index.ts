@@ -106,28 +106,69 @@ serve(async (req) => {
             // Send Email if enabled and API key is present
             if (profile.email_notifications_enabled && RESEND_API_KEY) {
               try {
-                // Get user email from auth
-                const { data: { user }, error: userError } = await supabase.auth.admin.getUserById(profile.id)
+                const { data: { user } } = await supabase.auth.admin.getUserById(profile.id)
 
                 if (user?.email) {
-                  const emailBody = isEnglish ? `
-                    <h2>Tax Deadline Reminder</h2>
-                    <p>Hi ${profile.full_name || 'there'},</p>
-                    <p>This is a reminder that your <strong>${typeLabel}</strong> deadline is approaching.</p>
-                    <p><strong>Due Date:</strong> ${deadlineDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</p>
-                    <p><strong>Days Remaining:</strong> ${diffDays}</p>
-                    <p>Log in to ENK Pilot to mark it as paid once you've submitted your payment.</p>
-                    <br/>
-                    <p>Best regards,<br/>The ENK Pilot Team</p>
-                  ` : `
-                    <h2>Skattepåminnelse</h2>
-                    <p>Hei ${profile.full_name || 'deg'},</p>
-                    <p>Dette er en påminnelse om at din frist for <strong>${typeLabel}</strong> nærmer seg.</p>
-                    <p><strong>Forfallsdato:</strong> ${deadlineDate.toLocaleDateString('nb-NO', { month: 'long', day: 'numeric', year: 'numeric' })}</p>
-                    <p><strong>Dager igjen:</strong> ${diffDays}</p>
-                    <p>Logg inn på ENK Pilot for å markere den som betalt når du har sendt inn betalingen.</p>
-                    <br/>
-                    <p>Vennlig hilsen,<br/>ENK Pilot-teamet</p>
+                  const emailBody = `
+                  <!DOCTYPE html>
+                  <html>
+                  <head>
+                    <style>
+                      body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #f8fafc; margin: 0; padding: 0; }
+                      .container { max-width: 600px; margin: 20px auto; background: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+                      .header { background-color: #ffffff; padding: 32px 32px 16px 32px; text-align: center; border-bottom: 1px solid #f1f5f9; }
+                      .logo-box { background-color: #2563eb; width: 44px; height: 44px; border-radius: 10px; display: inline-block; margin-bottom: 12px; text-align: center; }
+                      .logo-text { color: #ffffff; font-weight: bold; font-size: 18px; line-height: 44px; margin: 0; padding: 0; display: block; }
+                      .brand-name { font-size: 20px; font-weight: 800; color: #0f172a; letter-spacing: -0.025em; margin: 0; text-transform: uppercase; }
+                      .content { padding: 32px; color: #475569; line-height: 1.6; }
+                      .content h1 { color: #0f172a; font-size: 24px; font-weight: 700; margin-bottom: 16px; text-align: center; }
+                      .deadline-card { background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; margin: 24px 0; }
+                      .deadline-item { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 14px; }
+                      .deadline-label { font-weight: 600; color: #64748b; }
+                      .deadline-value { font-weight: 700; color: #0f172a; }
+                      .button { display: block; background-color: #2563eb; color: #ffffff !important; padding: 14px; border-radius: 12px; text-decoration: none; font-weight: 600; font-size: 16px; text-align: center; margin-top: 24px; }
+                      .footer { background-color: #f8fafc; padding: 24px; text-align: center; color: #94a3b8; font-size: 12px; border-top: 1px solid #f1f5f9; }
+                    </style>
+                  </head>
+                  <body>
+                    <div class="container">
+                      <div class="header">
+                        <div class="logo-box"><span class="logo-text">EP</span></div>
+                        <h2 class="brand-name">ENK Pilot</h2>
+                      </div>
+                      <div class="content">
+                        <h1>${isEnglish ? 'Deadline Reminder' : 'Påminnelse om frist'}</h1>
+                        <p>Hei ${profile.full_name || 'deg'},</p>
+                        <p>${isEnglish ? 'This is a friendly reminder from your financial co-pilot.' : 'Dette er en vennlig påminnelse fra din økonomiske medpilot.'}</p>
+                        
+                        <div class="deadline-card">
+                          <div class="deadline-item">
+                            <span class="deadline-label">${isEnglish ? 'Type:' : 'Type:'}</span>
+                            <span class="deadline-value">${typeLabel}</span>
+                          </div>
+                          <div class="deadline-item">
+                            <span class="deadline-label">${isEnglish ? 'Due Date:' : 'Forfallsdato:'}</span>
+                            <span class="deadline-value">${deadlineDate.toLocaleDateString(isEnglish ? 'en-US' : 'nb-NO', { month: 'long', day: 'numeric', year: 'numeric' })}</span>
+                          </div>
+                          <div class="deadline-item">
+                            <span class="deadline-label">${isEnglish ? 'Days Remaining:' : 'Dager igjen:'}</span>
+                            <span class="deadline-value">${diffDays}</span>
+                          </div>
+                        </div>
+
+                        <p>${isEnglish ? 'Log in to ENK Pilot to record your payment and keep your tax health in check.' : 'Logg inn på ENK Pilot for å registrere betalingen og holde oversikt over din skattehelse.'}</p>
+                        
+                        <a href="https://enkpilot.com" class="button">${isEnglish ? 'Open Dashboard' : 'Åpne Dashboard'}</a>
+                      </div>
+                      <div class="footer">
+                        <p><strong>ENK Pilot</strong> — ${isEnglish ? 'Your financial co-pilot' : 'Din økonomiske medpilot'}</p>
+                        <p>Oslo, Norge</p>
+                        <p style="margin-top: 12px;">${isEnglish ? 'You received this because you enabled email reminders in your settings.' : 'Du mottar denne e-posten fordi du har aktivert påminnelser i dine innstillinger.'}</p>
+                        <p>&copy; 2026 ENK Pilot</p>
+                      </div>
+                    </div>
+                  </body>
+                  </html>
                   `
 
                   const res = await fetch('https://api.resend.com/emails', {
@@ -137,10 +178,14 @@ serve(async (req) => {
                       'Authorization': `Bearer ${RESEND_API_KEY}`,
                     },
                     body: JSON.stringify({
-                      from: 'ENK Pilot <onboarding@resend.dev>',
+                      from: 'ENK Pilot <no-reply@notify.enkpilot.com>',
                       to: [user.email],
                       subject: title,
                       html: emailBody,
+                      headers: {
+                        'List-Unsubscribe': '<https://enkpilot.com/settings>',
+                        'X-Entity-Ref-ID': `${profile.id}-${deadlineDate.getTime()}`
+                      }
                     }),
                   })
 

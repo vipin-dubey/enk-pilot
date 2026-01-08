@@ -2,20 +2,25 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { login, signup } from './actions'
+import { login, signup, resendVerification } from './actions'
 import { Link } from '@/navigation'
 import { getTranslations } from 'next-intl/server'
+import AuthHashHandler from './auth-hash-handler'
 
 export default async function LoginPage({
-  params
+  params,
+  searchParams
 }: {
   params: Promise<{ locale: string }>
+  searchParams: Promise<{ error?: string, message?: string }>
 }) {
   const { locale } = await params
+  const { error, message } = await searchParams
   const t = await getTranslations('common')
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-slate-50 px-4 py-12 sm:px-6 lg:px-8">
+      <AuthHashHandler />
       <Card className="w-full max-w-md shadow-lg border-none">
         <CardHeader className="space-y-1 text-center bg-white rounded-t-xl pb-8">
           <div className="flex justify-center mb-4">
@@ -29,6 +34,16 @@ export default async function LoginPage({
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4 pt-6 bg-white px-8">
+          {error && (
+            <div className="p-3 text-sm font-medium text-red-600 bg-red-50 rounded-lg border border-red-100 animate-in fade-in slide-in-from-top-2 duration-300">
+              {error}
+            </div>
+          )}
+          {message && (
+            <div className="p-3 text-sm font-medium text-blue-600 bg-blue-50 rounded-lg border border-blue-100 animate-in fade-in slide-in-from-top-2 duration-300">
+              {message}
+            </div>
+          )}
           <form className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="email" className="text-slate-600 font-semibold">E-post</Label>
@@ -51,13 +66,24 @@ export default async function LoginPage({
                 className="h-11 border-slate-200"
               />
             </div>
-            <div className="flex gap-2 pt-2">
-              <Button formAction={login} className="flex-1 bg-blue-600 hover:bg-blue-700 h-11 font-bold">
-                Logg inn
-              </Button>
-              <Button formAction={signup} variant="outline" className="flex-1 h-11 border-slate-200 text-slate-600 hover:bg-slate-50 font-bold">
-                Registrer deg
-              </Button>
+            <div className="flex flex-col gap-2 pt-2">
+              <div className="flex gap-2">
+                <Button formAction={login} className="flex-1 bg-blue-600 hover:bg-blue-700 h-11 font-bold">
+                  Logg inn
+                </Button>
+                <Button formAction={signup} variant="outline" className="flex-1 h-11 border-slate-200 text-slate-600 hover:bg-slate-50 font-bold">
+                  Registrer deg
+                </Button>
+              </div>
+              {(error || (message && message.toLowerCase().includes('email'))) && (
+                <Button 
+                  formAction={resendVerification}
+                  variant="link" 
+                  className="text-xs text-blue-600 font-bold hover:text-blue-700 h-auto p-0"
+                >
+                  Send bekreftelse på nytt?
+                </Button>
+              )}
             </div>
           </form>
         </CardContent>
