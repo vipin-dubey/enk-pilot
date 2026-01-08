@@ -62,11 +62,26 @@
     "settings": "Innstillinger"
   },
   "tabs": {
-    "safeToSpend": "Trygt å bruke",
+    "overview": "Puls",
+    "safeToSpend": "Kalkulator",
     "deadlines": "Frister",
-    "receipts": "Kvitteringer",
+    "receipts": "Bilag",
     "history": "Journal",
     "analytics": "Analyse"
+  },
+  "overview": {
+    "safeToSpend": "Trygt å bruke",
+    "businessHealth": "Bedriftspuls",
+    "healthDescription": "Live oversikt over ditt enkeltpersonforetaks økonomiske helse.",
+    "ytdProfit": "Årets overskudd (Hittil)",
+    "ytdExpenses": "Årets kostnader",
+    "taxReserved": "Reservert skatt",
+    "mvaReserved": "Reservert MVA",
+    "nextDeadline": "Neste frist",
+    "noDeadlines": "Ingen kommende frister",
+    "taxProtection": "Skattebeskyttelse",
+    "receiptTracker": "Bilagskontroll",
+    "matchingData": "Journaldata synkronisert"
   },
   "receipts": {
     "title": "Last opp kvittering",

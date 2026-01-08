@@ -23,6 +23,8 @@ import { CfoAnalytics } from '@/components/dashboard/cfo-analytics'
 import { signout } from './login/actions'
 import { MobileMenu } from '@/components/dashboard/mobile-menu'
 import { LandingPage } from '@/components/landing-page'
+import { OverviewPulse } from '@/components/dashboard/overview-pulse'
+import { getUpcomingDeadlines } from '@/lib/deadlines'
 
 export default async function DashboardPage({
   params,
@@ -62,6 +64,21 @@ export default async function DashboardPage({
   const seatsLeft = Math.max(0, 100 - (foundingCount || 0))
   const percentFull = Math.round((currentTaken / virtualTotal) * 100)
 
+  // Fetch aggregate data for Overview Pulse
+  const { data: allocations } = await supabase
+    .from('allocations')
+    .select('safe_to_spend, tax_reserved, mva_reserved')
+    .eq('user_id', user.id)
+
+  const totals = (allocations || []).reduce((acc, curr) => ({
+    safeToSpend: acc.safeToSpend + (Number(curr.safe_to_spend) || 0),
+    taxReserved: acc.taxReserved + (Number(curr.tax_reserved) || 0),
+    mvaReserved: acc.mvaReserved + (Number(curr.mva_reserved) || 0),
+  }), { safeToSpend: 0, taxReserved: 0, mvaReserved: 0 })
+
+  const upcomingDeadlines = getUpcomingDeadlines()
+  const actualNextDeadline = upcomingDeadlines.filter(d => d.date.getTime() >= new Date().setHours(0, 0, 0, 0))[0]
+
   return (
     <div className="min-h-screen bg-slate-50/50">
       <header className="sticky top-0 z-10 w-full border-b bg-white/80 backdrop-blur-md">
@@ -72,7 +89,7 @@ export default async function DashboardPage({
               <span className="sr-only">ENK Pilot</span>
             </Link>
           </div>
-          
+
           <div className="flex items-center gap-2 md:gap-4">
             <div className="flex items-center gap-2">
               {profile?.is_founding_user && (
@@ -92,19 +109,28 @@ export default async function DashboardPage({
               )}
               <NotificationCenter />
             </div>
-            
+
             {/* Desktop Only Actions */}
-            <div className="hidden md:flex items-center gap-4">
+            <div className="hidden md:flex items-center gap-2 lg:gap-3">
               <LanguageSwitcher />
-              <div className="h-8 w-8 rounded-full bg-slate-100 flex items-center justify-center border">
-                <UserCircle className="h-5 w-5 text-slate-500" />
-              </div>
+
+              <Link href="/settings">
+                <Button variant="ghost" size="icon" className="h-9 w-9 text-slate-500 hover:text-blue-600 hover:bg-blue-50 rounded-full transition-colors">
+                  <Settings className="h-5 w-5" />
+                  <span className="sr-only">{tCommon('settings')}</span>
+                </Button>
+              </Link>
+
               <form action={signout}>
-                <Button variant="ghost" size="sm" className="gap-2 text-slate-500">
-                  <LogOut className="h-4 w-4" />
-                  <span>{tCommon('logout')}</span>
+                <Button variant="ghost" size="icon" className="h-9 w-9 text-slate-500 hover:text-rose-600 hover:bg-rose-50 rounded-full transition-colors">
+                  <LogOut className="h-5 w-5" />
+                  <span className="sr-only">{tCommon('logout')}</span>
                 </Button>
               </form>
+
+              <div className="h-8 w-8 rounded-full bg-slate-100 flex items-center justify-center border border-slate-200">
+                <UserCircle className="h-5 w-5 text-slate-500" />
+              </div>
             </div>
 
             {/* Mobile Dedicated Menu */}
@@ -130,77 +156,100 @@ export default async function DashboardPage({
                 {t('welcome', { name: profile?.full_name || user.email?.split('@')[0] })}
               </p>
             </div>
-            
+
             <div className="md:hidden pt-1 shrink-0">
-              <DashboardHeaderActions showSettings={false} />
+              <Link href="/settings">
+                <Button variant="ghost" size="icon" className="h-9 w-9 text-slate-500 rounded-full">
+                  <Settings className="h-5 w-5" />
+                </Button>
+              </Link>
             </div>
           </div>
-          
-          <div className="flex flex-col items-center md:items-end gap-4">
-            {profile?.is_pro && (
-              <div className="flex items-center gap-2">
-                <span className="inline-flex items-center rounded-full bg-blue-50 px-3 py-1 text-xs font-bold text-blue-700 ring-1 ring-inset ring-blue-700/10">
-                  {t('proAccount')}
-                </span>
-              </div>
-            )}
-            {!profile?.is_pro && (
-              <Link href="/upgrade" className="max-w-sm w-full">
-                <Card className="w-full bg-gradient-to-br from-indigo-600 via-blue-600 to-blue-700 text-white border-none shadow-xl overflow-hidden relative group transition-all hover:shadow-2xl hover:-translate-y-0.5 animate-in fade-in slide-in-from-right duration-700 cursor-pointer">
-                  <div className="absolute top-0 right-0 p-3 opacity-10 group-hover:opacity-20 transition-opacity">
-                    <Sparkles className="h-12 w-12" />
-                  </div>
-                
-                <div className="absolute top-2 left-2 flex items-center gap-1.5 px-2 py-0.5 bg-white/20 backdrop-blur-md rounded-full border border-white/20">
-                  <span className="relative flex h-2 w-2">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
-                    <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-500"></span>
-                  </span>
-                  <span className="text-[9px] font-black uppercase tracking-tighter text-white">
-                    {locale === 'nb' ? 'Begrenset tid' : 'Limited Time'}
+
+          <div className="flex flex-col items-center md:items-end gap-3">
+            <DashboardHeaderActions />
+
+            <div className="flex flex-col items-center md:items-end gap-4">
+              {profile?.is_pro && (
+                <div className="flex items-center gap-2">
+                  <span className="inline-flex items-center rounded-full bg-blue-50 px-3 py-1 text-xs font-bold text-blue-700 ring-1 ring-inset ring-blue-700/10">
+                    {t('proAccount')}
                   </span>
                 </div>
-
-                <div className="p-5 pt-8 flex items-center gap-4 relative z-0">
-                  <div className="h-10 w-10 shrink-0 rounded-full bg-white/20 flex items-center justify-center backdrop-blur-sm border border-white/30">
-                    <Sparkles className="h-5 w-5 text-white" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-black tracking-tight">{locale === 'nb' ? 'Grunnlegger-tilbud' : 'Founding Offer'}</p>
-                    <div className="flex items-center gap-2 mt-0.5">
-                      <p className="text-[11px] text-blue-100 font-medium leading-tight line-clamp-1">
-                        {locale === 'nb' ? `${seatsLeft} plasser igjen!` : `${seatsLeft} seats left!`}
-                      </p>
-                        <div className="flex-1 h-1 bg-white/20 rounded-full overflow-hidden max-w-[60px]">
-                          <div 
-                            className="h-full bg-amber-400 transition-all duration-1000" 
-                            style={{ width: `${percentFull}%` }}
-                          ></div>
-                        </div>
+              )}
+              {!profile?.is_pro && (
+                <Link href="/upgrade" className="max-w-sm w-full">
+                  <Card className="w-full bg-gradient-to-br from-indigo-600 via-blue-600 to-blue-700 text-white border-none shadow-xl overflow-hidden relative group transition-all hover:shadow-2xl hover:-translate-y-0.5 animate-in fade-in slide-in-from-right duration-700 cursor-pointer">
+                    <div className="absolute top-0 right-0 p-3 opacity-10 group-hover:opacity-20 transition-opacity">
+                      <Sparkles className="h-12 w-12" />
                     </div>
-                  </div>
-                  <Button size="sm" variant="secondary" className="bg-white text-blue-700 hover:bg-blue-50 border-none font-black shadow-sm h-8 px-4">
-                    kr 299
-                  </Button>
-                </div>
-                </Card>
-              </Link>
-            )}
-        </div>
-      </div>
 
-      <DashboardTabs>
+                    <div className="absolute top-2 left-2 flex items-center gap-1.5 px-2 py-0.5 bg-white/20 backdrop-blur-md rounded-full border border-white/20">
+                      <span className="relative flex h-2 w-2">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+                        <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-500"></span>
+                      </span>
+                      <span className="text-[9px] font-black uppercase tracking-tighter text-white">
+                        {locale === 'nb' ? 'Begrenset tid' : 'Limited Time'}
+                      </span>
+                    </div>
+
+                    <div className="p-5 pt-8 flex items-center gap-4 relative z-0">
+                      <div className="h-10 w-10 shrink-0 rounded-full bg-white/20 flex items-center justify-center backdrop-blur-sm border border-white/30">
+                        <Sparkles className="h-5 w-5 text-white" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-black tracking-tight">{locale === 'nb' ? 'Grunnlegger-tilbud' : 'Founding Offer'}</p>
+                        <div className="flex items-center gap-2 mt-0.5">
+                          <p className="text-[11px] text-blue-100 font-medium leading-tight line-clamp-1">
+                            {locale === 'nb' ? `${seatsLeft} plasser igjen!` : `${seatsLeft} seats left!`}
+                          </p>
+                          <div className="flex-1 h-1 bg-white/20 rounded-full overflow-hidden max-w-[60px]">
+                            <div
+                              className="h-full bg-amber-400 transition-all duration-1000"
+                              style={{ width: `${percentFull}%` }}
+                            ></div>
+                          </div>
+                        </div>
+                      </div>
+                      <Button size="sm" variant="secondary" className="bg-white text-blue-700 hover:bg-blue-50 border-none font-black shadow-sm h-8 px-4">
+                        kr 299
+                      </Button>
+                    </div>
+                  </Card>
+                </Link>
+              )}
+            </div>
+          </div>
+        </div>
+
+        <DashboardTabs>
           {{
+            overview: (
+              <OverviewPulse
+                totalSafeToSpend={totals.safeToSpend}
+                totalTaxReserved={totals.taxReserved}
+                totalMvaReserved={totals.mvaReserved}
+                ytdProfit={profile?.ytd_gross_income || 0}
+                ytdExpenses={profile?.ytd_expenses || 0}
+                nextDeadline={actualNextDeadline ? {
+                  type: actualNextDeadline.type,
+                  date: actualNextDeadline.date,
+                  label: actualNextDeadline.label
+                } : undefined}
+                isPro={profile?.plan_type === 'founding'}
+              />
+            ),
             safeToSpend: (
               <div className="space-y-6">
-                <SmartTaxAssistant 
-                  isPro={profile?.is_pro} 
-                  seatsLeft={seatsLeft} 
-                  percentFull={percentFull} 
+                <SmartTaxAssistant
+                  isPro={profile?.is_pro}
+                  seatsLeft={seatsLeft}
+                  percentFull={percentFull}
                 />
-                <SafeToSpendCalculator 
+                <SafeToSpendCalculator
                   initialTaxRate={profile?.tax_rate_percent}
-                  isMvaRegistered={profile?.is_mva_registered} 
+                  isMvaRegistered={profile?.is_mva_registered}
                   ytdGrossIncome={profile?.ytd_gross_income}
                   ytdExpenses={profile?.ytd_expenses}
                   externalSalary={profile?.external_salary_income}
@@ -209,7 +258,7 @@ export default async function DashboardPage({
                   seatsLeft={seatsLeft}
                   percentFull={percentFull}
                   virtualDeductions={
-                    (profile?.has_home_office ? 2050 : 0) + 
+                    (profile?.has_home_office ? 2050 : 0) +
                     ((profile?.estimated_annual_mileage || 0) * 3.50)
                   }
                 />
@@ -225,15 +274,15 @@ export default async function DashboardPage({
               </div>
             ),
             history: (
-              <TransactionJournal 
-                isPro={profile?.is_pro} 
+              <TransactionJournal
+                isPro={profile?.is_pro}
                 trialExportsUsed={profile?.trial_exports_used || 0}
                 seatsLeft={seatsLeft}
                 percentFull={percentFull}
               />
             ),
             analytics: (
-              <CfoAnalytics 
+              <CfoAnalytics
                 isPro={profile?.is_pro}
                 seatsLeft={seatsLeft}
                 percentFull={percentFull}

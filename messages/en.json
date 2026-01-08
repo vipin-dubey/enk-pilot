@@ -62,11 +62,26 @@
     "settings": "Settings"
   },
   "tabs": {
-    "safeToSpend": "Safe-to-Spend",
+    "overview": "Pulse",
+    "safeToSpend": "Calculator",
     "deadlines": "Deadlines",
     "receipts": "Receipts",
     "history": "Journal",
     "analytics": "Analytics"
+  },
+  "overview": {
+    "safeToSpend": "Safe to Spend",
+    "businessHealth": "Business Pulse",
+    "healthDescription": "Live overview of your sole proprietorship's financial health.",
+    "ytdProfit": "YTD Net Profit",
+    "ytdExpenses": "YTD Expenses",
+    "taxReserved": "Reserved for Tax",
+    "mvaReserved": "Reserved for MVA",
+    "nextDeadline": "Next Deadline",
+    "noDeadlines": "No upcoming deadlines",
+    "taxProtection": "Tax Protection",
+    "receiptTracker": "Receipt Tracker",
+    "matchingData": "Journal data synced"
   },
   "receipts": {
     "title": "Receipt Upload",
