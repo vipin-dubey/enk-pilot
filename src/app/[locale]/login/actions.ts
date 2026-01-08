@@ -48,8 +48,9 @@ export async function signup(formData: FormData) {
   const supabase = await createClient()
   const headersList = await (await import('next/headers')).headers()
   const host = headersList.get('host') || ''
-  const protocol = host.includes('localhost') ? 'http' : 'https'
-  const origin = `${protocol}://${host}`
+  const isLocal = host.includes('localhost')
+  const protocol = isLocal ? 'http' : 'https'
+  const origin = isLocal ? `${protocol}://${host}` : 'https://app.enkpilot.com'
 
   const data = {
     email: formData.get('email') as string,
@@ -76,8 +77,9 @@ export async function resendVerification(formData: FormData) {
   const supabase = await createClient()
   const headersList = await (await import('next/headers')).headers()
   const host = headersList.get('host') || ''
-  const protocol = host.includes('localhost') ? 'http' : 'https'
-  const origin = `${protocol}://${host}`
+  const isLocal = host.includes('localhost')
+  const protocol = isLocal ? 'http' : 'https'
+  const origin = isLocal ? `${protocol}://${host}` : 'https://app.enkpilot.com'
   const email = formData.get('email') as string
 
   if (!email) {

@@ -20,93 +20,96 @@ export default async function LoginPage({
   const t = await getTranslations('common')
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-slate-50 px-4 py-12 sm:px-6 lg:px-8">
-      <AuthHashHandler />
-      <Card className="w-full max-w-md shadow-lg border-none">
-        <CardHeader className="text-center bg-white rounded-t-xl pb-2 pt-8">
-          <div className="flex justify-center mb-4">
-            <img 
-              src="/logo.png" 
-              alt="ENK Pilot Logo" 
-              className="h-20 w-auto object-contain animate-in zoom-in duration-1000 drop-shadow-sm"
-            />
-          </div>
-          <span className="sr-only">ENK Pilot</span>
-          <CardDescription className="text-slate-500 font-semibold px-4">
-            Enten du er ny eller veteran, vi hjelper deg med ENK-økonomien.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4 pt-4 bg-white px-8 pb-4">
-          {error && (
-            <div className="p-3 text-sm font-medium text-red-600 bg-red-50 rounded-lg border border-red-100 animate-in fade-in slide-in-from-top-2 duration-300">
-              {error}
-            </div>
-          )}
-          {message && (
-            <div className="p-3 text-sm font-medium text-blue-600 bg-blue-50 rounded-lg border border-blue-100 animate-in fade-in slide-in-from-top-2 duration-300">
-              {message}
-            </div>
-          )}
-          <form className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="email" className="text-slate-600 font-semibold">E-post</Label>
-              <Input 
-                id="email" 
-                name="email" 
-                type="email" 
-                placeholder="ola@norman.no" 
-                required 
-                className="h-11 border-slate-200"
+    <div className="flex min-h-screen flex-col items-center justify-center bg-slate-50 px-4 py-12 sm:px-6 lg:px-8">
+      <div className="flex-1 flex items-center justify-center w-full">
+        <AuthHashHandler />
+        <Card className="w-full max-w-md shadow-lg border-none">
+          <CardHeader className="text-center bg-white rounded-t-xl pb-2 pt-8">
+            <div className="flex justify-center mb-4">
+              <img
+                src="/logo.png"
+                alt="ENK Pilot Logo"
+                className="h-20 w-auto object-contain animate-in zoom-in duration-1000 drop-shadow-sm"
               />
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="password" className="text-slate-600 font-semibold">Passord</Label>
-              <Input 
-                id="password" 
-                name="password" 
-                type="password" 
-                required 
-                className="h-11 border-slate-200"
-              />
-            </div>
-            <div className="flex flex-col gap-2 pt-2">
-              <div className="flex gap-2">
-                <Button formAction={login} className="flex-1 bg-blue-600 hover:bg-blue-700 h-11 font-bold">
-                  Logg inn
-                </Button>
-                <Button formAction={signup} variant="outline" className="flex-1 h-11 border-slate-200 text-slate-600 hover:bg-slate-50 font-bold">
-                  Registrer deg
-                </Button>
+            <span className="sr-only">ENK Pilot</span>
+            <CardDescription className="text-slate-500 font-semibold px-4">
+              Enten du er ny eller veteran, vi hjelper deg med ENK-økonomien.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4 pt-4 bg-white px-8 pb-4">
+            {error && (
+              <div className="p-3 text-sm font-medium text-red-600 bg-red-50 rounded-lg border border-red-100 animate-in fade-in slide-in-from-top-2 duration-300">
+                {error}
               </div>
-              {(error || (message && message.toLowerCase().includes('email'))) && (
-                <Button 
-                  formAction={resendVerification}
-                  variant="link" 
-                  className="text-xs text-blue-600 font-bold hover:text-blue-700 h-auto p-0"
-                >
-                  Send bekreftelse på nytt?
-                </Button>
-              )}
+            )}
+            {message && (
+              <div className="p-3 text-sm font-medium text-blue-600 bg-blue-50 rounded-lg border border-blue-100 animate-in fade-in slide-in-from-top-2 duration-300">
+                {message}
+              </div>
+            )}
+            <form className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="email" className="text-slate-600 font-semibold">E-post</Label>
+                <Input
+                  id="email"
+                  name="email"
+                  type="email"
+                  placeholder="ola@norman.no"
+                  required
+                  className="h-11 border-slate-200"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="password" className="text-slate-600 font-semibold">Passord</Label>
+                <Input
+                  id="password"
+                  name="password"
+                  type="password"
+                  required
+                  className="h-11 border-slate-200"
+                />
+              </div>
+              <div className="flex flex-col gap-2 pt-2">
+                <div className="flex gap-2">
+                  <Button formAction={login} className="flex-1 bg-blue-600 hover:bg-blue-700 h-11 font-bold">
+                    Logg inn
+                  </Button>
+                  <Button formAction={signup} variant="outline" className="flex-1 h-11 border-slate-200 text-slate-600 hover:bg-slate-50 font-bold">
+                    Registrer deg
+                  </Button>
+                </div>
+                {(error || (message && message.toLowerCase().includes('email'))) && (
+                  <Button
+                    formAction={resendVerification}
+                    variant="link"
+                    className="text-xs text-blue-600 font-bold hover:text-blue-700 h-auto p-0"
+                  >
+                    Send bekreftelse på nytt?
+                  </Button>
+                )}
+              </div>
+            </form>
+          </CardContent>
+          <CardFooter className="flex flex-col space-y-4 p-8 bg-white rounded-b-xl border-t border-slate-50">
+            <div className="relative w-full">
+              <div className="absolute inset-0 flex items-center">
+                <span className="w-full border-t" />
+              </div>
+              <div className="relative flex justify-center text-xs uppercase">
+                <span className="bg-white px-2 text-slate-400 font-bold tracking-wider">Alt er trygt og kryptert</span>
+              </div>
             </div>
-          </form>
-        </CardContent>
-        <CardFooter className="flex flex-col space-y-4 p-8 bg-white rounded-b-xl border-t border-slate-50">
-          <div className="relative w-full">
-            <div className="absolute inset-0 flex items-center">
-              <span className="w-full border-t" />
-            </div>
-            <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-white px-2 text-slate-400 font-bold tracking-wider">Alt er trygt og kryptert</span>
-            </div>
-          </div>
-          <Link href="/" locale={locale} className="text-sm text-blue-600 hover:underline text-center font-medium">
-            Glemt passordet?
-          </Link>
-        </CardFooter>
-      </Card>
-      <div className="fixed bottom-0 left-0 right-0 p-6 sm:p-8">
+            <Link href="/" locale={locale} className="text-sm text-blue-600 hover:underline text-center font-medium">
+              Glemt passordet?
+            </Link>
+          </CardFooter>
+        </Card>
+      </div>
+      <div className="w-full max-w-7xl mx-auto">
         <PublicFooter />
       </div>
     </div>
+
   )
 }
