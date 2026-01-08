@@ -22,6 +22,7 @@ import { DashboardTabs } from '@/components/dashboard/dashboard-tabs'
 import { CfoAnalytics } from '@/components/dashboard/cfo-analytics'
 import { signout } from './login/actions'
 import { MobileMenu } from '@/components/dashboard/mobile-menu'
+import { LandingPage } from '@/components/landing-page'
 
 export default async function DashboardPage({
   params,
@@ -40,8 +41,7 @@ export default async function DashboardPage({
   const { data: { user } } = await supabase.auth.getUser()
 
   if (!user) {
-    redirect({ href: '/login', locale })
-    return null
+    return <LandingPage locale={locale} />
   }
 
   const { data: profile } = await supabase

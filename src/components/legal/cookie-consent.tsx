@@ -4,18 +4,14 @@ import { useState, useEffect } from 'react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Cookie, ShieldCheck, X } from 'lucide-react'
-import { useParams } from 'next/navigation'
 import { Link } from '@/navigation'
-
-export function CookieConsent() {
+export function CookieConsent({ locale }: { locale: string }) {
   const [isVisible, setIsVisible] = useState(false)
-  const { locale } = useParams() as { locale: string }
 
   useEffect(() => {
     const consent = localStorage.getItem('cookie-consent')
     if (!consent) {
-      const timer = setTimeout(() => setIsVisible(true), 1500)
-      return () => clearTimeout(timer)
+      setIsVisible(true)
     }
   }, [])
 
@@ -32,7 +28,7 @@ export function CookieConsent() {
   if (!isVisible) return null
 
   return (
-    <div className="fixed bottom-6 left-6 right-6 z-[100] sm:left-auto sm:right-8 sm:w-[400px] animate-in slide-in-from-bottom-8 duration-700">
+    <div className="fixed bottom-6 left-6 right-6 z-[9999] sm:left-auto sm:right-8 sm:w-[400px]">
       <Card className="border-none shadow-2xl overflow-hidden bg-white/95 backdrop-blur-md border border-slate-200">
         <div className="bg-blue-600 h-1.5 w-full" />
         <CardContent className="p-6">

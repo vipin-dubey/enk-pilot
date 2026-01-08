@@ -28,7 +28,7 @@ export default async function LocaleLayout({
   return (
     <NextIntlClientProvider messages={messages} locale={locale}>
       {children}
-      <CookieConsent />
+      <CookieConsent locale={locale} />
     </NextIntlClientProvider>
   );
 }
