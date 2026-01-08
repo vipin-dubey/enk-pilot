@@ -348,5 +348,27 @@
     "currentPlan": "Nåværende plan",
     "upgradeNow": "Oppgrader nå",
     "mostPopular": "Mest populær"
+  },
+  "mfa": {
+    "title": "To-faktor autentisering (2FA)",
+    "description": "Legg til et ekstra lag med sikkerhet på kontoen din ved å kreve en sekssifret kode fra en autentiseringsapp.",
+    "statusEnabled": "2FA er aktivert",
+    "statusDisabled": "2FA er deaktivert",
+    "enable": "Aktiver 2FA",
+    "disable": "Deaktiver 2FA",
+    "enrollTitle": "Sett opp 2FA",
+    "enrollStep1": "1. Skann QR-koden med autentiseringsappen din (f.eks. Google Authenticator, Authy eller 1Password).",
+    "enrollStep2": "2. Skriv inn den sekssifrede koden fra appen for å bekrefte oppsettet.",
+    "verify": "Bekreft og aktiver",
+    "invalidCode": "Ugyldig kode. Vennligst prøv igjen.",
+    "setupSuccess": "2FA er nå aktivert på din konto.",
+    "setupError": "Kunne ikke aktivere 2FA. Vennligst prøv igjen.",
+    "proFeature": "Sikkerhetsoppgradering",
+    "proFeatureDesc": "2FA er en Pro-funksjon. Oppgrader for å sikre kontoen din.",
+    "challengeTitle": "To-faktor bekreftelse",
+    "challengeDesc": "Skriv inn koden fra autentiseringsappen din for å fortsette.",
+    "challengeButton": "Bekreft",
+    "challengePlaceholder": "123456",
+    "upgradeNow": "Oppgrader for å aktivere"
   }
 }

@@ -349,5 +349,27 @@
     "currentPlan": "Current Plan",
     "upgradeNow": "Upgrade Now",
     "mostPopular": "Most Popular"
+  },
+  "mfa": {
+    "title": "Two-Factor Authentication (2FA)",
+    "description": "Add an extra layer of security to your account by requiring a six-digit code from an authenticator app.",
+    "statusEnabled": "2FA is enabled",
+    "statusDisabled": "2FA is disabled",
+    "enable": "Enable 2FA",
+    "disable": "Disable 2FA",
+    "enrollTitle": "Set up 2FA",
+    "enrollStep1": "1. Scan the QR code with your authenticator app (e.g., Google Authenticator, Authy, or 1Password).",
+    "enrollStep2": "2. Enter the six-digit code from the app to confirm setup.",
+    "verify": "Verify and Activate",
+    "invalidCode": "Invalid code. Please try again.",
+    "setupSuccess": "2FA is now enabled on your account.",
+    "setupError": "Could not enable 2FA. Please try again.",
+    "proFeature": "Security Upgrade",
+    "proFeatureDesc": "2FA is a Pro feature. Upgrade to secure your account.",
+    "challengeTitle": "Two-Factor Verification",
+    "challengeDesc": "Enter the code from your authenticator app to continue.",
+    "challengeButton": "Verify",
+    "challengePlaceholder": "123456",
+    "upgradeNow": "Upgrade to Enable"
   }
 }

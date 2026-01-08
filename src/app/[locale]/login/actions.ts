@@ -12,11 +12,21 @@ export async function login(formData: FormData) {
     password: formData.get('password') as string,
   }
 
-  const { error } = await supabase.auth.signInWithPassword(data)
+  const { data: signInData, error } = await supabase.auth.signInWithPassword(data)
 
   if (error) {
     console.error('Login error:', error.message)
     redirect({ href: `/login?error=${encodeURIComponent(error.message)}`, locale: 'nb' })
+    return
+  }
+
+  // Check for MFA factors
+  const { data: factors, error: factorsError } = await supabase.auth.mfa.listFactors()
+  const activeFactor = factors?.totp?.find(f => f.status === 'verified')
+
+  if (activeFactor) {
+    // Redirect to MFA verification page
+    redirect({ href: `/login/mfa?factorId=${activeFactor.id}`, locale: 'nb' })
     return
   }
 
@@ -84,6 +94,42 @@ export async function resendVerification(formData: FormData) {
   }
 
   redirect({ href: '/login?message=Ny link er sendt til din e-post', locale: 'nb' })
+}
+
+export async function verifyMfaChallenge(factorId: string, code: string) {
+  const supabase = await createClient()
+
+  const { data: challenge, error: challengeError } = await supabase.auth.mfa.challenge({
+    factorId
+  })
+
+  if (challengeError) {
+    redirect({ href: `/login/mfa?factorId=${factorId}&error=${encodeURIComponent(challengeError.message)}`, locale: 'nb' })
+    return
+  }
+
+  const { error: verifyError } = await supabase.auth.mfa.verify({
+    factorId,
+    challengeId: challenge.id,
+    code
+  })
+
+  if (verifyError) {
+    redirect({ href: `/login/mfa?factorId=${factorId}&error=${encodeURIComponent(verifyError.message)}`, locale: 'nb' })
+    return
+  }
+
+  // Fetch user preference for locale
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('default_locale')
+    .eq('id', (await supabase.auth.getUser()).data.user?.id)
+    .single()
+
+  const preferredLocale = profile?.default_locale || 'nb'
+
+  revalidatePath('/', 'layout')
+  redirect({ href: '/', locale: preferredLocale as any })
 }
 
 export async function signout() {

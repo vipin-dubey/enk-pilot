@@ -9,6 +9,7 @@ import { LocaleSettings } from './locale-settings'
 import { PasswordSettings } from './password-settings'
 import { ReminderSettings } from './reminder-settings'
 import { BusinessSettings } from './business-settings'
+import { MfaSettings } from './mfa-settings'
 
 export default async function SettingsPage({
   params,
@@ -103,6 +104,7 @@ export default async function SettingsPage({
                 <Lock className="h-5 w-5 text-blue-600" />
                 <h3 className="text-lg font-semibold">{t('security')}</h3>
               </div>
+              <MfaSettings isPro={profile?.subscription_status === 'active' || profile?.subscription_status === 'trialling' || !!profile?.is_founding_user} />
               <PasswordSettings />
             </div>
           </div>
