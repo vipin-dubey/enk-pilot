@@ -23,18 +23,20 @@ export default async function LoginPage({
     <div className="flex min-h-screen items-center justify-center bg-slate-50 px-4 py-12 sm:px-6 lg:px-8">
       <AuthHashHandler />
       <Card className="w-full max-w-md shadow-lg border-none">
-        <CardHeader className="space-y-1 text-center bg-white rounded-t-xl pb-8">
+        <CardHeader className="text-center bg-white rounded-t-xl pb-2 pt-8">
           <div className="flex justify-center mb-4">
-            <div className="h-12 w-12 bg-blue-600 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-xl">EP</span>
-            </div>
+            <img 
+              src="/logo.png" 
+              alt="ENK Pilot Logo" 
+              className="h-20 w-auto object-contain animate-in zoom-in duration-1000 drop-shadow-sm"
+            />
           </div>
-          <CardTitle className="text-3xl font-bold font-outfit uppercase tracking-tighter">ENK Pilot</CardTitle>
-          <CardDescription className="text-slate-500 font-medium pt-2">
+          <span className="sr-only">ENK Pilot</span>
+          <CardDescription className="text-slate-500 font-semibold px-4">
             Enten du er ny eller veteran, vi hjelper deg med ENK-økonomien.
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4 pt-6 bg-white px-8">
+        <CardContent className="space-y-4 pt-4 bg-white px-8 pb-4">
           {error && (
             <div className="p-3 text-sm font-medium text-red-600 bg-red-50 rounded-lg border border-red-100 animate-in fade-in slide-in-from-top-2 duration-300">
               {error}
