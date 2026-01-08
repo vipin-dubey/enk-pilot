@@ -14,7 +14,37 @@
     "foundingUser": "Founding Supporter",
     "freePlan": "Free",
     "settings": "Settings",
-    "backToDashboard": "Back to Dashboard"
+    "backToDashboard": "Back to Dashboard",
+    "secureAndEncrypted": "Everything is safe and encrypted"
+  },
+  "auth": {
+    "login": {
+      "title": "Login",
+      "noAccount": "Don't have an account?",
+      "signupLink": "Sign up here",
+      "forgotPassword": "Forgot password?"
+    },
+    "signup": {
+      "title": "Create Account",
+      "description": "Join ENK Pilot and take full control of your business finances.",
+      "hasAccount": "Already have an account?",
+      "loginLink": "Log in here",
+      "submit": "Sign up",
+      "success": "Check your email to complete your registration"
+    },
+    "forgotPassword": {
+      "title": "Forgot Password",
+      "description": "Enter your email and we'll send you a link to reset your password.",
+      "submit": "Send reset link",
+      "backToLogin": "Back to login",
+      "success": "Reset link has been sent to your email"
+    },
+    "resetPassword": {
+      "title": "Reset Password",
+      "description": "Choose a new and secure password for your account.",
+      "submit": "Update password",
+      "success": "Your password has been updated"
+    }
   },
   "dashboard": {
     "title": "Dashboard",

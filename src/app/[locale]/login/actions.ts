@@ -140,6 +140,59 @@ export async function verifyMfaChallenge(factorId: string, code: string) {
   redirect({ href: '/', locale: preferredLocale as any })
 }
 
+export async function requestPasswordReset(formData: FormData) {
+  const supabase = await createClient()
+  const headersList = await (await import('next/headers')).headers()
+  const host = headersList.get('host') || ''
+  const isLocal = host.includes('localhost')
+  const protocol = isLocal ? 'http' : 'https'
+  const origin = isLocal ? `${protocol}://${host}` : 'https://app.enkpilot.com'
+  const email = formData.get('email') as string
+
+  if (!email) {
+    redirect({ href: '/forgot-password?error=Vennligst skriv inn e-postadressen din', locale: 'nb' })
+    return
+  }
+
+  const { error } = await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: `${origin}/auth/callback?next=/reset-password`,
+  })
+
+  if (error) {
+    redirect({ href: `/forgot-password?error=${encodeURIComponent(error.message)}`, locale: 'nb' })
+    return
+  }
+
+  redirect({ href: '/forgot-password?message=Instructions sent to your email', locale: 'nb' })
+}
+
+export async function resetPassword(formData: FormData) {
+  const supabase = await createClient()
+  const password = formData.get('password') as string
+  const confirmPassword = formData.get('confirmPassword') as string
+
+  if (!password || password.length < 6) {
+    redirect({ href: '/reset-password?error=Passordet må være minst 6 tegn', locale: 'nb' })
+    return
+  }
+
+  if (password !== confirmPassword) {
+    redirect({ href: '/reset-password?error=Passordene er ikke like', locale: 'nb' })
+    return
+  }
+
+  const { error } = await supabase.auth.updateUser({
+    password: password
+  })
+
+  if (error) {
+    redirect({ href: `/reset-password?error=${encodeURIComponent(error.message)}`, locale: 'nb' })
+    return
+  }
+
+  redirect({ href: '/login?message=Passordet ditt er nå oppdatert', locale: 'nb' })
+}
+
 export async function signout() {
   const supabase = await createClient()
   await supabase.auth.signOut()

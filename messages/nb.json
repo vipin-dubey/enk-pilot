@@ -14,7 +14,37 @@
     "foundingUser": "Grunnlegger",
     "freePlan": "Gratis",
     "settings": "Innstillinger",
-    "backToDashboard": "Tilbake til dashbord"
+    "backToDashboard": "Tilbake til dashbord",
+    "secureAndEncrypted": "Alt er trygt og kryptert"
+  },
+  "auth": {
+    "login": {
+      "title": "Logg inn",
+      "noAccount": "Har du ikke konto?",
+      "signupLink": "Registrer deg her",
+      "forgotPassword": "Glemt passordet?"
+    },
+    "signup": {
+      "title": "Opprett konto",
+      "description": "Bli en del av ENK Pilot og få full kontroll på økonomien.",
+      "hasAccount": "Har du allerede en konto?",
+      "loginLink": "Logg inn her",
+      "submit": "Registrer deg",
+      "success": "Sjekk e-posten din for å fullføre registreringen"
+    },
+    "forgotPassword": {
+      "title": "Glemt passord",
+      "description": "Skriv inn e-posten din så sender vi deg en lenke for å gjenopprette passordet.",
+      "submit": "Send gjenopprettingslenke",
+      "backToLogin": "Tilbake til innlogging",
+      "success": "Gjenopprettingslenke er sendt til din e-post"
+    },
+    "resetPassword": {
+      "title": "Oppdater passord",
+      "description": "Velg et nytt og sikkert passord for kontoen din.",
+      "submit": "Oppdater passord",
+      "success": "Passordet ditt er nå oppdatert"
+    }
   },
   "dashboard": {
     "title": "Dashbord",

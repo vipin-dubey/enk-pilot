@@ -2,15 +2,15 @@
 
 import { Link } from '@/navigation'
 import { Button } from '@/components/ui/button'
-import { 
-  ShieldCheck, 
-  Sparkles, 
-  Zap, 
-  Receipt, 
-  Target, 
-  PieChart, 
-  ChevronRight, 
-  Check, 
+import {
+  ShieldCheck,
+  Sparkles,
+  Zap,
+  Receipt,
+  Target,
+  PieChart,
+  ChevronRight,
+  Check,
   Lock,
   Globe,
   ArrowRight,
@@ -28,7 +28,7 @@ export function LandingPage({ locale, host: serverHost }: { locale: string, host
   useEffect(() => {
     setMounted(true)
   }, [])
-  
+
   // Robust absolute URL calculation
   const getAppUrl = () => {
     // Priority 1: Use window if on client
@@ -38,7 +38,7 @@ export function LandingPage({ locale, host: serverHost }: { locale: string, host
         return `${protocol}//app.${host}`
       }
     }
-    
+
     // Priority 2: Use serverHost if provided (for SEO/SSR)
     if (serverHost) {
       if (serverHost.includes('localhost') || serverHost.includes('127.0.0.1')) {
@@ -51,6 +51,7 @@ export function LandingPage({ locale, host: serverHost }: { locale: string, host
 
   const appBase = mounted ? getAppUrl() : ''
   const loginUrl = mounted ? `${appBase}/${locale}/login` : `/${locale}/login`
+  const signupUrl = mounted ? `${appBase}/${locale}/signup` : `/${locale}/signup`
 
   return (
     <div className="min-h-screen bg-white text-slate-900 font-sans selection:bg-blue-100 selection:text-blue-900" suppressHydrationWarning>
@@ -74,13 +75,13 @@ export function LandingPage({ locale, host: serverHost }: { locale: string, host
                 Login
               </Button>
             </a>
-            <a href={loginUrl}>
+            <a href={signupUrl}>
               <Button size="sm" className="bg-slate-900 hover:bg-black text-white font-black px-5 rounded-xl shadow-lg shadow-slate-900/10 transition-all active:scale-[0.98] text-xs">
                 Start Free
               </Button>
             </a>
             {/* Mobile Menu Toggle */}
-            <button 
+            <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className="lg:hidden p-2 text-slate-600 hover:text-slate-900 transition-colors"
             >
@@ -93,29 +94,29 @@ export function LandingPage({ locale, host: serverHost }: { locale: string, host
         {isMenuOpen && (
           <div className="lg:hidden absolute top-16 left-0 w-full bg-white border-b border-slate-100 shadow-xl z-50 animate-in fade-in slide-in-from-top-2 duration-200">
             <nav className="flex flex-col p-6 gap-6">
-              <a 
-                href="#features" 
+              <a
+                href="#features"
                 onClick={() => setIsMenuOpen(false)}
                 className="text-lg font-black font-outfit text-slate-900 uppercase tracking-tighter"
               >
                 Features
               </a>
-              <a 
-                href="#security" 
+              <a
+                href="#security"
                 onClick={() => setIsMenuOpen(false)}
                 className="text-lg font-black font-outfit text-slate-900 uppercase tracking-tighter"
               >
                 Security
               </a>
-              <a 
-                href="#pricing" 
+              <a
+                href="#pricing"
                 onClick={() => setIsMenuOpen(false)}
                 className="text-lg font-black font-outfit text-slate-900 uppercase tracking-tighter"
               >
                 Pricing
               </a>
               <hr className="border-slate-100" />
-              <a 
+              <a
                 href={loginUrl}
                 className="text-lg font-black font-outfit text-blue-600 uppercase tracking-tighter"
               >
@@ -138,17 +139,17 @@ export function LandingPage({ locale, host: serverHost }: { locale: string, host
             <Sparkles className="h-3 w-3" />
             <span className="text-[10px] font-black uppercase tracking-wider">Built for Norwegian Founders</span>
           </div>
-          
+
           <h1 className="text-4xl lg:text-6xl font-black font-outfit tracking-tight text-slate-900 mb-4 leading-[1.1] animate-in fade-in slide-in-from-bottom-6 duration-1000">
             Your ENK on <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">Autopilot.</span>
           </h1>
-          
+
           <p className="max-w-xl mx-auto text-base lg:text-lg text-slate-500 font-medium mb-8 leading-relaxed animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-200">
             Know exactly how much is <span className="text-slate-900 font-bold underline decoration-blue-500 decoration-2 underline-offset-4">safe to spend.</span> ENK Pilot handles MVA and taxes in real-time.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16 animate-in fade-in slide-in-from-bottom-10 duration-1000 delay-300">
-            <a href={loginUrl}>
+            <a href={signupUrl}>
               <Button size="lg" className="h-14 px-8 bg-slate-900 hover:bg-black text-white font-black text-base rounded-2xl shadow-xl shadow-slate-900/20 transition-all hover:-translate-y-1 active:scale-95">
                 Join Now <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
@@ -161,9 +162,9 @@ export function LandingPage({ locale, host: serverHost }: { locale: string, host
           <div className="relative max-w-4xl mx-auto animate-in fade-in slide-in-from-bottom-12 duration-1000 delay-500">
             <div className="absolute -top-6 -left-6 -right-6 bottom-0 bg-gradient-to-t from-white via-white/0 to-white/0 z-10" />
             <div className="rounded-2xl border border-slate-200 shadow-xl overflow-hidden bg-slate-100 p-1.5 lg:p-2">
-              <img 
-                src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=2426&ixlib=rb-4.0.3" 
-                alt="ENK Pilot Dashboard Mockup" 
+              <img
+                src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=2426&ixlib=rb-4.0.3"
+                alt="ENK Pilot Dashboard Mockup"
                 className="rounded-xl shadow-inner border border-slate-200 w-full"
               />
             </div>
@@ -180,32 +181,32 @@ export function LandingPage({ locale, host: serverHost }: { locale: string, host
           </div>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            <FeatureCard 
+            <FeatureCard
               icon={<ShieldCheck className="h-5 w-5 text-blue-600" />}
               title="Safe to Spend™"
               description="Proprietary engine tracks MVA, trinnskatt, and personal allowances in real-time. Protect your profit."
             />
-            <FeatureCard 
+            <FeatureCard
               icon={<Receipt className="h-5 w-5 text-indigo-600" />}
               title="AI Receipt Scan"
               description="Snap receipts with your phone. We extract vendor, MVA, and category automatically into your journal."
             />
-            <FeatureCard 
+            <FeatureCard
               icon={<Target className="h-5 w-5 text-emerald-600" />}
               title="Deadline Guard"
               description="Never miss MVA or Forskuddsskatt. Smart reminders based on your business flow."
             />
-            <FeatureCard 
+            <FeatureCard
               icon={<PieChart className="h-5 w-5 text-amber-600" />}
               title="Real-time Analytics"
               description="Visual summaries of growth, expenses, and tax health. Professional grade insights for your ENK."
             />
-            <FeatureCard 
+            <FeatureCard
               icon={<Globe className="h-5 w-5 text-purple-600" />}
               title="Multi-Currency"
               description="Selling in USD or EUR? We fetch live Norges Bank rates to calculate your exact NOK income."
             />
-            <FeatureCard 
+            <FeatureCard
               icon={<Zap className="h-5 w-5 text-red-600" />}
               title="Tax Insights"
               description=" suggerstions on forgotten deductions and warnings before you hit MVA thresholds."
@@ -223,7 +224,7 @@ export function LandingPage({ locale, host: serverHost }: { locale: string, host
                 <div className="inline-flex items-center gap-2 px-3 py-1 bg-blue-500/10 text-blue-400 rounded-full border border-blue-500/20 mb-4 font-bold text-[10px] uppercase tracking-widest">
                   Enterprise-Grade Security
                 </div>
-                <h2 className="text-3xl lg:text-4xl font-black font-outfit tracking-tight mb-4">Privacy first. <br/><span className="text-blue-400">Local-First Intelligence.</span></h2>
+                <h2 className="text-3xl lg:text-4xl font-black font-outfit tracking-tight mb-4">Privacy first. <br /><span className="text-blue-400">Local-First Intelligence.</span></h2>
                 <p className="text-slate-400 font-medium mb-8 text-base leading-relaxed">
                   Encryption for your data and mandatory GDPR compliance. Our <strong>Smart Scanning</strong> and AI tasks happen directly in your browser—we never send your sensitive financial documents to external servers for processing.
                 </p>
@@ -274,7 +275,7 @@ export function LandingPage({ locale, host: serverHost }: { locale: string, host
                 <PricingItem text="Standard Security" />
                 <PricingItem text="Limited MVA Tracking" />
               </ul>
-              <a href={loginUrl} className="w-full">
+              <a href={signupUrl} className="w-full">
                 <Button variant="outline" className="w-full h-12 rounded-xl border-2 border-slate-200 font-black hover:bg-slate-50 transition-all text-xs">
                   Join Free
                 </Button>
@@ -295,7 +296,7 @@ export function LandingPage({ locale, host: serverHost }: { locale: string, host
                 <PricingItem text="Two-Factor Auth (2FA)" />
                 <PricingItem text="Priority Support" />
               </ul>
-              <a href={loginUrl} className="w-full">
+              <a href={signupUrl} className="w-full">
                 <Button className="w-full h-12 rounded-xl bg-slate-900 hover:bg-black font-black shadow-lg shadow-slate-900/10 transition-all hover:-translate-y-0.5 active:scale-95 text-xs text-white">
                   Get Pro
                 </Button>
@@ -322,7 +323,7 @@ export function LandingPage({ locale, host: serverHost }: { locale: string, host
                 <PricingItem text="Priority Roadmap Influence" />
                 <PricingItem text="Special 1-Year Rate" />
               </ul>
-              <a href={loginUrl} className="w-full">
+              <a href={signupUrl} className="w-full">
                 <Button className="w-full h-12 rounded-xl bg-amber-900 hover:bg-amber-950 font-black shadow-lg shadow-amber-900/30 transition-all hover:-translate-y-0.5 active:scale-95 text-xs text-white">
                   Join Founding
                 </Button>
@@ -339,7 +340,7 @@ export function LandingPage({ locale, host: serverHost }: { locale: string, host
           <p className="max-w-md mx-auto text-slate-500 font-medium text-base mb-10">
             Join other Norwegian founders who have stopped stressing about taxes.
           </p>
-          <a href={loginUrl}>
+          <a href={signupUrl}>
             <Button size="lg" className="h-16 px-12 bg-slate-900 text-white hover:bg-black font-black text-xl rounded-2xl shadow-xl transition-all hover:-translate-y-1 active:scale-95">
               Join Now
             </Button>

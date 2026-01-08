@@ -50,8 +50,11 @@ export async function updateSession(request: NextRequest, response?: NextRespons
   const isAppSubdomain = host.startsWith('app.')
   const isMarketingHost = !isAppSubdomain
   const isAuthPath = pathname.startsWith('/login') ||
+    pathname.startsWith('/signup') ||
+    pathname.startsWith('/forgot-password') ||
+    pathname.startsWith('/reset-password') ||
     pathname.includes('/auth/callback') ||
-    pathname.match(/^\/(en|nb)\/(login|auth)/)
+    pathname.match(/^\/(en|nb)\/(login|signup|forgot-password|reset-password|auth)/)
 
   const syncRedirect = (targetUrl: URL | string) => {
     const res = NextResponse.redirect(targetUrl)

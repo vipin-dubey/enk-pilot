@@ -17,7 +17,8 @@ export default async function LoginPage({
 }) {
   const { locale } = await params
   const { error, message } = await searchParams
-  const t = await getTranslations('common')
+  const t = await getTranslations('auth.login')
+  const commonT = await getTranslations('common')
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-slate-50 px-4 py-12 sm:px-6 lg:px-8">
@@ -61,7 +62,7 @@ export default async function LoginPage({
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="password" className="text-slate-600 font-semibold">Passord</Label>
+                <Label htmlFor="password" title="password" className="text-slate-600 font-semibold">Passord</Label>
                 <Input
                   id="password"
                   name="password"
@@ -71,14 +72,10 @@ export default async function LoginPage({
                 />
               </div>
               <div className="flex flex-col gap-2 pt-2">
-                <div className="flex gap-2">
-                  <Button formAction={login} className="flex-1 bg-blue-600 hover:bg-blue-700 h-11 font-bold">
-                    Logg inn
-                  </Button>
-                  <Button formAction={signup} variant="outline" className="flex-1 h-11 border-slate-200 text-slate-600 hover:bg-slate-50 font-bold">
-                    Registrer deg
-                  </Button>
-                </div>
+                <Button formAction={login} className="w-full bg-blue-600 hover:bg-blue-700 h-11 font-bold">
+                  {t('title')}
+                </Button>
+
                 {(error || (message && message.toLowerCase().includes('email'))) && (
                   <Button
                     formAction={resendVerification}
@@ -97,12 +94,20 @@ export default async function LoginPage({
                 <span className="w-full border-t" />
               </div>
               <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-white px-2 text-slate-400 font-bold tracking-wider">Alt er trygt og kryptert</span>
+                <span className="bg-white px-2 text-slate-400 font-bold tracking-wider">{commonT('secureAndEncrypted')}</span>
               </div>
             </div>
-            <Link href="/" locale={locale} className="text-sm text-blue-600 hover:underline text-center font-medium">
-              Glemt passordet?
-            </Link>
+            <div className="flex flex-col items-center gap-2">
+              <Link href="/forgot-password" locale={locale} className="text-sm text-blue-600 hover:underline font-medium">
+                {t('forgotPassword')}
+              </Link>
+              <div className="text-sm text-slate-600 pt-2">
+                {t('noAccount')}{' '}
+                <Link href="/signup" locale={locale} className="text-blue-600 hover:underline font-bold">
+                  {t('signupLink')}
+                </Link>
+              </div>
+            </div>
           </CardFooter>
         </Card>
       </div>
@@ -110,6 +115,5 @@ export default async function LoginPage({
         <PublicFooter />
       </div>
     </div>
-
   )
 }
