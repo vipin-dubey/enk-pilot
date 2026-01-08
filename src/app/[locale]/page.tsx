@@ -37,11 +37,11 @@ export default async function DashboardPage({
   const tTabs = await getTranslations('tabs')
   const tCommon = await getTranslations('common')
   const supabase = await createClient()
-
   const { data: { user } } = await supabase.auth.getUser()
+  const host = (await (await import('next/headers')).headers()).get('host') || ''
 
   if (!user) {
-    return <LandingPage locale={locale} />
+    return <LandingPage locale={locale} host={host} />
   }
 
   const { data: profile } = await supabase

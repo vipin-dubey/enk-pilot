@@ -40,13 +40,16 @@ export async function login(formData: FormData) {
   const preferredLocale = profile?.default_locale || 'nb'
 
   revalidatePath('/', 'layout')
+  revalidatePath(`/${preferredLocale}`, 'layout')
   redirect({ href: '/', locale: preferredLocale as any })
 }
 
 export async function signup(formData: FormData) {
   const supabase = await createClient()
   const headersList = await (await import('next/headers')).headers()
-  const origin = headersList.get('origin')
+  const host = headersList.get('host') || ''
+  const protocol = host.includes('localhost') ? 'http' : 'https'
+  const origin = `${protocol}://${host}`
 
   const data = {
     email: formData.get('email') as string,
@@ -72,7 +75,9 @@ export async function signup(formData: FormData) {
 export async function resendVerification(formData: FormData) {
   const supabase = await createClient()
   const headersList = await (await import('next/headers')).headers()
-  const origin = headersList.get('origin')
+  const host = headersList.get('host') || ''
+  const protocol = host.includes('localhost') ? 'http' : 'https'
+  const origin = `${protocol}://${host}`
   const email = formData.get('email') as string
 
   if (!email) {
@@ -129,6 +134,7 @@ export async function verifyMfaChallenge(factorId: string, code: string) {
   const preferredLocale = profile?.default_locale || 'nb'
 
   revalidatePath('/', 'layout')
+  revalidatePath(`/${preferredLocale}`, 'layout')
   redirect({ href: '/', locale: preferredLocale as any })
 }
 
@@ -136,5 +142,6 @@ export async function signout() {
   const supabase = await createClient()
   await supabase.auth.signOut()
   revalidatePath('/', 'layout')
+  revalidatePath('/[locale]', 'layout')
   redirect({ href: '/login', locale: 'nb' })
 }

@@ -13,18 +13,47 @@ import {
   Check, 
   Lock,
   Globe,
-  ArrowRight
+  ArrowRight,
+  Menu,
+  X
 } from 'lucide-react'
 import { useTranslations } from 'next-intl'
+import { useState, useEffect } from 'react'
 import { PublicFooter } from '@/components/layout/footer'
 
-export function LandingPage({ locale }: { locale: string }) {
-  const isProd = typeof window !== 'undefined' && !window.location.hostname.includes('localhost')
-  const appBase = isProd ? 'https://app.enkpilot.com' : ''
-  const loginUrl = `${appBase}/${locale}/login`
+export function LandingPage({ locale, host: serverHost }: { locale: string, host?: string }) {
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+  
+  // Robust absolute URL calculation
+  const getAppUrl = () => {
+    // Priority 1: Use window if on client
+    if (typeof window !== 'undefined') {
+      const { protocol, host, hostname } = window.location
+      if (hostname.includes('localhost') || hostname.includes('127.0.0.1')) {
+        return `${protocol}//app.${host}`
+      }
+    }
+    
+    // Priority 2: Use serverHost if provided (for SEO/SSR)
+    if (serverHost) {
+      if (serverHost.includes('localhost') || serverHost.includes('127.0.0.1')) {
+        return `http://app.${serverHost}`
+      }
+    }
+
+    return `https://app.enkpilot.com`
+  }
+
+  const appBase = mounted ? getAppUrl() : ''
+  const loginUrl = mounted ? `${appBase}/${locale}/login` : `/${locale}/login`
 
   return (
-    <div className="min-h-screen bg-white text-slate-900 font-sans selection:bg-blue-100 selection:text-blue-900">
+    <div className="min-h-screen bg-white text-slate-900 font-sans selection:bg-blue-100 selection:text-blue-900" suppressHydrationWarning>
       {/* Premium Header */}
       <header className="fixed top-0 z-50 w-full bg-white/70 backdrop-blur-xl border-b border-slate-100">
         <div className="container mx-auto px-4 h-16 flex items-center justify-between">
@@ -39,7 +68,7 @@ export function LandingPage({ locale }: { locale: string }) {
             <a href="#pricing" className="text-xs font-bold text-slate-500 hover:text-slate-900 transition-colors uppercase tracking-wider">Pricing</a>
           </nav>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1 sm:gap-2">
             <a href={loginUrl}>
               <Button variant="ghost" className="hidden sm:flex text-xs font-bold text-slate-600 hover:text-slate-900 hover:bg-slate-50 rounded-xl px-4">
                 Login
@@ -50,8 +79,51 @@ export function LandingPage({ locale }: { locale: string }) {
                 Start Free
               </Button>
             </a>
+            {/* Mobile Menu Toggle */}
+            <button 
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="lg:hidden p-2 text-slate-600 hover:text-slate-900 transition-colors"
+            >
+              {isMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            </button>
           </div>
         </div>
+
+        {/* Mobile Navigation Overlay */}
+        {isMenuOpen && (
+          <div className="lg:hidden absolute top-16 left-0 w-full bg-white border-b border-slate-100 shadow-xl z-50 animate-in fade-in slide-in-from-top-2 duration-200">
+            <nav className="flex flex-col p-6 gap-6">
+              <a 
+                href="#features" 
+                onClick={() => setIsMenuOpen(false)}
+                className="text-lg font-black font-outfit text-slate-900 uppercase tracking-tighter"
+              >
+                Features
+              </a>
+              <a 
+                href="#security" 
+                onClick={() => setIsMenuOpen(false)}
+                className="text-lg font-black font-outfit text-slate-900 uppercase tracking-tighter"
+              >
+                Security
+              </a>
+              <a 
+                href="#pricing" 
+                onClick={() => setIsMenuOpen(false)}
+                className="text-lg font-black font-outfit text-slate-900 uppercase tracking-tighter"
+              >
+                Pricing
+              </a>
+              <hr className="border-slate-100" />
+              <a 
+                href={loginUrl}
+                className="text-lg font-black font-outfit text-blue-600 uppercase tracking-tighter"
+              >
+                Login to App
+              </a>
+            </nav>
+          </div>
+        )}
       </header>
 
       {/* Hero Section */}
