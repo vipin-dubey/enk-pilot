@@ -81,6 +81,13 @@ export default async function DashboardPage({
                   </span>
                 </div>
               )}
+              {(!profile?.plan_type || profile?.plan_type === 'free') && !profile?.is_founding_user && (
+                <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 bg-slate-50 border border-slate-200 rounded-full shadow-sm animate-in fade-in zoom-in duration-500">
+                  <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">
+                    {tCommon('freePlan')}
+                  </span>
+                </div>
+              )}
               <NotificationCenter />
             </div>
             
