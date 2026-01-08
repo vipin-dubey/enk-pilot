@@ -37,11 +37,17 @@ export function MobileMenu({ isPro, profile }: { isPro?: boolean, profile?: any 
   const tCommon = useTranslations('common')
   const tTabs = useTranslations('tabs')
   const locale = useLocale()
+  const handleNavClick = (tab?: string) => {
+    setIsOpen(false)
+    if (tab && typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('switch-dashboard-tab', { detail: { tab } }))
+    }
+  }
 
   const navItems = [
-    { icon: LayoutDashboard, label: tTabs('safeToSpend'), href: '/#safe-to-spend' },
-    { icon: LineChart, label: tTabs('analytics'), href: '/#analytics', badge: 'Pro' },
-    { icon: History, label: tTabs('history'), href: '/#history' },
+    { icon: LayoutDashboard, label: tTabs('safeToSpend'), href: '/#safe-to-spend', tab: 'safe-to-spend' },
+    { icon: LineChart, label: tTabs('analytics'), href: '/#analytics', badge: 'Pro', tab: 'analytics' },
+    { icon: History, label: tTabs('history'), href: '/#history', tab: 'history' },
     { icon: CreditCard, label: locale === 'nb' ? 'Oppgradering' : 'Upgrade', href: '/upgrade', highlight: !isPro },
     { icon: Settings, label: tCommon('settings'), href: '/settings' },
   ]
@@ -127,7 +133,7 @@ export function MobileMenu({ isPro, profile }: { isPro?: boolean, profile?: any 
               <Link 
                 key={i} 
                 href={item.href} 
-                onClick={() => setIsOpen(false)}
+                onClick={() => handleNavClick(item.tab)}
                 className={`flex items-center gap-3 p-3 rounded-xl transition-all border ${
                   item.highlight 
                     ? 'bg-blue-600 border-blue-600 text-white shadow-md' 

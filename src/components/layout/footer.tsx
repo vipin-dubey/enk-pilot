@@ -22,7 +22,7 @@ export function PublicFooter() {
             </div>
           </div>
 
-          <div className="flex flex-col items-center md:items-end gap-2">
+            <div className="flex flex-col items-center md:items-end gap-2">
             <div className="flex items-center gap-4">
               <Link href="/privacy" className="text-[10px] font-bold text-slate-400 hover:text-blue-600 transition-colors uppercase tracking-widest">
                 {locale === 'en' ? 'Privacy' : 'Personvern'}
@@ -34,7 +34,14 @@ export function PublicFooter() {
                 {locale === 'en' ? 'Support' : 'Kontakt'}
               </a>
             </div>
-            <p className="text-[9px] font-black uppercase tracking-widest text-slate-400">ENK Pilot &copy; 2026 • Built with 🇳🇴</p>
+            <div className="flex flex-col items-center md:items-end gap-1">
+              <p className="text-[9px] font-black uppercase tracking-widest text-slate-400">
+                ENK Pilot &copy; 2026 • Norway
+              </p>
+              <p className="text-[8px] text-slate-400 opacity-60">
+                {locale === 'en' ? 'A modern tax tool for sole proprietors' : 'Et moderne skatteverktøy for enkeltpersonforetak'}
+              </p>
+            </div>
           </div>
         </div>
       </div>

@@ -1,7 +1,7 @@
 import { getTranslations } from 'next-intl/server'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Link } from '@/navigation'
-import { ChevronLeft, Gavel, ShieldCheck, AlertCircle } from 'lucide-react'
+import { ChevronLeft, Gavel, ShieldCheck, AlertCircle, Handshake, Info, Scale, User, CreditCard, RefreshCw, Mail, Globe } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { PublicFooter } from '@/components/layout/footer'
 
@@ -66,9 +66,12 @@ export default async function TermsPage({
               </section>
 
               <section className="space-y-4">
-                <h2 className="text-xl font-black uppercase tracking-tighter text-slate-900 font-outfit border-b border-slate-100 pb-2">
-                  1. {locale === 'en' ? 'Acceptance of Terms' : 'Godtakelse av vilkår'}
-                </h2>
+                <div className="flex items-center gap-3">
+                  <Handshake className="h-5 w-5 text-blue-600" />
+                  <h2 className="text-xl font-black uppercase tracking-tighter text-slate-900 font-outfit m-0">
+                    1. {locale === 'en' ? 'Acceptance of Terms' : 'Godtakelse av vilkår'}
+                  </h2>
+                </div>
                 <p className="text-sm font-medium leading-relaxed">
                   {locale === 'en' ? (
                     'By creating an account or using ENK Pilot ("the Service"), you agree to be bound by these terms. If you do not agree to the terms, you must immediately stop using the service.'
@@ -79,9 +82,12 @@ export default async function TermsPage({
               </section>
 
               <section className="space-y-4">
-                <h2 className="text-xl font-black uppercase tracking-tighter text-slate-900 font-outfit border-b border-slate-100 pb-2">
-                  2. {locale === 'en' ? 'No Professional Advice' : 'Ingen profesjonell rådgivning'}
-                </h2>
+                <div className="flex items-center gap-3">
+                  <Info className="h-5 w-5 text-blue-600" />
+                  <h2 className="text-xl font-black uppercase tracking-tighter text-slate-900 font-outfit m-0">
+                    2. {locale === 'en' ? 'No Professional Advice' : 'Ingen profesjonell rådgivning'}
+                  </h2>
+                </div>
                 <p className="text-sm font-medium leading-relaxed">
                   {locale === 'en' ? (
                     'All content and calculations in ENK Pilot are intended for information and guidance only. While we strive for accuracy, laws and regulations can change quickly. You are strongly encouraged to verify all data and calculations with a certified accountant or directly with the Tax Administration (Skatteetaten) before submitting reports or making payments.'
@@ -92,9 +98,12 @@ export default async function TermsPage({
               </section>
 
               <section className="space-y-4">
-                <h2 className="text-xl font-black uppercase tracking-tighter text-slate-900 font-outfit border-b border-slate-100 pb-2">
-                  3. {locale === 'en' ? 'Limitation of Liability' : 'Ansvarsbegrensning'}
-                </h2>
+                <div className="flex items-center gap-3">
+                  <Scale className="h-5 w-5 text-blue-600" />
+                  <h2 className="text-xl font-black uppercase tracking-tighter text-slate-900 font-outfit m-0">
+                    3. {locale === 'en' ? 'Limitation of Liability' : 'Ansvarsbegrensning'}
+                  </h2>
+                </div>
                 <p className="text-sm font-medium leading-relaxed">
                   {locale === 'en' ? (
                     'ENK Pilot, its developers, or affiliates shall under no circumstances be held liable for any direct or indirect loss, tax interest, penalties from authorities, or other financial consequences arising from the use or inability to use the service.'
@@ -105,9 +114,12 @@ export default async function TermsPage({
               </section>
 
               <section className="space-y-4">
-                <h2 className="text-xl font-black uppercase tracking-tighter text-slate-900 font-outfit border-b border-slate-100 pb-2">
-                  4. {locale === 'en' ? 'User Responsibility' : 'Brukerens ansvar'}
-                </h2>
+                <div className="flex items-center gap-3">
+                  <User className="h-5 w-5 text-blue-600" />
+                  <h2 className="text-xl font-black uppercase tracking-tighter text-slate-900 font-outfit m-0">
+                    4. {locale === 'en' ? 'User Responsibility' : 'Brukerens ansvar'}
+                  </h2>
+                </div>
                 <p className="text-sm font-medium leading-relaxed">
                   {locale === 'en' ? (
                     'As a user, you are responsible for the accuracy of the data you enter (income, expenses, tax rate). You are also responsible for ensuring that your receipts and vouchers are in accordance with the Bookkeeping Act.'
@@ -118,9 +130,12 @@ export default async function TermsPage({
               </section>
 
               <section className="space-y-4">
-                <h2 className="text-xl font-black uppercase tracking-tighter text-slate-900 font-outfit border-b border-slate-100 pb-2">
-                  5. {locale === 'en' ? 'Third-Party Services' : 'Tredjepartstjenester'}
-                </h2>
+                <div className="flex items-center gap-3">
+                  <Globe className="h-5 w-5 text-blue-600" />
+                  <h2 className="text-xl font-black uppercase tracking-tighter text-slate-900 font-outfit m-0">
+                    5. {locale === 'en' ? 'Third-Party Services' : 'Tredjepartstjenester'}
+                  </h2>
+                </div>
                 <p className="text-sm font-medium leading-relaxed">
                   {locale === 'en' ? (
                     'We use third parties such as Stripe/Lemon Squeezy for payments, Supabase for data storage, and Posthog for analysis. By using the service, you also agree to the terms of these providers.'
@@ -131,9 +146,57 @@ export default async function TermsPage({
               </section>
 
               <section className="space-y-4">
-                <h2 className="text-xl font-black uppercase tracking-tighter text-slate-900 font-outfit border-b border-slate-100 pb-2">
-                  6. {locale === 'en' ? 'Changes to the Service' : 'Endringer i tjenesten'}
-                </h2>
+                <div className="flex items-center gap-3">
+                  <CreditCard className="h-5 w-5 text-blue-600" />
+                  <h2 className="text-xl font-black uppercase tracking-tighter text-slate-900 font-outfit m-0">
+                    6. {locale === 'en' ? 'Subscriptions & Billing' : 'Abonnement og fakturering'}
+                  </h2>
+                </div>
+                <div className="text-sm font-medium leading-relaxed space-y-2">
+                  <p>
+                    {locale === 'en' 
+                      ? 'ENK Pilot offers subscription-based services. By subscribing, you authorize us (via our payment processors) to charge the applicable fees to your designated payment method.' 
+                      : 'ENK Pilot tilbyr abonnementsbaserte tjenester. Ved å abonnere gir du oss (via våre betalingsformidlere) fullmakt til å belaste gjeldende gebyrer til din valgte betalingsmetode.'}
+                  </p>
+                  <p>
+                    <strong>{locale === 'en' ? 'Automatic Renewal' : 'Automatisk fornyelse'}:</strong>{' '}
+                    {locale === 'en'
+                      ? 'Subscriptions automatically renew at the end of each billing period unless cancelled at least 24 hours before the renewal date.'
+                      : 'Abonnementer fornyes automatisk ved slutten av hver faktureringsperiode med mindre de kanselleres minst 24 timer før fornyelsesdatoen.'}
+                  </p>
+                </div>
+              </section>
+
+              <section className="space-y-4">
+                <div className="flex items-center gap-3">
+                  <RefreshCw className="h-5 w-5 text-blue-600" />
+                  <h2 className="text-xl font-black uppercase tracking-tighter text-slate-900 font-outfit m-0">
+                    7. {locale === 'en' ? 'Refund & Cancellation' : 'Refusjon og kansellering'}
+                  </h2>
+                </div>
+                <div className="text-sm font-medium leading-relaxed space-y-2">
+                  <p>
+                    <strong>{locale === 'en' ? 'Cancellation' : 'Kansellering'}:</strong>{' '}
+                    {locale === 'en'
+                      ? 'You can cancel your subscription at any time through your account settings. Upon cancellation, you will retain access to Pro features until the end of your current billing period.'
+                      : 'Du kan når som helst kansellere abonnementet ditt via kontoinnstillingene. Ved kansellering vil du beholde tilgangen til Pro-funksjoner frem til slutten av din nåværende faktureringsperiode.'}
+                  </p>
+                  <p>
+                    <strong>{locale === 'en' ? 'Refunds' : 'Refusjoner'}:</strong>{' '}
+                    {locale === 'en'
+                      ? 'As a general rule, payments for ENK Pilot are non-refundable. We offer a 14-day free trial for new users to evaluate the service before being charged.'
+                      : 'Som hovedregel er betalinger for ENK Pilot ikke-refunderbare. Vi tilbyr en 14-dagers gratis prøveperiode for nye brukere slik at tjenesten kan evalueres før betaling skjer.'}
+                  </p>
+                </div>
+              </section>
+
+              <section className="space-y-4">
+                <div className="flex items-center gap-3">
+                  <AlertCircle className="h-5 w-5 text-blue-600" />
+                  <h2 className="text-xl font-black uppercase tracking-tighter text-slate-900 font-outfit m-0">
+                    8. {locale === 'en' ? 'Changes to the Service' : 'Endringer i tjenesten'}
+                  </h2>
+                </div>
                 <p className="text-sm font-medium leading-relaxed">
                   {locale === 'en' ? (
                     'We reserve the right to modify, suspend, or terminate the service at any time without notice. We may also change these terms, and your continued use of the service constitutes your acceptance of the new terms.'
@@ -144,9 +207,12 @@ export default async function TermsPage({
               </section>
 
               <section className="space-y-4">
-                <h2 className="text-xl font-black uppercase tracking-tighter text-slate-900 font-outfit border-b border-slate-100 pb-2">
-                  7. {locale === 'en' ? 'Contact Information' : 'Kontaktinformasjon'}
-                </h2>
+                <div className="flex items-center gap-3">
+                  <Mail className="h-5 w-5 text-blue-600" />
+                  <h2 className="text-xl font-black uppercase tracking-tighter text-slate-900 font-outfit m-0">
+                    9. {locale === 'en' ? 'Contact Information' : 'Kontaktinformasjon'}
+                  </h2>
+                </div>
                 <p className="text-sm font-medium leading-relaxed">
                   {locale === 'en' ? (
                     <>
