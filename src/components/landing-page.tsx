@@ -160,13 +160,109 @@ export function LandingPage({ locale, host: serverHost }: { locale: string, host
           </div>
 
           <div className="relative max-w-4xl mx-auto animate-in fade-in slide-in-from-bottom-12 duration-1000 delay-500">
-            <div className="absolute -top-6 -left-6 -right-6 bottom-0 bg-gradient-to-t from-white via-white/0 to-white/0 z-10" />
-            <div className="rounded-2xl border border-slate-200 shadow-xl overflow-hidden bg-slate-100 p-1.5 lg:p-2">
-              <img
-                src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=2426&ixlib=rb-4.0.3"
-                alt="ENK Pilot Dashboard Mockup"
-                className="rounded-xl shadow-inner border border-slate-200 w-full"
-              />
+            {/* Contextual Glow */}
+            <div className="absolute -top-20 -left-20 w-64 h-64 bg-blue-400 rounded-full blur-[100px] opacity-20" />
+            <div className="absolute -bottom-20 -right-20 w-64 h-64 bg-indigo-400 rounded-full blur-[100px] opacity-20" />
+
+            <div className="rounded-2xl border border-slate-200 shadow-2xl overflow-hidden bg-white/50 backdrop-blur-sm p-2 lg:p-4 relative z-10">
+              <div className="rounded-xl border border-slate-100 bg-slate-50 shadow-inner overflow-hidden aspect-[16/9] lg:aspect-auto lg:h-[480px] flex flex-col md:flex-row">
+                {/* Mockup Sidebar/Navigation */}
+                <div className="hidden md:flex w-16 bg-white border-r border-slate-200 flex-col items-center py-6 gap-6">
+                  <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center">
+                    <img src="/logo-mark.png" alt="" className="h-5 w-5 brightness-0 invert" />
+                  </div>
+                  <div className="space-y-4">
+                    <div className="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center text-blue-600"><PieChart className="h-4 w-4" /></div>
+                    <div className="w-8 h-8 rounded-lg text-slate-400 flex items-center justify-center"><Receipt className="h-4 w-4" /></div>
+                    <div className="w-8 h-8 rounded-lg text-slate-400 flex items-center justify-center"><Target className="h-4 w-4" /></div>
+                  </div>
+                </div>
+
+                {/* Mockup Main Content */}
+                <div className="flex-1 p-4 lg:p-8 flex flex-col gap-6 overflow-hidden">
+                  <div className="flex items-center justify-between">
+                    <div className="h-4 w-32 bg-slate-200 rounded animate-pulse" />
+                    <div className="flex gap-2">
+                      <div className="h-8 w-8 rounded-full bg-slate-200 animate-pulse" />
+                      <div className="h-8 w-16 bg-slate-200 rounded-lg animate-pulse" />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 h-full">
+                    {/* The Gauge Mockup */}
+                    <div className="bg-white rounded-2xl border border-slate-100 p-6 lg:p-10 shadow-sm flex flex-col items-center justify-center relative overflow-hidden group">
+                      <div className="absolute inset-0 bg-gradient-to-br from-blue-50/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+
+                      <div className="relative w-48 h-48 lg:w-64 lg:h-64 mb-6">
+                        {/* Circular Progress Gauge */}
+                        <svg className="w-full h-full transform -rotate-90">
+                          <circle
+                            cx="50%" cy="50%" r="45%"
+                            className="fill-none stroke-slate-100 stroke-[8]"
+                          />
+                          <circle
+                            cx="50%" cy="50%" r="45%"
+                            className="fill-none stroke-blue-600 stroke-[10] transition-all duration-1000 ease-out"
+                            strokeDasharray="210 283"
+                            strokeLinecap="round"
+                          />
+                        </svg>
+
+                        {/* Needle / Value */}
+                        <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
+                          <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Safe to Spend</span>
+                          <span className="text-2xl lg:text-4xl font-black font-outfit text-slate-900 tracking-tighter">kr 12.450</span>
+                          <div className="mt-2 flex items-center gap-1.5 px-2 py-0.5 bg-emerald-50 rounded-full border border-emerald-100">
+                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                            <span className="text-[9px] font-bold text-emerald-600 uppercase tracking-tighter">Updated Live</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="w-full flex justify-between text-[10px] font-bold text-slate-400 tracking-widest uppercase">
+                        <span>Reserved for Tax: kr 4.560</span>
+                        <span>YTD Profit: 125k</span>
+                      </div>
+                    </div>
+
+                    {/* Side Info Cards */}
+                    <div className="space-y-4 flex flex-col">
+                      <div className="bg-white rounded-xl border border-slate-100 p-4 shadow-sm flex items-center gap-4">
+                        <div className="h-10 w-10 rounded-lg bg-indigo-50 flex items-center justify-center text-indigo-600">
+                          <Receipt className="h-5 w-5" />
+                        </div>
+                        <div className="flex-1">
+                          <div className="h-3 w-20 bg-slate-100 rounded mb-2" />
+                          <div className="h-2 w-12 bg-slate-50 rounded" />
+                        </div>
+                        <span className="font-bold text-sm text-slate-900">kr 1.250</span>
+                      </div>
+
+                      <div className="bg-white rounded-xl border border-slate-100 p-4 shadow-sm flex items-center gap-4">
+                        <div className="h-10 w-10 rounded-lg bg-emerald-50 flex items-center justify-center text-emerald-600">
+                          <ShieldCheck className="h-5 w-5" />
+                        </div>
+                        <div className="flex-1">
+                          <div className="h-3 w-24 bg-slate-100 rounded mb-2" />
+                          <div className="h-2 w-16 bg-slate-50 rounded" />
+                        </div>
+                        <span className="text-xs font-bold text-emerald-600 uppercase">Secure</span>
+                      </div>
+
+                      <div className="flex-1 bg-gradient-to-br from-slate-900 to-slate-800 rounded-xl p-6 text-white overflow-hidden relative group">
+                        <div className="relative z-10">
+                          <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Next Deadline</p>
+                          <h4 className="text-lg font-black font-outfit tracking-tight">Forskuddsskatt</h4>
+                          <p className="text-xs text-slate-300 mt-1">Due in 14 days</p>
+                        </div>
+                        <div className="absolute right-[-20px] bottom-[-20px] opacity-10 group-hover:rotate-12 transition-transform duration-700">
+                          <Target className="h-24 w-24" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
