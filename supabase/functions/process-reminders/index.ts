@@ -133,8 +133,7 @@ serve(async (req) => {
                   <body>
                     <div class="container">
                       <div class="header">
-                        <div class="logo-box"><span class="logo-text">EP</span></div>
-                        <h2 class="brand-name">ENK Pilot</h2>
+                        <img src="https://enkpilot.com/logo.png" alt="ENK Pilot Logo" style="height: 50px; width: auto;" />
                       </div>
                       <div class="content">
                         <h1>${isEnglish ? 'Deadline Reminder' : 'Påminnelse om frist'}</h1>
