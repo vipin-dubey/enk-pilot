@@ -154,8 +154,8 @@ export default async function PrivacyPage({
                 <ul className="text-sm font-medium space-y-2 list-disc pl-5">
                   <li>
                     <strong>{locale === 'en' ? 'Account Deletion' : 'Sletting av konto'}:</strong>{' '}
-                    {locale === 'en' 
-                      ? 'If you request account deletion, all your personal data and uploaded receipts will be permanently deleted from our primary databases within 48 hours.' 
+                    {locale === 'en'
+                      ? 'If you request account deletion, all your personal data and uploaded receipts will be permanently deleted from our primary databases within 48 hours.'
                       : 'Hvis du ber om sletting av konto, vil alle dine personopplysninger og opplastede kvitteringer bli permanent slettet fra våre primærdatabaser innen 48 timer.'}
                   </li>
                   <li>
@@ -188,14 +188,20 @@ export default async function PrivacyPage({
                   {locale === 'en' ? (
                     <>
                       If you have any questions about this privacy policy, please contact us at{' '}
-                      <a href="mailto:support@enkpilot.com" className="text-blue-600 hover:underline">
+                      <a
+                        href="mailto:support@enkpilot.com"
+                        className="text-blue-600 hover:underline inline-block"
+                      >
                         support@enkpilot.com
                       </a>.
                     </>
                   ) : (
                     <>
                       Hvis du har spørsmål om denne personvernserklæringen, vennligst kontakt oss på{' '}
-                      <a href="mailto:support@enkpilot.com" className="text-blue-600 hover:underline">
+                      <a
+                        href="mailto:support@enkpilot.com"
+                        className="text-blue-600 hover:underline inline-block"
+                      >
                         support@enkpilot.com
                       </a>.
                     </>

@@ -81,6 +81,40 @@ export async function updateSession(request: NextRequest, response?: NextRespons
     return res
   }
 
+  // Handle Soft-Delete Reactivation or Blocking
+  if (user) {
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('deleted_at')
+      .eq('id', user.id)
+      .single()
+
+    if (profile?.deleted_at) {
+      const deletedAt = new Date(profile.deleted_at)
+      const now = new Date()
+      const daysSinceDeletion = (now.getTime() - deletedAt.getTime()) / (1000 * 60 * 60 * 24)
+
+      if (daysSinceDeletion <= 30) {
+        // Automatically reactivate within 30 days
+        await supabase
+          .from('profiles')
+          .update({ deleted_at: null })
+          .eq('id', user.id)
+
+        // Redirect to dashboard with success message
+        const target = request.nextUrl.clone()
+        const dashboardPath = currentLocale === defaultLocale ? '/dashboard' : `/${currentLocale}/dashboard`
+        target.pathname = dashboardPath
+        target.searchParams.set('restored', 'true')
+        return syncRedirect(target)
+      } else {
+        // Permanent deletion logic: If accessed after 30 days, block and logout
+        await supabase.auth.signOut()
+        return syncRedirect('/')
+      }
+    }
+  }
+
   // LOCALHOST DEV MODE: Skip subdomain routing entirely
   if (isLocalhost) {
     const isLandingPage = pathname === '/' || pathname === '/en' || pathname === '/nb'

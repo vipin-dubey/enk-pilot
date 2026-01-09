@@ -10,6 +10,7 @@ import { PasswordSettings } from './password-settings'
 import { ReminderSettings } from './reminder-settings'
 import { BusinessSettings } from './business-settings'
 import { MfaSettings } from './mfa-settings'
+import { DeleteAccount } from './delete-account'
 
 export default async function SettingsPage({
   params,
@@ -71,7 +72,7 @@ export default async function SettingsPage({
                 <Briefcase className="h-5 w-5 text-blue-600" />
                 <h3 className="text-lg font-semibold">{t('business')}</h3>
               </div>
-              <BusinessSettings 
+              <BusinessSettings
                 initialSettings={{
                   isMvaRegistered: profile?.is_mva_registered ?? false,
                   ytdGrossIncome: profile?.ytd_gross_income ?? 0,
@@ -79,7 +80,7 @@ export default async function SettingsPage({
                   externalSalary: profile?.external_salary_income ?? 0,
                   estimatedAnnualProfit: profile?.estimated_annual_profit ?? 0,
                   annualPrepaidTaxAmount: profile?.annual_prepaid_tax_amount ?? 0
-                }} 
+                }}
               />
             </div>
 
@@ -89,12 +90,12 @@ export default async function SettingsPage({
                 <Bell className="h-5 w-5 text-blue-600" />
                 <h3 className="text-lg font-semibold">{tr('title')}</h3>
               </div>
-              <ReminderSettings 
+              <ReminderSettings
                 initialSettings={{
                   emailEnabled: profile?.email_notifications_enabled ?? true,
                   pushEnabled: profile?.push_notifications_enabled ?? true,
                   leadDays: profile?.reminder_lead_days ?? [1, 7, 14]
-                }} 
+                }}
               />
             </div>
 
@@ -106,6 +107,11 @@ export default async function SettingsPage({
               </div>
               <MfaSettings isPro={profile?.subscription_status === 'active' || profile?.subscription_status === 'trialling' || !!profile?.is_founding_user} />
               <PasswordSettings />
+            </div>
+
+            {/* Delete Account */}
+            <div className="space-y-6 pt-8 border-t border-slate-200">
+              <DeleteAccount />
             </div>
           </div>
 

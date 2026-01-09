@@ -10,6 +10,7 @@
     "loading": "Laster...",
     "error": "Feil",
     "success": "Suksess",
+    "accountRestored": "Kontoen din ble gjenopprettet",
     "search": "Søk...",
     "foundingUser": "Grunnlegger",
     "freePlan": "Gratis",
@@ -292,7 +293,15 @@
     "saveError": "Kunne ikke oppdatere innstillinger",
     "scanPrepaid": "Skann bilag",
     "prepaidDetected": "Fant {amount} kr i forskuddsskatt! Klikk lagre for å bruke.",
-    "prepaidNotFound": "Fant ingen beløp i PDF-en. Vennligst skriv inn manuelt."
+    "prepaidNotFound": "Fant ingen beløp i PDF-en. Vennligst skriv inn manuelt.",
+    "deleteAccount": "Slett konto",
+    "deleteAccountDescription": "Slett kontoen din og alle tilhørende data permanent.",
+    "deleteAccountWarning": "Advarsel: Denne handlingen kan ikke angres etter 30 dager. Hvis du sletter kontoen, har du 30 dager på deg til å logge inn igjen for å reaktivere den. Etter det vil alle dataene dine bli slettet permanent.",
+    "deleteAccountConfirm": "For å bekrefte, skriv \"DELETE MY ACCOUNT\" i feltet under:",
+    "deleteAccountButton": "Slett min konto",
+    "deleteAccountReactivate": "Hvis du logger inn i løpet av 30 dager, vil kontoen reaktiveres automatisk.",
+    "deleteAccountError": "Kunne ikke slette kontoen. Prøv igjen.",
+    "deleteAccountSuccess": "Kontoen din er planlagt for sletting. Du blir nå logget ut."
   },
   "dashboardSummary": {
     "title": "Bedriftsoversikt",
@@ -394,14 +403,17 @@
     "monthly": "Månedlig",
     "yearly": "Årlig",
     "founding": "Grunnlegger",
-    "foundingSubtitle": "Kun for de første 100 brukerne",
+    "foundingSubtitle": "Begrensede plasser tilgjengelig",
     "foundingPerks": "Grunnlegger-merke, Prioritert ønsker om funksjonalitet, Beta-tilgang",
-    "startTrial": "Start 14-dagers gratis prøveperiode",
+    "startTrial": "Start 1 måneds gratis prøveperiode",
     "billedAnnually": "Faktureres årlig",
     "cancelAnytime": "Avbryt når som helst",
     "currentPlan": "Nåværende plan",
     "upgradeNow": "Oppgrader nå",
-    "mostPopular": "Mest populær"
+    "mostPopular": "Mest populær",
+    "pro": {
+      "trial": "1 måneds gratis prøveperiode"
+    }
   },
   "mfa": {
     "title": "To-faktor autentisering (2FA)",
@@ -541,7 +553,8 @@
         "f1": "Alle gratisfunksjoner",
         "f2": "Ubegrenset Audit-klar eksport",
         "f3": "AI Kvitteringsskanning",
-        "f4": "AI Skatteinnsikt"
+        "f4": "AI Skatteinnsikt",
+        "f5": "MFA Autentisering"
       },
       "founding": {
         "title": "Grunnlegger Pro",
@@ -551,7 +564,7 @@
         "trial": "1 måneds gratis prøveperiode",
         "renews": "Fornyes til 349 kr / år",
         "f1": "Alle Pro-funksjoner",
-        "f2": "Begrenset til første 100 brukere",
+        "f2": "Begrensede plasser tilgjengelig",
         "f3": "Grunnlegger-merke",
         "f4": "Påvirkning på veikart",
         "f5": "Spesialpris for 1 år"

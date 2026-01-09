@@ -305,7 +305,7 @@ export async function LandingPage({ locale, host: serverHost }: { locale: string
               </div>
               <p className="text-[9px] text-blue-600 font-bold uppercase tracking-widest mb-6">{t('pricing.pro.trial')}</p>
               <ul className="space-y-3 mb-8 flex-1">
-                <PricingItem text={t('pricing.pro.f1')} highlighted /> <PricingItem text={t('pricing.pro.f2')} /> <PricingItem text={t('pricing.pro.f3')} /> <PricingItem text={t('pricing.pro.f4')} />
+                <PricingItem text={t('pricing.pro.f1')} highlighted /> <PricingItem text={t('pricing.pro.f2')} /> <PricingItem text={t('pricing.pro.f3')} /> <PricingItem text={t('pricing.pro.f4')} /> <PricingItem text={t('pricing.pro.f5')} />
               </ul>
               <a href={signupUrl} className="w-full"><Button className="w-full h-12 rounded-xl bg-slate-900 hover:bg-black font-black shadow-lg shadow-slate-900/10 transition-all hover:-translate-y-0.5 active:scale-95 text-xs text-white">{t('pricing.pro.cta')}</Button></a>
             </div>

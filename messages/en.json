@@ -10,6 +10,7 @@
     "loading": "Loading...",
     "error": "Error",
     "success": "Success",
+    "accountRestored": "Your account was restored successfully",
     "search": "Search...",
     "foundingUser": "Founding Supporter",
     "freePlan": "Free",
@@ -292,7 +293,15 @@
     "prepaidNotFound": "No amount found in PDF. Please enter manually.",
     "saveSuccess": "Business settings updated",
     "save": "Save Settings",
-    "saveError": "Failed to update settings"
+    "saveError": "Failed to update settings",
+    "deleteAccount": "Delete Account",
+    "deleteAccountDescription": "Permanently remove your account and all associated data.",
+    "deleteAccountWarning": "Warning: This action is irreversible after 30 days. If you delete your account, you will have 30 days to log back in to reactivate it. After that, all your data will be permanently purged.",
+    "deleteAccountConfirm": "To confirm, please type \"DELETE MY ACCOUNT\" in the box below:",
+    "deleteAccountButton": "Delete My Account",
+    "deleteAccountReactivate": "If you access your account within 30 days, it will be reactivated automatically.",
+    "deleteAccountError": "Failed to delete account. Please try again.",
+    "deleteAccountSuccess": "Your account has been scheduled for deletion. You will be logged out now."
   },
   "dashboardSummary": {
     "title": "Business Snapshot",
@@ -395,14 +404,17 @@
     "monthly": "Monthly",
     "yearly": "Yearly",
     "founding": "Founding Supporter",
-    "foundingSubtitle": "Limited to first 100 users",
+    "foundingSubtitle": "Limited seats available",
     "foundingPerks": "Founding Badge, Priority Feature Requests, Beta Access",
     "startTrial": "Start Free Trial",
     "billedAnnually": "Billed annually",
     "cancelAnytime": "Cancel anytime",
     "currentPlan": "Current Plan",
     "upgradeNow": "Upgrade Now",
-    "mostPopular": "Most Popular"
+    "mostPopular": "Most Popular",
+    "pro": {
+      "trial": "1-month Free Trial"
+    }
   },
   "mfa": {
     "title": "Two-Factor Authentication (2FA)",
@@ -542,7 +554,8 @@
         "f1": "All Free Features",
         "f2": "Unlimited Audit Ready Export",
         "f3": "AI Receipt Scan",
-        "f4": "AI Tax Insights"
+        "f4": "AI Tax Insights",
+        "f5": "MFA Authentication"
       },
       "founding": {
         "title": "Founding Pro",
@@ -552,7 +565,7 @@
         "trial": "1-month Free Trial",
         "renews": "Renews at 349 kr / year",
         "f1": "All Pro Features",
-        "f2": "Limited to first 100 users",
+        "f2": "Limited seats available",
         "f3": "Founding Member Badge",
         "f4": "Priority Roadmap Influence",
         "f5": "Special 1-Year Rate"

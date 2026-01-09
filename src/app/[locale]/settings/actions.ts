@@ -68,3 +68,25 @@ export async function updateNotificationSettings(settings: {
   revalidatePath('/[locale]/settings', 'page')
   return { success: true }
 }
+
+export async function softDeleteAccount() {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+
+  if (!user) return { error: 'unauthorized' }
+
+  // Set deleted_at timestamp
+  const { error } = await supabase
+    .from('profiles')
+    .update({ deleted_at: new Date().toISOString() })
+    .eq('id', user.id)
+
+  if (error) {
+    return { error: 'deleteAccountError' }
+  }
+
+  // Sign out the user
+  await supabase.auth.signOut()
+
+  return { success: true }
+}

@@ -217,14 +217,20 @@ export default async function TermsPage({
                   {locale === 'en' ? (
                     <>
                       If you have any questions about these terms, please contact us at{' '}
-                      <a href="mailto:support@enkpilot.com" className="text-blue-600 hover:underline">
+                      <a
+                        href="mailto:support@enkpilot.com"
+                        className="text-blue-600 hover:underline inline-block"
+                      >
                         support@enkpilot.com
                       </a>.
                     </>
                   ) : (
                     <>
                       Hvis du har spørsmål om disse vilkårene, vennligst kontakt oss på{' '}
-                      <a href="mailto:support@enkpilot.com" className="text-blue-600 hover:underline">
+                      <a
+                        href="mailto:support@enkpilot.com"
+                        className="text-blue-600 hover:underline inline-block"
+                      >
                         support@enkpilot.com
                       </a>.
                     </>

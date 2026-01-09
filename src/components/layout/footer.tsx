@@ -34,9 +34,12 @@ export function PublicFooter() {
               <Link href="/terms#refund-policy" className="text-[10px] font-bold text-slate-500 hover:text-blue-600 transition-colors uppercase tracking-widest">
                 {locale === 'en' ? 'Refund Policy' : 'Refusjon'}
               </Link>
-              <a href="mailto:support@enkpilot.com" className="text-[10px] font-bold text-slate-500 hover:text-blue-600 transition-colors uppercase tracking-widest">
+              <button
+                onClick={() => window.location.href = 'mailto:support' + '@' + 'enkpilot.com'}
+                className="text-[10px] font-bold text-slate-500 hover:text-blue-600 transition-colors uppercase tracking-widest"
+              >
                 {locale === 'en' ? 'Support' : 'Kontakt'}
-              </a>
+              </button>
             </div>
             <div className="flex flex-col items-center md:items-end gap-1">
               <div className="flex items-center gap-2">
