@@ -163,9 +163,16 @@ export function LandingPage({ locale, host: serverHost }: { locale: string, host
                 {t('hero.joinNow')} <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </a>
-            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest sm:ml-2">
-              {t('hero.foundingSeats')}
-            </p>
+            <div className="flex flex-col items-center sm:items-start">
+              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest sm:ml-2">
+                {t('hero.foundingSeats', { count: 82 })}
+              </p>
+              <div className="flex -space-x-2 sm:ml-2 mt-1">
+                {[...Array(5)].map((_, i) => (
+                  <div key={i} className="w-5 h-5 rounded-full border-2 border-white bg-slate-200" />
+                ))}
+              </div>
+            </div>
           </div>
 
           <div className="relative max-w-4xl mx-auto animate-in fade-in slide-in-from-bottom-12 duration-1000 delay-500">
@@ -190,10 +197,10 @@ export function LandingPage({ locale, host: serverHost }: { locale: string, host
                 {/* Mockup Main Content */}
                 <div className="flex-1 p-4 lg:p-8 flex flex-col gap-6 overflow-hidden">
                   <div className="flex items-center justify-between">
-                    <div className="h-4 w-32 bg-slate-200 rounded animate-pulse" />
+                    <div className="h-4 w-32 bg-slate-200 rounded" />
                     <div className="flex gap-2">
-                      <div className="h-8 w-8 rounded-full bg-slate-200 animate-pulse" />
-                      <div className="h-8 w-16 bg-slate-200 rounded-lg animate-pulse" />
+                      <div className="h-8 w-8 rounded-full bg-slate-200" />
+                      <div className="h-8 w-16 bg-slate-200 rounded-lg" />
                     </div>
                   </div>
 
@@ -277,8 +284,47 @@ export function LandingPage({ locale, host: serverHost }: { locale: string, host
         </div>
       </section>
 
+      {/* Trust Bar */}
+      <div className="border-y border-slate-100 bg-white">
+        <div className="container mx-auto px-4 py-8">
+          <div className="flex flex-wrap justify-center items-center gap-8 md:gap-16 opacity-40 grayscale group hover:grayscale-0 transition-all duration-700">
+            <div className="flex items-center gap-2">
+              <ShieldCheck className="h-5 w-5" />
+              <span className="text-[10px] font-black uppercase tracking-widest">{t('stats.compliant')}</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Globe className="h-5 w-5" />
+              <span className="text-[10px] font-black uppercase tracking-widest">{t('stats.built')}</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Zap className="h-5 w-5" />
+              <span className="text-[10px] font-black uppercase tracking-widest">{t('stats.trusted')}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* How it Works Section */}
+      <section className="py-20 lg:py-32 bg-white">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-16 lg:mb-24">
+            <h2 className="text-3xl lg:text-5xl font-black font-outfit tracking-tighter text-slate-900 mb-6">
+              {t.rich('howItWorks.title', {
+                highlight: (chunks) => <span className="text-blue-600">{chunks}</span>
+              })}
+            </h2>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-12 lg:gap-20">
+            <Step icon={<Receipt className="h-8 w-8 text-blue-600" />} number="01" title={t('howItWorks.step1.title')} desc={t('howItWorks.step1.desc')} />
+            <Step icon={<Activity className="h-8 w-8 text-indigo-600" />} number="02" title={t('howItWorks.step2.title')} desc={t('howItWorks.step2.desc')} />
+            <Step icon={<ShieldCheck className="h-8 w-8 text-emerald-600" />} number="03" title={t('howItWorks.step3.title')} desc={t('howItWorks.step3.desc')} />
+          </div>
+        </div>
+      </section>
+
       {/* Features Grid */}
-      <section id="features" className="py-16 lg:py-24 bg-slate-50/50">
+      <section id="features" className="py-20 lg:py-32 bg-slate-50/50">
         <div className="container mx-auto px-4">
           <div className="text-center mb-20">
             <h2 className="text-4xl lg:text-5xl font-black font-outfit tracking-tighter text-slate-900 mb-6">
@@ -347,7 +393,7 @@ export function LandingPage({ locale, host: serverHost }: { locale: string, host
       </section>
 
       {/* Security Section */}
-      <section id="security" className="py-16 lg:py-24 bg-white">
+      <section id="security" className="py-20 lg:py-32 bg-white">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto bg-slate-900 rounded-[2rem] p-8 lg:p-16 text-white relative overflow-hidden shadow-xl">
             <div className="relative z-10 flex flex-col lg:flex-row items-center gap-10">
@@ -390,8 +436,7 @@ export function LandingPage({ locale, host: serverHost }: { locale: string, host
         </div>
       </section>
 
-      {/* Pricing Section */}
-      <section id="pricing" className="py-16 lg:py-24 bg-white">
+      <section id="pricing" className="py-20 lg:py-32 bg-white border-t border-slate-100">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <h2 className="text-3xl lg:text-4xl font-black font-outfit tracking-tight text-slate-900 mb-3">{t('pricing.title')}</h2>
@@ -411,6 +456,10 @@ export function LandingPage({ locale, host: serverHost }: { locale: string, host
                 <PricingItem text={t('pricing.starter.f2')} />
                 <PricingItem text={t('pricing.starter.f3')} />
                 <PricingItem text={t('pricing.starter.f4')} />
+                <PricingItem text={t('pricing.starter.f5')} />
+                <PricingItem text={t('pricing.starter.f6')} />
+                <PricingItem text={t('pricing.starter.f7')} />
+                <PricingItem text={t('pricing.starter.f8')} />
               </ul>
               <a href={signupUrl} className="w-full">
                 <Button variant="outline" className="w-full h-12 rounded-xl border-2 border-slate-200 font-black hover:bg-slate-50 transition-all text-xs">
@@ -431,7 +480,6 @@ export function LandingPage({ locale, host: serverHost }: { locale: string, host
                 <PricingItem text={t('pricing.pro.f2')} />
                 <PricingItem text={t('pricing.pro.f3')} />
                 <PricingItem text={t('pricing.pro.f4')} />
-                <PricingItem text={t('pricing.pro.f5')} />
               </ul>
               <a href={signupUrl} className="w-full">
                 <Button className="w-full h-12 rounded-xl bg-slate-900 hover:bg-black font-black shadow-lg shadow-slate-900/10 transition-all hover:-translate-y-0.5 active:scale-95 text-xs text-white">
@@ -470,22 +518,45 @@ export function LandingPage({ locale, host: serverHost }: { locale: string, host
         </div>
       </section>
 
-      {/* CTA Final */}
-      <section className="py-20 lg:py-24 bg-slate-100/50 text-slate-900">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl lg:text-5xl font-black font-outfit tracking-tight mb-6">
+      {/* Final CTA */}
+      <section className="py-24 lg:py-40 bg-slate-900 text-white relative overflow-hidden">
+        <div className="absolute inset-0 opacity-10 pointer-events-none">
+          <div className="absolute top-0 right-0 w-96 h-96 bg-blue-500 rounded-full blur-[120px]" />
+          <div className="absolute bottom-0 left-0 w-96 h-96 bg-indigo-500 rounded-full blur-[120px]" />
+        </div>
+        <div className="container mx-auto px-4 text-center relative z-10">
+          <h2 className="text-4xl lg:text-6xl font-black font-outfit tracking-tighter mb-8 max-w-2xl mx-auto">
             {t.rich('cta.title', {
-              highlight: (chunks) => <span className="text-blue-600">{chunks}</span>
+              highlight: (chunks) => <span className="text-blue-400">{chunks}</span>
             })}
           </h2>
-          <p className="max-w-md mx-auto text-slate-500 font-medium text-base mb-10">
+          <p className="max-w-md mx-auto text-slate-400 font-medium text-lg mb-12">
             {t('cta.description')}
           </p>
           <a href={signupUrl}>
-            <Button size="lg" className="h-16 px-12 bg-slate-900 text-white hover:bg-black font-black text-xl rounded-2xl shadow-xl transition-all hover:-translate-y-1 active:scale-95">
+            <Button size="lg" className="h-20 px-16 bg-white text-slate-900 hover:bg-slate-100 font-black text-2xl rounded-2xl shadow-2xl transition-all hover:-translate-y-1 active:scale-95">
               {t('cta.button')}
             </Button>
           </a>
+        </div>
+      </section>
+
+      {/* FAQ Section */}
+      <section className="py-20 lg:py-32 bg-white">
+        <div className="container mx-auto px-4 max-w-3xl">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl lg:text-4xl font-black font-outfit tracking-tight text-slate-900 mb-3">
+              {t.rich('faq.title', {
+                highlight: (chunks) => <span className="text-blue-600">{chunks}</span>
+              })}
+            </h2>
+          </div>
+          <div className="space-y-6">
+            <FaqItem question={t('faq.q1')} answer={t('faq.a1')} />
+            <FaqItem question={t('faq.q2')} answer={t('faq.a2')} />
+            <FaqItem question={t('faq.q3')} answer={t('faq.a3')} />
+            <FaqItem question={t('faq.q4')} answer={t('faq.a4')} />
+          </div>
         </div>
       </section>
 
@@ -516,6 +587,45 @@ function FeatureCard({ icon, title, description, gradient }: { icon: React.React
       <div className="absolute top-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-all duration-500 translate-x-4 group-hover:translate-x-0">
         <ArrowRight className="h-5 w-5 text-slate-300" />
       </div>
+    </div>
+  )
+}
+
+function Step({ icon, number, title, desc }: { icon: React.ReactNode, number: string, title: string, desc: string }) {
+  return (
+    <div className="relative group">
+      <div className="absolute -left-4 -top-8 text-[8rem] font-black text-slate-50 select-none group-hover:text-blue-50 transition-colors duration-500 z-0 leading-none">
+        {number}
+      </div>
+      <div className="relative z-10">
+        <div className="h-16 w-16 bg-white rounded-2xl border border-slate-100 shadow-sm flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-500">
+          {icon}
+        </div>
+        <h3 className="text-xl font-bold text-slate-900 mb-4">{title}</h3>
+        <p className="text-slate-500 leading-relaxed font-medium">{desc}</p>
+      </div>
+    </div>
+  )
+}
+
+function FaqItem({ question, answer }: { question: string, answer: string }) {
+  const [isOpen, setIsOpen] = useState(false)
+  return (
+    <div className="border-b border-slate-100 last:border-0">
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="w-full py-6 flex items-center justify-between gap-4 text-left group"
+      >
+        <span className="font-bold text-slate-900 group-hover:text-blue-600 transition-colors uppercase tracking-tight text-sm lg:text-base">{question}</span>
+        <ChevronRight className={`h-5 w-5 text-slate-300 transition-transform duration-300 ${isOpen ? 'rotate-90 text-blue-600' : ''}`} />
+      </button>
+      {isOpen && (
+        <div className="pb-6 animate-in fade-in slide-in-from-top-2 duration-300">
+          <p className="text-slate-500 leading-relaxed font-medium text-sm lg:text-base">
+            {answer}
+          </p>
+        </div>
+      )}
     </div>
   )
 }

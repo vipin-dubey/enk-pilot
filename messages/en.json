@@ -435,17 +435,37 @@
       "startFree": "Start Free"
     },
     "hero": {
-      "badge": "Built for Norwegian Founders",
+      "badge": "Modern Tax Safety for ENK",
       "title": "Your ENK on <highlight>Autopilot</highlight>.",
       "description": "Know exactly how much is <highlight>safe to spend</highlight>. ENK Pilot handles MVA and taxes in real-time.",
       "safeToSpend": "Safe to Spend",
       "joinNow": "Join Now",
-      "foundingSeats": "Claim one of 100 Founding Seats",
+      "foundingSeats": "Only {count} Founding Seats remaining",
       "updatedLive": "Updated Live",
       "reservedForTax": "Reserved for Tax",
       "ytdProfit": "YTD Profit",
       "nextDeadline": "Next Deadline",
       "dueIn": "Due in {days} days"
+    },
+    "stats": {
+      "trusted": "Trusted by early founders",
+      "compliant": "100% GDPR & SAF-T Ready",
+      "built": "Built for Norway"
+    },
+    "howItWorks": {
+      "title": "Tax safety in <highlight>3 simple steps</highlight>",
+      "step1": {
+        "title": "Snap & Record",
+        "desc": "Snap a photo of your income or expenses. Our AI extracts every detail instantly into your business journal."
+      },
+      "step2": {
+        "title": "Live Buffer Logic",
+        "desc": "We instantly set aside MVA, bracket tax, and personal deductions in a virtual vault."
+      },
+      "step3": {
+        "title": "Spend with Confidence",
+        "desc": "See your 'Safe-to-Spend' balance update in real-time. No more tax-day surprises."
+      }
     },
     "features": {
       "title": "Everything in <highlight>one place.</highlight>",
@@ -500,21 +520,24 @@
         "price": "0",
         "unit": "kr / mo",
         "cta": "Join Free",
-        "f1": "Basic Tax Buffer Engine",
-        "f2": "Manual Expense Ledger",
-        "f3": "Standard Security",
-        "f4": "Limited MVA Tracking"
+        "f1": "Business Pulse",
+        "f2": "Full Safe to Spend™ Engine",
+        "f3": "Deadline Guard",
+        "f4": "One Time Audit Ready Export",
+        "f5": "General Tax Insights",
+        "f6": "Manual Expense Ledger",
+        "f7": "Standard Security",
+        "f8": "Limited MVA Tracking"
       },
       "pro": {
         "title": "Pro Monthly",
         "price": "39",
         "unit": "kr / mo",
         "cta": "Get Pro",
-        "f1": "Full Safe to Spend™ Engine",
-        "f2": "Unlimited AI Scans",
-        "f3": "Multi-Currency Support",
-        "f4": "Two-Factor Auth (2FA)",
-        "f5": "Priority Support"
+        "f1": "All Free Features",
+        "f2": "Unlimited Audit Ready Export",
+        "f3": "AI Receipt Scan",
+        "f4": "AI Tax Insights"
       },
       "founding": {
         "title": "Founding Pro",
@@ -533,6 +556,17 @@
       "title": "Ready to fly on <highlight>Autopilot</highlight>?",
       "description": "Join other Norwegian founders who have stopped stressing about taxes.",
       "button": "Join Now"
+    },
+    "faq": {
+      "title": "Frequently Asked <highlight>Questions</highlight>",
+      "q1": "Is my data safe?",
+      "a1": "Yes. We use industry-standard encryption and all AI scanning happens locally in your browser. We never see your sensitive document content.",
+      "q2": "Does this replace my accountant?",
+      "a2": "ENK Pilot is a decision-support tool. It's perfect for handling your own ENK, but we always recommend an accountant for complex tax advice.",
+      "q3": "Is it compliant with Norwegian law?",
+      "a3": "Strictly. We base our engine on 2026 Skatteetaten rules and support export formats ready for your tax return.",
+      "q4": "Can I cancel my subscription?",
+      "a4": "Anytime. No hidden fees or lock-in periods. You stay in control."
     }
   }
 }
