@@ -9,14 +9,24 @@ export function CookieConsent({ locale }: { locale: string }) {
   const [isVisible, setIsVisible] = useState(false)
 
   useEffect(() => {
-    const consent = localStorage.getItem('cookie-consent')
-    if (!consent) {
+    try {
+      const consent = localStorage.getItem('cookie-consent')
+      if (!consent) {
+        setIsVisible(true)
+      }
+    } catch (e) {
+      // If localStorage is blocked, we might show banner but can't save.
+      // Or we just default to visible.
       setIsVisible(true)
     }
   }, [])
 
   const handleAccept = (type: 'all' | 'necessary') => {
-    localStorage.setItem('cookie-consent', type)
+    try {
+      localStorage.setItem('cookie-consent', type)
+    } catch (e) {
+      console.error('Failed to save cookie consent', e)
+    }
     setIsVisible(false)
 
     // Here we would normally initialize/disable tracking scripts

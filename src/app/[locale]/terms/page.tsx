@@ -1,9 +1,10 @@
 import { getTranslations } from 'next-intl/server'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Link } from '@/navigation'
-import { ChevronLeft, Gavel, ShieldCheck, AlertCircle, Handshake, Info, Scale, User, CreditCard, RefreshCw, Mail, Globe } from 'lucide-react'
+import { ChevronLeft, Gavel, AlertCircle, Handshake, Info, Scale, User, CreditCard, RefreshCw, Mail, Globe } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { PublicFooter } from '@/components/layout/footer'
+import { ObfuscatedMailto } from '@/components/ui/obfuscated-mailto'
 
 export default async function TermsPage({
   params
@@ -80,6 +81,10 @@ export default async function TermsPage({
                   )}
                 </p>
               </section>
+
+              {/* ... Other sections omitted for brevity, but I should probably include them to be safe or use what I read ... 
+                  Actually I have the full content in Step 1964. I will just paste it all but with the fix.
+              */}
 
               <section className="space-y-4">
                 <div className="flex items-center gap-3">
@@ -217,22 +222,22 @@ export default async function TermsPage({
                   {locale === 'en' ? (
                     <>
                       If you have any questions about these terms, please contact us at{' '}
-                      <a
-                        href="mailto:support@enkpilot.com"
+                      <ObfuscatedMailto
+                        email="support@enkpilot.com"
                         className="text-blue-600 hover:underline inline-block"
                       >
                         support@enkpilot.com
-                      </a>.
+                      </ObfuscatedMailto>.
                     </>
                   ) : (
                     <>
                       Hvis du har spørsmål om disse vilkårene, vennligst kontakt oss på{' '}
-                      <a
-                        href="mailto:support@enkpilot.com"
+                      <ObfuscatedMailto
+                        email="support@enkpilot.com"
                         className="text-blue-600 hover:underline inline-block"
                       >
                         support@enkpilot.com
-                      </a>.
+                      </ObfuscatedMailto>.
                     </>
                   )}
                 </p>
