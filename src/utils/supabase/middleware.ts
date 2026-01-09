@@ -53,6 +53,11 @@ export async function updateSession(request: NextRequest, response?: NextRespons
 
   const isAppSubdomain = host.startsWith('app.')
   const isMarketingHost = !isAppSubdomain
+  const isPublicPath =
+    pathname === '/' || pathname === '/en' || pathname === '/nb' ||
+    pathname.includes('/terms') ||
+    pathname.includes('/privacy')
+
   const isAuthPath = pathname.startsWith('/login') ||
     pathname.startsWith('/signup') ||
     pathname.startsWith('/forgot-password') ||
@@ -88,8 +93,8 @@ export async function updateSession(request: NextRequest, response?: NextRespons
       return syncRedirect(target)
     }
 
-    // Just protect auth routes - Allow /, /en, and /nb as landing pages
-    if (!user && !isAuthPath && !isLandingPage) {
+    // Just protect auth routes - Allow public pages
+    if (!user && !isAuthPath && !isPublicPath) {
       const target = request.nextUrl.clone()
       // Construct locale-aware login path
       const loginPath = currentLocale === defaultLocale ? '/login' : `/${currentLocale}/login`

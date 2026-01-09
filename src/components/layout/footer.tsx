@@ -29,7 +29,10 @@ export function PublicFooter() {
                 {locale === 'en' ? 'Privacy Policy' : 'Personvern'}
               </Link>
               <Link href="/terms" className="text-[10px] font-bold text-slate-500 hover:text-blue-600 transition-colors uppercase tracking-widest">
-                {locale === 'en' ? 'Terms of Service' : 'Vilkår'}
+                {locale === 'en' ? 'Terms' : 'Vilkår'}
+              </Link>
+              <Link href="/terms#refund-policy" className="text-[10px] font-bold text-slate-500 hover:text-blue-600 transition-colors uppercase tracking-widest">
+                {locale === 'en' ? 'Refund Policy' : 'Refusjon'}
               </Link>
               <a href="mailto:support@enkpilot.com" className="text-[10px] font-bold text-slate-500 hover:text-blue-600 transition-colors uppercase tracking-widest">
                 {locale === 'en' ? 'Support' : 'Kontakt'}

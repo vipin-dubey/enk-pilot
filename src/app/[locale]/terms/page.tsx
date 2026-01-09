@@ -50,14 +50,14 @@ export default async function TermsPage({
                   <p className="text-sm m-0 p-0 leading-relaxed font-medium">
                     {locale === 'en' ? (
                       <>
-                        ENK Pilot is an <strong>educational tool</strong> and decision support service. The service is provided "as-is". 
-                        We are not accountants, tax advisors, or lawyers. You are solely responsible for your own 
+                        ENK Pilot is an <strong>educational tool</strong> and decision support service. The service is provided "as-is".
+                        We are not accountants, tax advisors, or lawyers. You are solely responsible for your own
                         financial decisions and tax compliance.
                       </>
                     ) : (
                       <>
-                        ENK Pilot er et <strong>pedagogisk verktøy</strong> og en beslutningsstøtte. Tjenesten leveres "som den er" (as-is). 
-                        Vi er ikke regnskapsførere, skatterådgivere eller jurister. Du har selv det fulle og hele ansvaret for dine 
+                        ENK Pilot er et <strong>pedagogisk verktøy</strong> og en beslutningsstøtte. Tjenesten leveres "som den er" (as-is).
+                        Vi er ikke regnskapsførere, skatterådgivere eller jurister. Du har selv det fulle og hele ansvaret for dine
                         økonomiske beslutninger og skattekrav.
                       </>
                     )}
@@ -154,8 +154,8 @@ export default async function TermsPage({
                 </div>
                 <div className="text-sm font-medium leading-relaxed space-y-2">
                   <p>
-                    {locale === 'en' 
-                      ? 'ENK Pilot offers subscription-based services. By subscribing, you authorize us (via our payment processors) to charge the applicable fees to your designated payment method.' 
+                    {locale === 'en'
+                      ? 'ENK Pilot offers subscription-based services. By subscribing, you authorize us (via our payment processors) to charge the applicable fees to your designated payment method.'
                       : 'ENK Pilot tilbyr abonnementsbaserte tjenester. Ved å abonnere gir du oss (via våre betalingsformidlere) fullmakt til å belaste gjeldende gebyrer til din valgte betalingsmetode.'}
                   </p>
                   <p>
@@ -167,11 +167,11 @@ export default async function TermsPage({
                 </div>
               </section>
 
-              <section className="space-y-4">
+              <section className="space-y-4" id="refund-policy">
                 <div className="flex items-center gap-3">
                   <RefreshCw className="h-5 w-5 text-blue-600" />
                   <h2 className="text-xl font-black uppercase tracking-tighter text-slate-900 font-outfit m-0">
-                    7. {locale === 'en' ? 'Refund & Cancellation' : 'Refusjon og kansellering'}
+                    7. {locale === 'en' ? 'Refund & Cancellation Policy' : 'Refusjon og kansellering'}
                   </h2>
                 </div>
                 <div className="text-sm font-medium leading-relaxed space-y-2">
@@ -184,8 +184,8 @@ export default async function TermsPage({
                   <p>
                     <strong>{locale === 'en' ? 'Refunds' : 'Refusjoner'}:</strong>{' '}
                     {locale === 'en'
-                      ? 'As a general rule, payments for ENK Pilot are non-refundable. We offer a 14-day free trial for new users to evaluate the service before being charged.'
-                      : 'Som hovedregel er betalinger for ENK Pilot ikke-refunderbare. Vi tilbyr en 14-dagers gratis prøveperiode for nye brukere slik at tjenesten kan evalueres før betaling skjer.'}
+                      ? 'As a general rule, payments for ENK Pilot are non-refundable. We offer a 1-month free trial for all subscriptions to evaluate the service before being charged.'
+                      : 'Som hovedregel er betalinger for ENK Pilot ikke-refunderbare. Vi tilbyr en 1 måneds gratis prøveperiode for alle abonnementer slik at tjenesten kan evalueres før betaling skjer.'}
                   </p>
                 </div>
               </section>
@@ -229,6 +229,20 @@ export default async function TermsPage({
                       </a>.
                     </>
                   )}
+                </p>
+              </section>
+
+              <section className="space-y-4">
+                <div className="flex items-center gap-3">
+                  <Scale className="h-5 w-5 text-blue-600" />
+                  <h2 className="text-xl font-black uppercase tracking-tighter text-slate-900 font-outfit m-0">
+                    10. {locale === 'en' ? 'Governing Law' : 'Lovvalg og verneting'}
+                  </h2>
+                </div>
+                <p className="text-sm font-medium leading-relaxed">
+                  {locale === 'en'
+                    ? 'These terms are governed by and construed in accordance with the laws of Norway. Any disputes shall be subject to the exclusive jurisdiction of the courts of Norway.'
+                    : 'Disse vilkårene er underlagt og tolkes i samsvar med norsk lov. Eventuelle tvister skal være underlagt norske domstolers eksklusive jurisdiksjon.'}
                 </p>
               </section>
             </div>

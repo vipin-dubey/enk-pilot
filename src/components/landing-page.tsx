@@ -29,6 +29,10 @@ export async function LandingPage({ locale, host: serverHost }: { locale: string
     if (host.includes('localhost') || host.includes('127.0.0.1')) {
       return `http://${host}`
     }
+    // Fallback for static generation in dev
+    if (process.env.NODE_ENV === 'development') {
+      return 'http://localhost:3000'
+    }
     return `https://app.enkpilot.com`
   }
 
@@ -299,6 +303,7 @@ export async function LandingPage({ locale, host: serverHost }: { locale: string
                 <span className="text-3xl font-black text-slate-900 tracking-tight">{t('pricing.pro.price')}</span>
                 <span className="text-slate-500 font-bold uppercase text-[10px] tracking-widest">{t('pricing.pro.unit')}</span>
               </div>
+              <p className="text-[9px] text-blue-600 font-bold uppercase tracking-widest mb-6">{t('pricing.pro.trial')}</p>
               <ul className="space-y-3 mb-8 flex-1">
                 <PricingItem text={t('pricing.pro.f1')} highlighted /> <PricingItem text={t('pricing.pro.f2')} /> <PricingItem text={t('pricing.pro.f3')} /> <PricingItem text={t('pricing.pro.f4')} />
               </ul>
@@ -310,7 +315,10 @@ export async function LandingPage({ locale, host: serverHost }: { locale: string
               <h3 className="text-lg font-black font-outfit text-amber-900 mb-1 uppercase tracking-tighter">{t('pricing.founding.title')}</h3>
               <div className="mb-6">
                 <div className="flex items-baseline gap-1"><span className="text-3xl font-black text-amber-900 tracking-tight">{t('pricing.founding.price')}</span><span className="text-amber-700 font-bold uppercase text-[10px] tracking-widest">{t('pricing.founding.unit')}</span></div>
-                <p className="text-[9px] text-amber-700/60 font-bold uppercase tracking-widest mt-1">{t('pricing.founding.renews')}</p>
+                <div className="flex flex-col gap-1 mt-1">
+                  <p className="text-[9px] text-amber-700 font-bold uppercase tracking-widest">{t('pricing.founding.trial')}</p>
+                  <p className="text-[9px] text-amber-700/60 font-medium uppercase tracking-widest">{t('pricing.founding.renews')}</p>
+                </div>
               </div>
               <ul className="space-y-3 mb-8 flex-1">
                 <PricingItem text={t('pricing.founding.f1')} /> <PricingItem text={t('pricing.founding.f2')} highlighted /> <PricingItem text={t('pricing.founding.f3')} /> <PricingItem text={t('pricing.founding.f4')} /> <PricingItem text={t('pricing.founding.f5')} />
