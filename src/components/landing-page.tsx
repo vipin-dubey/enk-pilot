@@ -85,7 +85,7 @@ export async function LandingPage({ locale, host: serverHost }: { locale: string
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16 animate-in fade-in slide-in-from-bottom-10 duration-1000 delay-300">
-            <a href={signupUrl}>
+            <a href="#pricing">
               <Button size="lg" className="h-14 px-8 bg-slate-900 hover:bg-black text-white font-black text-base rounded-2xl shadow-xl shadow-slate-900/20 transition-all hover:-translate-y-1 active:scale-95">
                 {t('hero.joinNow')} <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
@@ -332,7 +332,7 @@ export async function LandingPage({ locale, host: serverHost }: { locale: string
             {t.rich('cta.title', { highlight: (chunks) => <span className="text-blue-400">{chunks}</span> })}
           </h2>
           <p className="max-w-md mx-auto text-slate-200 font-medium text-lg mb-12">{t('cta.description')}</p>
-          <a href={signupUrl}><Button size="lg" className="h-20 px-16 bg-white text-slate-900 hover:bg-slate-100 font-black text-2xl rounded-2xl shadow-2xl transition-all hover:-translate-y-1 active:scale-95">{t('cta.button')}</Button></a>
+          <a href="#pricing"><Button size="lg" className="h-20 px-16 bg-white text-slate-900 hover:bg-slate-100 font-black text-2xl rounded-2xl shadow-2xl transition-all hover:-translate-y-1 active:scale-95">{t('cta.button')}</Button></a>
         </div>
       </section>
 
