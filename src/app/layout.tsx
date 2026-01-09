@@ -20,15 +20,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="nb" suppressHydrationWarning>
-      <PHProvider>
-        <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-          <Suspense fallback={null}>
-            <PostHogPageView />
-          </Suspense>
-          {children}
-        </body>
-      </PHProvider>
-    </html>
+    <PHProvider>
+      <Suspense fallback={null}>
+        <PostHogPageView />
+      </Suspense>
+      {children}
+    </PHProvider>
   );
 }

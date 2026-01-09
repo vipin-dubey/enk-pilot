@@ -434,6 +434,10 @@
       "login": "Login",
       "startFree": "Start Free"
     },
+    "metadata": {
+      "title": "ENK Pilot | Smart Tax Calculator for Norwegian Founders",
+      "description": "Know exactly how much is safe to spend. Automated tax, MVA, and profit tracking for Norwegian sole proprietors (ENK). Privacy-first AI receipt scanning."
+    },
     "hero": {
       "badge": "Modern Tax Safety for ENK",
       "title": "Your ENK on <highlight>Autopilot</highlight>.",

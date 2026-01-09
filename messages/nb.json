@@ -433,6 +433,10 @@
       "login": "Logg inn",
       "startFree": "Start gratis"
     },
+    "metadata": {
+      "title": "ENK Pilot | Smart skattekalkulator for norske gründere",
+      "description": "Vit nøyaktig hvor mye som er trygt å bruke. Automatisert sporing av skatt, MVA og overskudd for ENK. Personvernvennlig AI-kvitteringsskanning."
+    },
     "hero": {
       "badge": "Moderne skattesikkerhet for ENK",
       "title": "Ditt ENK på <highlight>Autopilot</highlight>.",

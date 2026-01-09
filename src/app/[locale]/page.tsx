@@ -25,6 +25,59 @@ import { MobileMenu } from '@/components/dashboard/mobile-menu'
 import { LandingPage } from '@/components/landing-page'
 import { OverviewPulse } from '@/components/dashboard/overview-pulse'
 import { getUpcomingDeadlines } from '@/lib/deadlines'
+import { Metadata } from 'next'
+
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+  const { locale } = await params
+  const t = await getTranslations({ locale, namespace: 'landing.metadata' })
+  const host = (await (await import('next/headers')).headers()).get('host') || 'enkpilot.com'
+  const protocol = host.includes('localhost') ? 'http' : 'https'
+
+  return {
+    title: t('title'),
+    description: t('description'),
+    alternates: {
+      canonical: `${protocol}://${host}/${locale}`,
+      languages: {
+        'en': `${protocol}://${host}/en`,
+        'nb': `${protocol}://${host}/nb`,
+        'x-default': `${protocol}://${host}/nb`
+      }
+    },
+    openGraph: {
+      title: t('title'),
+      description: t('description'),
+      url: `${protocol}://${host}/${locale}`,
+      siteName: 'ENK Pilot',
+      locale: locale === 'en' ? 'en_US' : 'nb_NO',
+      type: 'website',
+      images: [
+        {
+          url: `${protocol}://${host}/logo-square.png`, // Recommended 1200x630 for general social
+          width: 1200,
+          height: 630,
+          alt: 'ENK Pilot - Smart Tax Management',
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: t('title'),
+      description: t('description'),
+      images: [`${protocol}://${host}/logo-square.png`],
+      creator: '@enkpilot', // Replace with actual handle if available
+    },
+    appleWebApp: {
+      title: 'ENK Pilot',
+      statusBarStyle: 'default',
+      capable: true,
+    },
+    formatDetection: {
+      telephone: false,
+    },
+    category: 'finance',
+  }
+}
 
 export default async function DashboardPage({
   params,
@@ -79,8 +132,26 @@ export default async function DashboardPage({
   const upcomingDeadlines = getUpcomingDeadlines()
   const actualNextDeadline = upcomingDeadlines.filter(d => d.date.getTime() >= new Date().setHours(0, 0, 0, 0))[0]
 
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareApplication',
+    name: 'ENK Pilot',
+    description: tTabs('overview'), // Fallback to pulse description or metadata
+    applicationCategory: 'FinanceApplication',
+    operatingSystem: 'Any',
+    offers: {
+      '@type': 'Offer',
+      price: '0',
+      priceCurrency: 'NOK',
+    },
+  }
+
   return (
     <div className="min-h-screen bg-slate-50/50">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <header className="sticky top-0 z-10 w-full border-b bg-white/80 backdrop-blur-md">
         <div className="container mx-auto px-4 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2">
