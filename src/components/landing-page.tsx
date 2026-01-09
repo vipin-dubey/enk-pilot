@@ -32,29 +32,21 @@ export function LandingPage({ locale, host: serverHost }: { locale: string, host
     setMounted(true)
   }, [])
 
-  // Robust absolute URL calculation
-  const getAppUrl = () => {
-    // Priority 1: Use window if on client
-    if (typeof window !== 'undefined') {
-      const { protocol, host, hostname } = window.location
-      if (hostname.includes('localhost') || hostname.includes('127.0.0.1')) {
-        return `${protocol}//app.${host}`
-      }
-    }
+  // Robust absolute URL calculation - improved for SEO/SSR
+  const getDeterministicAppUrl = () => {
+    const host = serverHost || (typeof window !== 'undefined' ? window.location.host : '')
+    if (!host) return `https://app.enkpilot.com`
 
-    // Priority 2: Use serverHost if provided (for SEO/SSR)
-    if (serverHost) {
-      if (serverHost.includes('localhost') || serverHost.includes('127.0.0.1')) {
-        return `http://app.${serverHost}`
-      }
+    if (host.includes('localhost') || host.includes('127.0.0.1')) {
+      const protocol = typeof window !== 'undefined' ? window.location.protocol : 'http:'
+      return `${protocol}//app.${host}`
     }
-
     return `https://app.enkpilot.com`
   }
 
-  const appBase = mounted ? getAppUrl() : ''
-  const loginUrl = mounted ? `${appBase}/${locale}/login` : `/${locale}/login`
-  const signupUrl = mounted ? `${appBase}/${locale}/signup` : `/${locale}/signup`
+  const appBase = getDeterministicAppUrl()
+  const loginUrl = `${appBase}/${locale}/login`
+  const signupUrl = `${appBase}/${locale}/signup`
 
   const t = useTranslations('landing')
 
@@ -619,13 +611,14 @@ function FaqItem({ question, answer }: { question: string, answer: string }) {
         <span className="font-bold text-slate-900 group-hover:text-blue-600 transition-colors uppercase tracking-tight text-sm lg:text-base">{question}</span>
         <ChevronRight className={`h-5 w-5 text-slate-300 transition-transform duration-300 ${isOpen ? 'rotate-90 text-blue-600' : ''}`} />
       </button>
-      {isOpen && (
-        <div className="pb-6 animate-in fade-in slide-in-from-top-2 duration-300">
-          <p className="text-slate-500 leading-relaxed font-medium text-sm lg:text-base">
-            {answer}
-          </p>
-        </div>
-      )}
+      <div
+        className={`overflow-hidden transition-all duration-300 ease-in-out ${isOpen ? 'max-h-96 opacity-100 pb-6' : 'max-h-0 opacity-0'}`}
+        aria-hidden={!isOpen}
+      >
+        <p className="text-slate-500 leading-relaxed font-medium text-sm lg:text-base">
+          {answer}
+        </p>
+      </div>
     </div>
   )
 }
