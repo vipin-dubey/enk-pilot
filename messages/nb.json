@@ -450,13 +450,17 @@
       "startFree": "Start gratis"
     },
     "metadata": {
-      "title": "ENK Pilot | Smart skattekalkulator for norske gründere",
-      "description": "Vit nøyaktig hvor mye som er trygt å bruke. Automatisert sporing av skatt, MVA og overskudd for ENK. Personvernvennlig AI-kvitteringsskanning."
+      "title": "ENK Pilot | Aldri mer skattesjokk som ENK",
+      "description": "ENK Pilot viser deg nøyaktig hvor mye skatt og MVA du må sette av – og hvor mye som er trygt å bruke – i sanntid. Bygget i Norge for norske enkeltpersonforetak."
     },
     "hero": {
       "badge": "Moderne skattesikkerhet for ENK",
-      "title": "Ditt ENK på <highlight>Autopilot</highlight>.",
-      "description": "Vit nøyaktig hvor mye som er <highlight>trygt å bruke</highlight>. ENK Pilot håndterer MVA og skatt i sanntid.",
+      "title": "ENK Pilot",
+      "subtitle": "Aldri mer skattesjokk som ENK",
+      "description": "ENK Pilot viser deg nøyaktig hvor mye skatt og MVA du må sette av – og hvor mye som er trygt å bruke – i sanntid.",
+      "cta1": "Start 30 dagers gratis prøve",
+      "cta2": "Se hvordan det fungerer",
+      "builtInNorway": "Bygget i Norge for norske enkeltpersonforetak. Ingen bindingstid.",
       "safeToSpend": "Trygt å bruke",
       "joinNow": "Bli med nå",
       "foundingSeats": "Begrenset antall Grunnlegger-plasser igjen",
@@ -471,56 +475,62 @@
       "compliant": "100% GDPR & SAF-T klar",
       "built": "Bygd for Norge"
     },
+    "explainer": {
+      "title": "Hva er ENK Pilot?",
+      "description": "ENK Pilot er en smart skattekalkulator og kontantstrøm-assistent for enkeltpersonforetak. Du legger inn inntekter og utgifter, så beregner vi automatisk skatt, MVA og en trygg buffer – slik at du alltid vet hva du kan bruke uten å få problemer med Skatteetaten."
+    },
     "howItWorks": {
-      "title": "Skattesikkerhet på <highlight>3 enkle steg</highlight>",
+      "title": "Slik fungerer ENK Pilot",
       "step1": {
-        "title": "Skan og registrer",
-        "desc": "Ta bilde av dine inntekter eller utgifter. Vår AI henter ut alle detaljer umiddelbart til din journal."
+        "title": "Legg inn inntekter og utgifter",
+        "desc": "Koble til kontoen din eller registrer inntekter og kostnader manuelt. ENK Pilot forstår norsk ENK-økonomi – inkludering MVA-plikt, forskuddsskatt og fradrag."
       },
       "step2": {
-        "title": "Live buffer-logikk",
-        "desc": "Setter umiddelbart av MVA, trinnskatt og personfradrag i et virtuelt hvelv."
+        "title": "Vi beregner skatt, MVA og buffer",
+        "desc": "Basert på regelverket for enkeltpersonforetak beregner vi hvor mye du bør sette av til forskuddsskatt, trinnskatt og arbeidsgiveravgift der det er relevant. Resten går inn i ditt virtuelle skatt- og MVA-hvelv."
       },
       "step3": {
-        "title": "Bruk penger med selvtillit",
-        "desc": "Se din 'Trygt å bruke'-saldo oppdateres i sanntid. Ingen flere overraskelser på skattedagen."
+        "title": "Du ser 'trygt å bruke'-saldoen din i sanntid",
+        "desc": "ENK Pilot viser deg alltid hvor mye som er trygt å bruke, etter at skatt og MVA er satt av. Ingen flere overraskelser når Skatteetaten skal ha sitt."
       }
     },
     "features": {
-      "title": "Alt på <highlight>ett sted.</highlight>",
-      "description": "Automatiserte beregninger og verktøy designet spesifikt for <highlight>norske enkeltpersonforetak</highlight> (ENK).",
-      "safeToSpend": {
-        "title": "Trygt å bruke™",
-        "desc": "Eget beregningsverktøy som sporer MVA, trinnskatt og personfradrag i sanntid. Beskytt overskuddet ditt."
-      },
-      "aiScan": {
-        "title": "AI-skanning av kvitteringer",
-        "desc": "Ta bilde av kvitteringer med mobilen. Henter ut selger, MVA og kategori automatisk til journalen din."
-      },
-      "pulse": {
-        "title": "Bedriftspuls",
-        "desc": "Et live dashbord som viser din økonomiske helse, overskuddstrender og sikkerhetsmarginer ved et blikk."
-      },
-      "deadline": {
-        "title": "Fristvakt",
-        "desc": "Gå aldri glipp av MVA eller forskuddsskatt. Smarte påminnelser basert på din bedriftsflyt."
-      },
-      "analysis": {
-        "title": "Smart analyse",
-        "desc": "Visuelle oppsummeringer av vekst, utgifter og skattehelse. Profesjonell innsikt for ditt ENK."
-      },
-      "currency": {
-        "title": "Flere valutaer",
-        "desc": "Selger du i USD eller EUR? Henter live kurser fra Norges Bank for å beregne nøyaktig inntekt i NOK."
-      },
-      "exports": {
-        "title": "Eksport til regnskap",
-        "desc": "Generer perfekte SAF-T-filer og filer klare for regnskapsfører på sekunder. Hold deg ajour uten innsats."
-      },
-      "insights": {
-        "title": "Skatteinnsikt",
-        "desc": "Smarte forslag til glemte fradrag og advarsler før du når MVA-grensen."
-      }
+      "title": "Alt du trenger for trygg ENK-økonomi",
+      "description": "Automatiserte beregninger og verktøy designet spesifikt for norske enkeltpersonforetak.",
+      "bufferTitle": "Skattebuffer og 'trygt å bruke'-saldo",
+      "buffer1": "Skattebuffer du kan stole på (basert på Skatteetaten-regler)",
+      "buffer2": "Se hva du faktisk kan bruke – én enkel saldo",
+      "buffer3": "Automatiske varsler når bufferen blir for lav",
+      "bufferSource": "Basert på Skatteetaten sine satser",
+      "receiptsTitle": "Kvitteringsapp for ENK – med AI",
+      "receiptsSubtitle": "Ta bilde – vi gjør resten",
+      "receipts1": "Ta bilde av kvitteringer direkte i ENK Pilot",
+      "receipts2": "Vi leser beløp, dato og leverandør, foreslår kategori og MVA-håndtering",
+      "receiptsPrivacy": "Alt skjer i din nettleser",
+      "receiptsPrivacy1": "All AI-skanning kjører lokalt – ingen kvitteringsbilder sendes ut",
+      "receiptsPrivacy2": "Personvern og norsk lovverk først",
+      "mvaTitle": "Full kontroll på MVA og frister",
+      "mvaSubtitle": "MVA-grensen og MVA-oppgaver",
+      "mva1": "Følger med på 50 000-kronersgrensen for MVA-plikt",
+      "mva2": "Viser hvor mye MVA du skylder basert på salget ditt",
+      "remindersSubtitle": "Påminnelser før det er for sent",
+      "reminders1": "Varsler før forskuddsskatt og MVA-innlevering",
+      "reminders2": "Slippe å sitte med dårlig samvittighet",
+      "saftTitle": "Klar for regnskapsfører og SAF-T",
+      "saftSubtitle": "Eksporter data på sekunder",
+      "saft1": "Ett klikk til format regnskapsfører forstår",
+      "saft2": "SAF-T-fil der det er nødvendig",
+      "supplementSubtitle": "Supplement til Fiken eller Conta",
+      "supplement1": "ENK Pilot erstatter ikke regnskap, men gir oversikt og ryddige data"
+    },
+    "privacy": {
+      "title": "Personvern og datasikkerhet",
+      "subtitle1": "Tydelig personvern, norsk kontekst",
+      "privacy1": "Data lagres sikkert i EU, følger GDPR og norsk personopplysningslov",
+      "privacy2": "Du eier dataene dine – eksporter eller slett når som helst",
+      "subtitle2": "Bygget for ENK-eiere i Norge",
+      "built1": "Laget av ENK-eier som forstår dine smerter",
+      "built2": "Kun økonomiske data til å hjelpe DEG, aldri solgt eller brukt til annonser"
     },
     "security": {
       "badge": "Sikkerhet i toppklasse",
@@ -531,9 +541,27 @@
       "gdpr": "GDPR-kompatibel"
     },
     "pricing": {
-      "title": "Planer som vokser med deg.",
+      "title": "Enkel og forutsigbar prising",
       "description": "Gjennomsiktige priser for alle stadier.",
       "recommended": "Anbefalt",
+      "earlyBird": {
+        "title": "Early Bird – støtt utvikling",
+        "price": "999",
+        "unit": "kr engangskjøp",
+        "cta": "Bli Early Bird",
+        "f1": "Livstids tilgang (første 50 brukere)",
+        "f2": "Prioritert innflytelse på funksjoner"
+      },
+      "standard": {
+        "title": "Standard",
+        "price": "349",
+        "unit": "kr / år",
+        "priceMonthly": "39",
+        "unitMonthly": "kr / mnd",
+        "cta": "Start gratis prøve",
+        "trial": "30 dagers gratis prøve (ingen kortinfo nødvendig)",
+        "f1": "Full tilgang"
+      },
       "starter": {
         "title": "Starter",
         "price": "0",
@@ -581,14 +609,16 @@
     },
     "faq": {
       "title": "Ofte stilte <highlight>spørsmål</highlight>",
-      "q1": "Er mine data trygge?",
-      "a1": "Ja. Vi bruker industristandard kryptering og all AI-skanning skjer lokalt i din nettleser. Vi ser aldri innholdet i dine sensitive dokumenter.",
-      "q2": "Erstatter dette regnskapsføreren min?",
-      "a2": "ENK Pilot er et beslutningsstøtteverktøy. Det er perfekt for å håndtere ditt eget ENK, men vi anbefaler alltid en regnskapsfører for komplekse skatteråd.",
-      "q3": "Er det i samsvar med norsk lov?",
-      "a3": "Absolutt. Vi baserer motoren vår på Skatteetatens regler for 2026 og støtter eksportformater som er klare for din skattemelding.",
-      "q4": "Kan jeg kansellere abonnementet mitt?",
-      "a4": "Når som helst. Ingen skjulte gebyrer eller bindingstider. Du beholder kontrollen."
+      "q1": "Erstatter ENK Pilot Fiken/Conta?",
+      "a1": "Nei – dette er et supplement for oversikt og skattbuffer.",
+      "q2": "Hvordan beregner dere skatten?",
+      "a2": "Basert på Skatteetaten-regler for ENK: minsteskatt, trygdeavgift, trinnskatt, MVA. Avansert kalkulator, ikke personlig rådgivning.",
+      "q3": "Er det trygt?",
+      "a3": "Ja – HTTPS, lokal AI-skanning, EU-data. Eksporter/slett når som helst.",
+      "q4": "Er mine data trygge?",
+      "a4": "Ja. Vi bruker industristandard kryptering og all AI-skanning skjer lokalt i din nettleser. Vi ser aldri innholdet i dine sensitive dokumenter.",
+      "q5": "Kan jeg kansellere abonnementet mitt?",
+      "a5": "Når som helst. Ingen skjulte gebyrer eller bindingstider. Du beholder kontrollen."
     }
   }
 }

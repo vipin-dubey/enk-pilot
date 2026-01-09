@@ -451,13 +451,17 @@
       "startFree": "Start Free"
     },
     "metadata": {
-      "title": "ENK Pilot | Smart Tax Calculator for Norwegian Founders",
-      "description": "Know exactly how much is safe to spend. Automated tax, MVA, and profit tracking for Norwegian sole proprietors (ENK). Privacy-first AI receipt scanning."
+      "title": "ENK Pilot | Never Get Tax Shocked as an ENK Again",
+      "description": "ENK Pilot shows you exactly how much tax and VAT you need to set aside – and how much is safe to spend – in real-time. Built in Norway for Norwegian sole proprietors."
     },
     "hero": {
       "badge": "Modern Tax Safety for ENK",
-      "title": "Your ENK on <highlight>Autopilot</highlight>.",
-      "description": "Know exactly how much is <highlight>safe to spend</highlight>. ENK Pilot handles MVA and taxes in real-time.",
+      "title": "ENK Pilot",
+      "subtitle": "Never Get Tax Shocked as an ENK Again",
+      "description": "ENK Pilot shows you exactly how much tax and VAT you need to set aside – and how much is safe to spend – in real-time.",
+      "cta1": "Start 30-Day Free Trial",
+      "cta2": "See How It Works",
+      "builtInNorway": "Built in Norway for Norwegian sole proprietors. No commitment.",
       "safeToSpend": "Safe to Spend",
       "joinNow": "Join Now",
       "foundingSeats": "Limited Founding Seats remaining",
@@ -472,56 +476,62 @@
       "compliant": "100% GDPR & SAF-T Ready",
       "built": "Built for Norway"
     },
+    "explainer": {
+      "title": "What is ENK Pilot?",
+      "description": "ENK Pilot is a smart tax calculator and cash flow assistant for sole proprietors. You enter income and expenses, and we automatically calculate tax, VAT, and a safe buffer – so you always know what you can spend without getting into trouble with the Tax Authority."
+    },
     "howItWorks": {
-      "title": "Tax safety in <highlight>3 simple steps</highlight>",
+      "title": "How ENK Pilot Works",
       "step1": {
-        "title": "Snap & Record",
-        "desc": "Snap a photo of your income or expenses. Our AI extracts every detail instantly into your business journal."
+        "title": "Enter Income and Expenses",
+        "desc": "Connect your account or register income and costs manually. ENK Pilot understands Norwegian ENK finances – including VAT liability, prepaid tax, and deductions."
       },
       "step2": {
-        "title": "Live Buffer Logic",
-        "desc": "Instantly sets aside MVA, bracket tax, and personal deductions in a virtual vault."
+        "title": "We Calculate Tax, VAT, and Buffer",
+        "desc": "Based on sole proprietor regulations, we calculate how much you should set aside for prepaid tax, bracket tax, and employer contributions where relevant. The rest goes into your virtual tax and VAT vault."
       },
       "step3": {
-        "title": "Spend with Confidence",
-        "desc": "See your 'Safe-to-Spend' balance update in real-time. No more tax-day surprises."
+        "title": "You See Your 'Safe to Spend' Balance in Real-Time",
+        "desc": "ENK Pilot always shows you how much is safe to spend, after tax and VAT are set aside. No more surprises when the Tax Authority comes calling."
       }
     },
     "features": {
-      "title": "Everything in <highlight>one place.</highlight>",
-      "description": "Automated calculations and tools designed specifically for <highlight>Norwegian sole proprietors</highlight> (ENK).",
-      "safeToSpend": {
-        "title": "Safe to Spend™",
-        "desc": "Proprietary engine tracks MVA, trinnskatt, and personal allowances in real-time. Protect your profit."
-      },
-      "aiScan": {
-        "title": "AI Receipt Scan",
-        "desc": "Snap receipts with your phone. Extracts vendor, MVA, and category automatically into your journal."
-      },
-      "pulse": {
-        "title": "Business Pulse",
-        "desc": "A live dashboard showing your business health, profit trends, and safety margins at a glance."
-      },
-      "deadline": {
-        "title": "Deadline Guard",
-        "desc": "Never miss MVA or Forskuddsskatt. Smart reminders based on your business flow."
-      },
-      "analysis": {
-        "title": "Smart Analysis",
-        "desc": "Deep visual summaries of growth, expenses, and tax health. Professional grade insights for your ENK."
-      },
-      "currency": {
-        "title": "Multi-Currency",
-        "desc": "Selling in USD or EUR? Fetches live Norges Bank rates to calculate your exact NOK income."
-      },
-      "exports": {
-        "title": "Audit-Ready Exports",
-        "desc": "Generate perfect SAF-T and accountant-ready files in seconds. Stay compliant with zero effort."
-      },
-      "insights": {
-        "title": "Tax Insights",
-        "desc": "Smart suggestions on forgotten deductions and warnings before you hit MVA thresholds."
-      }
+      "title": "Everything you need for safe ENK finances",
+      "description": "Automated calculations and tools specifically designed for Norwegian sole proprietorships.",
+      "bufferTitle": "Tax Buffer and 'Safe to Spend' Balance",
+      "buffer1": "Tax buffer you can trust (based on Tax Authority rules)",
+      "buffer2": "See what you can actually spend – one simple balance",
+      "buffer3": "Automatic alerts when buffer gets too low",
+      "bufferSource": "Based on Tax Authority rates",
+      "receiptsTitle": "Receipt App for ENK – with AI",
+      "receiptsSubtitle": "Snap a Photo – We Do the Rest",
+      "receipts1": "Take photos of receipts directly in ENK Pilot",
+      "receipts2": "We read amount, date, and vendor, suggest category and VAT handling",
+      "receiptsPrivacy": "Everything Happens in Your Browser",
+      "receiptsPrivacy1": "All AI scanning runs locally – no receipt images sent out",
+      "receiptsPrivacy2": "Privacy and Norwegian law first",
+      "mvaTitle": "Full Control of VAT and Deadlines",
+      "mvaSubtitle": "VAT Threshold and VAT Returns",
+      "mva1": "Tracks the 50,000 NOK threshold for VAT liability",
+      "mva2": "Shows how much VAT you owe based on your sales",
+      "remindersSubtitle": "Reminders Before It's Too Late",
+      "reminders1": "Alerts before prepaid tax and VAT submission",
+      "reminders2": "Avoid the guilt of missing deadlines",
+      "saftTitle": "Ready for Accountant and SAF-T",
+      "saftSubtitle": "Export Data in Seconds",
+      "saft1": "One click to format accountants understand",
+      "saft2": "SAF-T file where necessary",
+      "supplementSubtitle": "Supplement to Fiken or Conta",
+      "supplement1": "ENK Pilot doesn't replace accounting, but provides overview and clean data"
+    },
+    "privacy": {
+      "title": "Privacy and Data Security",
+      "subtitle1": "Clear Privacy, Norwegian Context",
+      "privacy1": "Data stored securely in EU, complies with GDPR and Norwegian data protection law",
+      "privacy2": "You own your data – export or delete anytime",
+      "subtitle2": "Built for ENK Owners in Norway",
+      "built1": "Created by an ENK owner who understands your pain",
+      "built2": "Only financial data to help YOU, never sold or used for ads"
     },
     "security": {
       "badge": "Enterprise-Grade Security",
@@ -532,9 +542,27 @@
       "gdpr": "GDPR Compliant"
     },
     "pricing": {
-      "title": "Plans that grow with you.",
+      "title": "Simple and Predictable Pricing",
       "description": "Transparent pricing for every stage.",
       "recommended": "Recommended",
+      "earlyBird": {
+        "title": "Early Bird – Support Development",
+        "price": "999",
+        "unit": "kr one-time",
+        "cta": "Become Early Bird",
+        "f1": "Lifetime access (first 50 users)",
+        "f2": "Priority influence on features"
+      },
+      "standard": {
+        "title": "Standard",
+        "price": "349",
+        "unit": "kr / year",
+        "priceMonthly": "39",
+        "unitMonthly": "kr / mo",
+        "cta": "Start Free Trial",
+        "trial": "30-day free trial (no card required)",
+        "f1": "Full access"
+      },
       "starter": {
         "title": "Starter",
         "price": "0",
@@ -582,14 +610,16 @@
     },
     "faq": {
       "title": "Frequently Asked <highlight>Questions</highlight>",
-      "q1": "Is my data safe?",
-      "a1": "Yes. We use industry-standard encryption and all AI scanning happens locally in your browser. We never see your sensitive document content.",
-      "q2": "Does this replace my accountant?",
-      "a2": "ENK Pilot is a decision-support tool. It's perfect for handling your own ENK, but we always recommend an accountant for complex tax advice.",
-      "q3": "Is it compliant with Norwegian law?",
-      "a3": "Strictly. We base our engine on 2026 Skatteetaten rules and support export formats ready for your tax return.",
-      "q4": "Can I cancel my subscription?",
-      "a4": "Anytime. No hidden fees or lock-in periods. You stay in control."
+      "q1": "Does ENK Pilot replace Fiken/Conta?",
+      "a1": "No – this is a supplement for overview and tax buffer.",
+      "q2": "How do you calculate taxes?",
+      "a2": "Based on Tax Authority rules for ENK: minimum tax, national insurance, bracket tax, VAT. Advanced calculator, not personal advice.",
+      "q3": "Is it safe?",
+      "a3": "Yes – HTTPS, local AI scanning, EU data. Export/delete anytime.",
+      "q4": "Is my data safe?",
+      "a4": "Yes. We use industry-standard encryption and all AI scanning happens locally in your browser. We never see your sensitive document content.",
+      "q5": "Can I cancel my subscription?",
+      "a5": "Anytime. No hidden fees or lock-in periods. You stay in control."
     }
   }
 }
