@@ -61,9 +61,9 @@ export function LandingPage({ locale, host: serverHost }: { locale: string, host
           </Link>
 
           <nav className="hidden lg:flex items-center gap-8">
-            <a href="#features" className="text-xs font-bold text-slate-500 hover:text-slate-900 transition-colors uppercase tracking-wider">{t('nav.features')}</a>
-            <a href="#security" className="text-xs font-bold text-slate-500 hover:text-slate-900 transition-colors uppercase tracking-wider">{t('nav.security')}</a>
-            <a href="#pricing" className="text-xs font-bold text-slate-500 hover:text-slate-900 transition-colors uppercase tracking-wider">{t('nav.pricing')}</a>
+            <a href="#features" className="text-xs font-bold text-slate-600 hover:text-slate-900 transition-colors uppercase tracking-wider">{t('nav.features')}</a>
+            <a href="#security" className="text-xs font-bold text-slate-600 hover:text-slate-900 transition-colors uppercase tracking-wider">{t('nav.security')}</a>
+            <a href="#pricing" className="text-xs font-bold text-slate-600 hover:text-slate-900 transition-colors uppercase tracking-wider">{t('nav.pricing')}</a>
           </nav>
 
           <div className="flex items-center gap-1 sm:gap-2">
@@ -158,12 +158,12 @@ export function LandingPage({ locale, host: serverHost }: { locale: string, host
               </Button>
             </a>
             <div className="flex flex-col items-center sm:items-start">
-              <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest sm:ml-2">
+              <p className="text-[10px] font-bold text-slate-600 uppercase tracking-widest sm:ml-2">
                 {t('hero.foundingSeats', { count: 82 })}
               </p>
               <div className="flex -space-x-2 sm:ml-2 mt-1">
                 {[...Array(5)].map((_, i) => (
-                  <div key={i} className="w-5 h-5 rounded-full border-2 border-white bg-slate-200" />
+                  <div key={i} className="w-5 h-5 rounded-full border-2 border-white bg-slate-300" />
                 ))}
               </div>
             </div>
@@ -262,7 +262,7 @@ export function LandingPage({ locale, host: serverHost }: { locale: string, host
                       <div className="flex-1 bg-gradient-to-br from-slate-900 to-slate-800 rounded-xl p-6 text-white overflow-hidden relative group">
                         <div className="relative z-10">
                           <p className="text-[10px] font-bold text-slate-300 uppercase tracking-widest mb-2">{t('hero.nextDeadline')}</p>
-                          <h4 className="text-lg font-black font-outfit tracking-tight">Forskuddsskatt</h4>
+                          <p className="text-lg font-black font-outfit tracking-tight">Forskuddsskatt</p>
                           <p className="text-xs text-slate-300 mt-1">{t('hero.dueIn', { days: 14 })}</p>
                         </div>
                         <div className="absolute right-[-20px] bottom-[-20px] opacity-10 group-hover:rotate-12 transition-transform duration-700">
@@ -443,7 +443,7 @@ export function LandingPage({ locale, host: serverHost }: { locale: string, host
               <h3 className="text-lg font-black font-outfit text-slate-900 mb-1 uppercase tracking-tighter">{t('pricing.starter.title')}</h3>
               <div className="flex items-baseline gap-1 mb-6">
                 <span className="text-3xl font-black text-slate-900 tracking-tight">{t('pricing.starter.price')}</span>
-                <span className="text-slate-400 font-bold uppercase text-[10px] tracking-widest">{t('pricing.starter.unit')}</span>
+                <span className="text-slate-500 font-bold uppercase text-[10px] tracking-widest">{t('pricing.starter.unit')}</span>
               </div>
               <ul className="space-y-3 mb-8 flex-1">
                 <PricingItem text={t('pricing.starter.f1')} />
@@ -467,7 +467,7 @@ export function LandingPage({ locale, host: serverHost }: { locale: string, host
               <h3 className="text-lg font-black font-outfit text-slate-900 mb-1 uppercase tracking-tighter">{t('pricing.pro.title')}</h3>
               <div className="flex items-baseline gap-1 mb-6">
                 <span className="text-3xl font-black text-slate-900 tracking-tight">{t('pricing.pro.price')}</span>
-                <span className="text-slate-400 font-bold uppercase text-[10px] tracking-widest">{t('pricing.pro.unit')}</span>
+                <span className="text-slate-500 font-bold uppercase text-[10px] tracking-widest">{t('pricing.pro.unit')}</span>
               </div>
               <ul className="space-y-3 mb-8 flex-1">
                 <PricingItem text={t('pricing.pro.f1')} highlighted />
@@ -491,7 +491,7 @@ export function LandingPage({ locale, host: serverHost }: { locale: string, host
               <div className="mb-6">
                 <div className="flex items-baseline gap-1">
                   <span className="text-3xl font-black text-amber-900 tracking-tight">{t('pricing.founding.price')}</span>
-                  <span className="text-amber-600/70 font-bold uppercase text-[10px] tracking-widest">{t('pricing.founding.unit')}</span>
+                  <span className="text-amber-700 font-bold uppercase text-[10px] tracking-widest">{t('pricing.founding.unit')}</span>
                 </div>
                 <p className="text-[9px] text-amber-700/60 font-bold uppercase tracking-widest mt-1">{t('pricing.founding.renews')}</p>
               </div>
@@ -524,7 +524,7 @@ export function LandingPage({ locale, host: serverHost }: { locale: string, host
               highlight: (chunks) => <span className="text-blue-400">{chunks}</span>
             })}
           </h2>
-          <p className="max-w-md mx-auto text-slate-300 font-medium text-lg mb-12">
+          <p className="max-w-md mx-auto text-slate-200 font-medium text-lg mb-12">
             {t('cta.description')}
           </p>
           <a href={signupUrl}>
