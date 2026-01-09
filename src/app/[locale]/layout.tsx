@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import { locales } from '@/i18n';
 import { Geist, Geist_Mono } from "next/font/google";
 import { CookieConsent } from '@/components/legal/cookie-consent';
+import { Metadata } from 'next';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -14,6 +15,12 @@ const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
 });
+
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+  return {
+    metadataBase: new URL('https://enkpilot.com'),
+  }
+}
 
 export function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
@@ -33,12 +40,10 @@ export default async function LocaleLayout({
     notFound();
   }
 
-  const messages = await getMessages({ locale });
-
   return (
     <html lang={locale} suppressHydrationWarning>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <NextIntlClientProvider messages={messages} locale={locale}>
+        <NextIntlClientProvider locale={locale}>
           {children}
           <CookieConsent locale={locale} />
         </NextIntlClientProvider>

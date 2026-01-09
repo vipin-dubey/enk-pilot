@@ -1,6 +1,7 @@
 'use client'
 
 import { Link } from '@/navigation'
+import Image from 'next/image'
 import { useParams } from 'next/navigation'
 import { ShieldCheck, Globe } from 'lucide-react'
 
@@ -25,10 +26,10 @@ export function PublicFooter() {
           <div className="flex flex-col items-center md:items-end gap-2">
             <div className="flex items-center gap-4">
               <Link href="/privacy" className="text-[10px] font-bold text-slate-500 hover:text-blue-600 transition-colors uppercase tracking-widest">
-                {locale === 'en' ? 'Privacy' : 'Personvern'}
+                {locale === 'en' ? 'Privacy Policy' : 'Personvern'}
               </Link>
               <Link href="/terms" className="text-[10px] font-bold text-slate-500 hover:text-blue-600 transition-colors uppercase tracking-widest">
-                {locale === 'en' ? 'Terms' : 'Vilkår'}
+                {locale === 'en' ? 'Terms of Service' : 'Vilkår'}
               </Link>
               <a href="mailto:support@enkpilot.com" className="text-[10px] font-bold text-slate-500 hover:text-blue-600 transition-colors uppercase tracking-widest">
                 {locale === 'en' ? 'Support' : 'Kontakt'}
@@ -36,7 +37,13 @@ export function PublicFooter() {
             </div>
             <div className="flex flex-col items-center md:items-end gap-1">
               <div className="flex items-center gap-2">
-                <img src="/logo.png" alt="" className="h-3 w-auto grayscale opacity-50" />
+                <Image
+                  src="/logo.png"
+                  alt=""
+                  width={60}
+                  height={12}
+                  className="h-3 w-auto grayscale opacity-50"
+                />
                 <p className="text-[9px] font-black uppercase tracking-widest text-slate-500">
                   ENK Pilot &copy; 2026 • Norway
                 </p>

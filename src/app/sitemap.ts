@@ -11,9 +11,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const sitemap: MetadataRoute.Sitemap = [];
 
     for (const locale of locales) {
+        const localePrefix = locale === 'nb' ? '' : `/${locale}`
         for (const route of routes) {
             sitemap.push({
-                url: `${protocol}://${host}/${locale}${route}`,
+                url: `${protocol}://${host}${localePrefix}${route}`,
                 lastModified: new Date(),
                 changeFrequency: route === '' ? 'daily' : 'monthly',
                 priority: route === '' ? 1 : 0.8,

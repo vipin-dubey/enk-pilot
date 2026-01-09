@@ -78,8 +78,17 @@ export async function updateSession(request: NextRequest, response?: NextRespons
 
   // LOCALHOST DEV MODE: Skip subdomain routing entirely
   if (isLocalhost) {
-    // Just protect auth routes - Allow /, /en, and /nb as landing pages
     const isLandingPage = pathname === '/' || pathname === '/en' || pathname === '/nb'
+
+    // Redirect logged in users from landing page to dashboard
+    if (user && isLandingPage) {
+      const target = request.nextUrl.clone()
+      const dashboardPath = currentLocale === defaultLocale ? '/dashboard' : `/${currentLocale}/dashboard`
+      target.pathname = dashboardPath
+      return syncRedirect(target)
+    }
+
+    // Just protect auth routes - Allow /, /en, and /nb as landing pages
     if (!user && !isAuthPath && !isLandingPage) {
       const target = request.nextUrl.clone()
       // Construct locale-aware login path
