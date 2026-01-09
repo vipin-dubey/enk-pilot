@@ -51,7 +51,7 @@ export function LandingPage({ locale, host: serverHost }: { locale: string, host
   const t = useTranslations('landing')
 
   return (
-    <div className="min-h-screen bg-white text-slate-900 font-sans selection:bg-blue-100 selection:text-blue-900" suppressHydrationWarning>
+    <main className="min-h-screen bg-white text-slate-900 font-sans selection:bg-blue-100 selection:text-blue-900" suppressHydrationWarning>
       {/* Premium Header */}
       <header className="fixed top-0 z-50 w-full bg-white/70 backdrop-blur-xl border-b border-slate-100">
         <div className="container mx-auto px-4 h-16 flex items-center justify-between">
@@ -81,6 +81,8 @@ export function LandingPage({ locale, host: serverHost }: { locale: string, host
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className="lg:hidden p-2 text-slate-600 hover:text-slate-900 transition-colors"
+              aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+              aria-expanded={isMenuOpen}
             >
               {isMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </button>
@@ -143,7 +145,7 @@ export function LandingPage({ locale, host: serverHost }: { locale: string, host
             })}
           </h1>
 
-          <p className="max-w-xl mx-auto text-base lg:text-lg text-slate-500 font-medium mb-8 leading-relaxed animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-200">
+          <p className="max-w-xl mx-auto text-base lg:text-lg text-slate-600 font-medium mb-8 leading-relaxed animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-200">
             {t.rich('hero.description', {
               highlight: (chunks) => <span className="text-slate-900 font-bold underline decoration-blue-500 decoration-2 underline-offset-4">{chunks}</span>
             })}
@@ -156,7 +158,7 @@ export function LandingPage({ locale, host: serverHost }: { locale: string, host
               </Button>
             </a>
             <div className="flex flex-col items-center sm:items-start">
-              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest sm:ml-2">
+              <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest sm:ml-2">
                 {t('hero.foundingSeats', { count: 82 })}
               </p>
               <div className="flex -space-x-2 sm:ml-2 mt-1">
@@ -177,7 +179,7 @@ export function LandingPage({ locale, host: serverHost }: { locale: string, host
                 {/* Mockup Sidebar/Navigation */}
                 <div className="hidden md:flex w-16 bg-white border-r border-slate-200 flex-col items-center py-6 gap-6">
                   <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center">
-                    <img src="/logo-mark.png" alt="" className="h-5 w-5 brightness-0 invert" />
+                    <img src="/logo-mark.png" alt="" role="presentation" className="h-5 w-5 brightness-0 invert" />
                   </div>
                   <div className="space-y-4">
                     <div className="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center text-blue-600"><PieChart className="h-4 w-4" /></div>
@@ -218,7 +220,7 @@ export function LandingPage({ locale, host: serverHost }: { locale: string, host
 
                         {/* Needle / Value */}
                         <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
-                          <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">{t('hero.safeToSpend')}</span>
+                          <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">{t('hero.safeToSpend')}</span>
                           <span className="text-2xl lg:text-4xl font-black font-outfit text-slate-900 tracking-tighter">kr 12.450</span>
                           <div className="mt-2 flex items-center gap-1.5 px-2 py-0.5 bg-emerald-50 rounded-full border border-emerald-100">
                             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
@@ -227,7 +229,7 @@ export function LandingPage({ locale, host: serverHost }: { locale: string, host
                         </div>
                       </div>
 
-                      <div className="w-full flex justify-between text-[10px] font-bold text-slate-400 tracking-widest uppercase">
+                      <div className="w-full flex justify-between text-[10px] font-bold text-slate-500 tracking-widest uppercase">
                         <span>{t('hero.reservedForTax')}: kr 4.560</span>
                         <span>{t('hero.ytdProfit')}: 125k</span>
                       </div>
@@ -259,7 +261,7 @@ export function LandingPage({ locale, host: serverHost }: { locale: string, host
 
                       <div className="flex-1 bg-gradient-to-br from-slate-900 to-slate-800 rounded-xl p-6 text-white overflow-hidden relative group">
                         <div className="relative z-10">
-                          <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">{t('hero.nextDeadline')}</p>
+                          <p className="text-[10px] font-bold text-slate-300 uppercase tracking-widest mb-2">{t('hero.nextDeadline')}</p>
                           <h4 className="text-lg font-black font-outfit tracking-tight">Forskuddsskatt</h4>
                           <p className="text-xs text-slate-300 mt-1">{t('hero.dueIn', { days: 14 })}</p>
                         </div>
@@ -324,7 +326,7 @@ export function LandingPage({ locale, host: serverHost }: { locale: string, host
                 highlight: (chunks) => <span className="text-blue-600 bg-clip-text uppercase">{chunks}</span>
               })}
             </h2>
-            <p className="text-slate-500 font-medium max-w-2xl mx-auto text-base lg:text-lg leading-relaxed px-4">
+            <p className="text-slate-600 font-medium max-w-2xl mx-auto text-base lg:text-lg leading-relaxed px-4">
               {t.rich('features.description', {
                 highlight: (chunks) => <span className="text-slate-900 font-bold">{chunks}</span>
               })}
@@ -432,7 +434,7 @@ export function LandingPage({ locale, host: serverHost }: { locale: string, host
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <h2 className="text-3xl lg:text-4xl font-black font-outfit tracking-tight text-slate-900 mb-3">{t('pricing.title')}</h2>
-            <p className="text-slate-500 font-medium max-w-md mx-auto text-sm font-bold uppercase tracking-widest">{t('pricing.description')}</p>
+            <p className="text-slate-600 font-medium max-w-md mx-auto text-sm font-bold uppercase tracking-widest">{t('pricing.description')}</p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
@@ -522,7 +524,7 @@ export function LandingPage({ locale, host: serverHost }: { locale: string, host
               highlight: (chunks) => <span className="text-blue-400">{chunks}</span>
             })}
           </h2>
-          <p className="max-w-md mx-auto text-slate-400 font-medium text-lg mb-12">
+          <p className="max-w-md mx-auto text-slate-300 font-medium text-lg mb-12">
             {t('cta.description')}
           </p>
           <a href={signupUrl}>
@@ -553,7 +555,7 @@ export function LandingPage({ locale, host: serverHost }: { locale: string, host
       </section>
 
       <PublicFooter />
-    </div>
+    </main>
   )
 }
 
@@ -570,7 +572,7 @@ function FeatureCard({ icon, title, description, gradient }: { icon: React.React
         <h3 className="text-xl font-black font-outfit text-slate-900 mb-3 tracking-tight group-hover:text-blue-600 transition-colors">
           {title}
         </h3>
-        <p className="text-slate-500 font-medium leading-relaxed text-sm">
+        <p className="text-slate-600 font-medium leading-relaxed text-sm">
           {description}
         </p>
       </div>
@@ -594,7 +596,7 @@ function Step({ icon, number, title, desc }: { icon: React.ReactNode, number: st
           {icon}
         </div>
         <h3 className="text-xl font-bold text-slate-900 mb-4">{title}</h3>
-        <p className="text-slate-500 leading-relaxed font-medium">{desc}</p>
+        <p className="text-slate-600 leading-relaxed font-medium">{desc}</p>
       </div>
     </div>
   )
@@ -615,7 +617,7 @@ function FaqItem({ question, answer }: { question: string, answer: string }) {
         className={`overflow-hidden transition-all duration-300 ease-in-out ${isOpen ? 'max-h-96 opacity-100 pb-6' : 'max-h-0 opacity-0'}`}
         aria-hidden={!isOpen}
       >
-        <p className="text-slate-500 leading-relaxed font-medium text-sm lg:text-base">
+        <p className="text-slate-600 leading-relaxed font-medium text-sm lg:text-base">
           {answer}
         </p>
       </div>
