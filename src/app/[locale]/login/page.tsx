@@ -35,7 +35,7 @@ export default async function LoginPage({
             </div>
             <span className="sr-only">ENK Pilot</span>
             <CardDescription className="text-slate-500 font-semibold px-4">
-              Enten du er ny eller veteran, vi hjelper deg med ENK-økonomien.
+              {t('description')}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4 pt-4 bg-white px-8 pb-4">
@@ -51,7 +51,7 @@ export default async function LoginPage({
             )}
             <form className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="email" className="text-slate-600 font-semibold">E-post</Label>
+                <Label htmlFor="email" className="text-slate-600 font-semibold">{t('emailLabel')}</Label>
                 <Input
                   id="email"
                   name="email"
@@ -62,7 +62,7 @@ export default async function LoginPage({
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="password" title="password" className="text-slate-600 font-semibold">Passord</Label>
+                <Label htmlFor="password" title="password" className="text-slate-600 font-semibold">{t('passwordLabel')}</Label>
                 <Input
                   id="password"
                   name="password"
@@ -82,7 +82,7 @@ export default async function LoginPage({
                     variant="link"
                     className="text-xs text-blue-600 font-bold hover:text-blue-700 h-auto p-0"
                   >
-                    Send bekreftelse på nytt?
+                    {t('resendVerification')}
                   </Button>
                 )}
               </div>

@@ -96,7 +96,7 @@ export async function LandingPage({ locale, host: serverHost }: { locale: string
             </a>
             <div className="flex flex-col items-center sm:items-start">
               <p className="text-[10px] font-bold text-slate-600 uppercase tracking-widest sm:ml-2">
-                {t('hero.foundingSeats', { count: 82 })}
+                {t('hero.foundingSeats')}
               </p>
               <div className="flex -space-x-2 sm:ml-2 mt-1">
                 {[...Array(5)].map((_, i) => (
@@ -298,7 +298,10 @@ export async function LandingPage({ locale, host: serverHost }: { locale: string
             </div>
             {/* Pro */}
             <div className="p-8 rounded-[2rem] border-2 border-slate-200 bg-white flex flex-col h-full relative group hover:border-blue-400 transition-all">
-              <h3 className="text-lg font-black font-outfit text-slate-900 mb-1 uppercase tracking-tighter">{t('pricing.pro.title')}</h3>
+              <h3 className="text-lg font-black font-outfit text-slate-900 mb-1 uppercase tracking-tighter flex items-center gap-2">
+                {t('pricing.pro.title')}
+                <span className="text-[8px] bg-slate-100 text-slate-500 px-2 py-0.5 rounded-full tracking-widest">{locale === 'nb' ? 'KOMMER SNART' : 'COMING SOON'}</span>
+              </h3>
               <div className="flex items-baseline gap-1 mb-6">
                 <span className="text-3xl font-black text-slate-900 tracking-tight">{t('pricing.pro.price')}</span>
                 <span className="text-slate-500 font-bold uppercase text-[10px] tracking-widest">{t('pricing.pro.unit')}</span>
@@ -312,7 +315,10 @@ export async function LandingPage({ locale, host: serverHost }: { locale: string
             {/* Founding */}
             <div className="p-8 rounded-[2rem] border-2 border-amber-200 bg-amber-50/30 flex flex-col h-full relative shadow-sm">
               <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-amber-500 text-white px-3 py-0.5 rounded-full font-black text-[8px] uppercase tracking-widest">{t('pricing.recommended')}</div>
-              <h3 className="text-lg font-black font-outfit text-amber-900 mb-1 uppercase tracking-tighter">{t('pricing.founding.title')}</h3>
+              <h3 className="text-lg font-black font-outfit text-amber-900 mb-1 uppercase tracking-tighter flex items-center gap-2">
+                {t('pricing.founding.title')}
+                <span className="text-[8px] bg-amber-100/50 text-amber-700 px-2 py-0.5 rounded-full tracking-widest">{locale === 'nb' ? 'KOMMER SNART' : 'COMING SOON'}</span>
+              </h3>
               <div className="mb-6">
                 <div className="flex items-baseline gap-1"><span className="text-3xl font-black text-amber-900 tracking-tight">{t('pricing.founding.price')}</span><span className="text-amber-700 font-bold uppercase text-[10px] tracking-widest">{t('pricing.founding.unit')}</span></div>
                 <div className="flex flex-col gap-1 mt-1">

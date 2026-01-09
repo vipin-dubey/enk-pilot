@@ -23,7 +23,11 @@
       "title": "Logg inn",
       "noAccount": "Har du ikke konto?",
       "signupLink": "Registrer deg her",
-      "forgotPassword": "Glemt passordet?"
+      "forgotPassword": "Glemt passordet?",
+      "description": "Enten du er ny eller veteran, hold orden på ENK-økonomien.",
+      "emailLabel": "E-post",
+      "passwordLabel": "Passord",
+      "resendVerification": "Send bekreftelse på nytt?"
     },
     "signup": {
       "title": "Opprett konto",
@@ -455,7 +459,7 @@
       "description": "Vit nøyaktig hvor mye som er <highlight>trygt å bruke</highlight>. ENK Pilot håndterer MVA og skatt i sanntid.",
       "safeToSpend": "Trygt å bruke",
       "joinNow": "Bli med nå",
-      "foundingSeats": "Kun {count} plasser som Grunnlegger igjen",
+      "foundingSeats": "Begrenset antall Grunnlegger-plasser igjen",
       "updatedLive": "Oppdatert live",
       "reservedForTax": "Satt av til skatt",
       "ytdProfit": "Overskudd hittil i år",
@@ -475,7 +479,7 @@
       },
       "step2": {
         "title": "Live buffer-logikk",
-        "desc": "Vi setter umiddelbart av MVA, trinnskatt og personfradrag i et virtuelt hvelv."
+        "desc": "Setter umiddelbart av MVA, trinnskatt og personfradrag i et virtuelt hvelv."
       },
       "step3": {
         "title": "Bruk penger med selvtillit",
@@ -491,7 +495,7 @@
       },
       "aiScan": {
         "title": "AI-skanning av kvitteringer",
-        "desc": "Ta bilde av kvitteringer med mobilen. Vi henter ut selger, MVA og kategori automatisk til journalen din."
+        "desc": "Ta bilde av kvitteringer med mobilen. Henter ut selger, MVA og kategori automatisk til journalen din."
       },
       "pulse": {
         "title": "Bedriftspuls",
@@ -507,7 +511,7 @@
       },
       "currency": {
         "title": "Flere valutaer",
-        "desc": "Selger du i USD eller EUR? Vi henter live kurser fra Norges Bank for å beregne nøyaktig inntekt i NOK."
+        "desc": "Selger du i USD eller EUR? Henter live kurser fra Norges Bank for å beregne nøyaktig inntekt i NOK."
       },
       "exports": {
         "title": "Eksport til regnskap",
@@ -566,7 +570,7 @@
         "f1": "Alle Pro-funksjoner",
         "f2": "Begrensede plasser tilgjengelig",
         "f3": "Grunnlegger-merke",
-        "f4": "Påvirkning på veikart",
+        "f4": "Prioriterte funksjonsønsker",
         "f5": "Spesialpris for 1 år"
       }
     },

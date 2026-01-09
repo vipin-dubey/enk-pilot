@@ -174,6 +174,8 @@ export default function UpgradePage() {
                           {t('upgradeNow')}
                         </Button>
                       </Link>
+
+                      <p className="text-[10px] text-center text-slate-400 font-bold uppercase tracking-widest mt-2">{locale === 'nb' ? 'Kommer snart' : 'Coming Soon'}</p>
                     </div>
                   </div>
 
@@ -201,6 +203,8 @@ export default function UpgradePage() {
                           {t('startTrial')}
                         </Button>
                       </Link>
+
+                      <p className="text-[10px] text-center text-slate-400 font-bold uppercase tracking-widest mt-2">{locale === 'nb' ? 'Kommer snart' : 'Coming Soon'}</p>
                     </div>
 
                     {/* Yearly Option */}
@@ -235,6 +239,8 @@ export default function UpgradePage() {
                           {t('startTrial')}
                         </Button>
                       </Link>
+
+                      <p className="text-[10px] text-center text-slate-400 font-bold uppercase tracking-widest mt-2">{locale === 'nb' ? 'Kommer snart' : 'Coming Soon'}</p>
                     </div>
                   </div>
                 </div>
@@ -270,8 +276,8 @@ export default function UpgradePage() {
               </div>
             </div>
           </div>
-        </div>
-      </div>
-    </div>
+        </div >
+      </div >
+    </div >
   )
 }

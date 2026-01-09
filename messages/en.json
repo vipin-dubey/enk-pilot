@@ -23,7 +23,11 @@
       "title": "Login",
       "noAccount": "Don't have an account?",
       "signupLink": "Sign up here",
-      "forgotPassword": "Forgot password?"
+      "forgotPassword": "Forgot password?",
+      "description": "Whether you're new or a veteran, keep your ENK finances in check.",
+      "emailLabel": "Email",
+      "passwordLabel": "Password",
+      "resendVerification": "Resend verification?"
     },
     "signup": {
       "title": "Create Account",
@@ -456,7 +460,7 @@
       "description": "Know exactly how much is <highlight>safe to spend</highlight>. ENK Pilot handles MVA and taxes in real-time.",
       "safeToSpend": "Safe to Spend",
       "joinNow": "Join Now",
-      "foundingSeats": "Only {count} Founding Seats remaining",
+      "foundingSeats": "Limited Founding Seats remaining",
       "updatedLive": "Updated Live",
       "reservedForTax": "Reserved for Tax",
       "ytdProfit": "YTD Profit",
@@ -476,7 +480,7 @@
       },
       "step2": {
         "title": "Live Buffer Logic",
-        "desc": "We instantly set aside MVA, bracket tax, and personal deductions in a virtual vault."
+        "desc": "Instantly sets aside MVA, bracket tax, and personal deductions in a virtual vault."
       },
       "step3": {
         "title": "Spend with Confidence",
@@ -492,7 +496,7 @@
       },
       "aiScan": {
         "title": "AI Receipt Scan",
-        "desc": "Snap receipts with your phone. We extract vendor, MVA, and category automatically into your journal."
+        "desc": "Snap receipts with your phone. Extracts vendor, MVA, and category automatically into your journal."
       },
       "pulse": {
         "title": "Business Pulse",
@@ -508,7 +512,7 @@
       },
       "currency": {
         "title": "Multi-Currency",
-        "desc": "Selling in USD or EUR? We fetch live Norges Bank rates to calculate your exact NOK income."
+        "desc": "Selling in USD or EUR? Fetches live Norges Bank rates to calculate your exact NOK income."
       },
       "exports": {
         "title": "Audit-Ready Exports",
@@ -567,7 +571,7 @@
         "f1": "All Pro Features",
         "f2": "Limited seats available",
         "f3": "Founding Member Badge",
-        "f4": "Priority Roadmap Influence",
+        "f4": "Priority Feature Requests",
         "f5": "Special 1-Year Rate"
       }
     },
