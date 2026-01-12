@@ -38,8 +38,17 @@ export function CookieConsent({ locale }: { locale: string }) {
   if (!isVisible) return null
 
   return (
-    <div className="fixed bottom-6 left-6 right-6 z-[9999] sm:left-auto sm:right-8 sm:w-[400px]">
-      <Card className="border-none shadow-2xl overflow-hidden bg-white/95 backdrop-blur-md border border-slate-200">
+    <div 
+      className="fixed bottom-6 left-6 right-6 sm:left-auto sm:right-8 sm:w-[400px]" 
+      style={{ 
+        zIndex: 2147483647, 
+        willChange: 'transform',
+        WebkitBackfaceVisibility: 'hidden',
+        backfaceVisibility: 'hidden',
+        transform: 'translateZ(0)'
+      } as React.CSSProperties}
+    >
+      <Card className="border-none shadow-2xl overflow-hidden bg-white/95 backdrop-blur-md border border-slate-200" style={{ WebkitBackdropFilter: 'blur(12px)' } as React.CSSProperties}>
         <div className="bg-blue-600 h-1.5 w-full" />
         <CardContent className="p-6">
           <div className="flex gap-4 items-start mb-6">

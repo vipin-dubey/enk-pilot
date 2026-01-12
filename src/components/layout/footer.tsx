@@ -25,21 +25,37 @@ export function PublicFooter() {
 
           <div className="flex flex-col items-center md:items-end gap-2">
             <div className="flex items-center gap-4">
-              <Link href="/privacy" className="text-[10px] font-bold text-slate-500 hover:text-blue-600 transition-colors uppercase tracking-widest">
+              <Link 
+                href="/privacy" 
+                locale={locale as 'en' | 'nb'} 
+                className="text-[10px] font-bold text-slate-500 hover:text-blue-600 transition-colors uppercase tracking-widest cursor-pointer"
+                style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
+              >
                 {locale === 'en' ? 'Privacy Policy' : 'Personvern'}
               </Link>
-              <Link href="/terms" className="text-[10px] font-bold text-slate-500 hover:text-blue-600 transition-colors uppercase tracking-widest">
+              <Link 
+                href="/terms" 
+                locale={locale as 'en' | 'nb'} 
+                className="text-[10px] font-bold text-slate-500 hover:text-blue-600 transition-colors uppercase tracking-widest cursor-pointer"
+                style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
+              >
                 {locale === 'en' ? 'Terms' : 'Vilkår'}
               </Link>
-              <Link href="/terms#refund-policy" className="text-[10px] font-bold text-slate-500 hover:text-blue-600 transition-colors uppercase tracking-widest">
+              <Link 
+                href="/terms#refund-policy" 
+                locale={locale as 'en' | 'nb'} 
+                className="text-[10px] font-bold text-slate-500 hover:text-blue-600 transition-colors uppercase tracking-widest cursor-pointer"
+                style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
+              >
                 {locale === 'en' ? 'Refund Policy' : 'Refusjon'}
               </Link>
-              <button
-                onClick={() => window.location.href = 'mailto:support' + '@' + 'enkpilot.com'}
-                className="text-[10px] font-bold text-slate-500 hover:text-blue-600 transition-colors uppercase tracking-widest"
+              <a
+                href={`mailto:support@enkpilot.com`}
+                className="text-[10px] font-bold text-slate-500 hover:text-blue-600 transition-colors uppercase tracking-widest cursor-pointer"
+                style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
               >
                 {locale === 'en' ? 'Support' : 'Kontakt'}
-              </button>
+              </a>
             </div>
             <div className="flex flex-col items-center md:items-end gap-1">
               <div className="flex items-center gap-2">

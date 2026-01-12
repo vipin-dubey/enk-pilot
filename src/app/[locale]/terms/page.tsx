@@ -181,16 +181,28 @@ export default async function TermsPage({
                 </div>
                 <div className="text-sm font-medium leading-relaxed space-y-2">
                   <p>
-                    <strong>{locale === 'en' ? 'Cancellation' : 'Kansellering'}:</strong>{' '}
+                    <strong>{locale === 'en' ? 'Free Trial' : 'Gratis prøveperiode'}:</strong>{' '}
                     {locale === 'en'
-                      ? 'You can cancel your subscription at any time through your account settings. Upon cancellation, you will retain access to Pro features until the end of your current billing period.'
-                      : 'Du kan når som helst kansellere abonnementet ditt via kontoinnstillingene. Ved kansellering vil du beholde tilgangen til Pro-funksjoner frem til slutten av din nåværende faktureringsperiode.'}
+                      ? 'All new subscriptions include a 1-month free trial period. You will not be charged during this trial, allowing you to fully evaluate the service before any payment is required.'
+                      : 'Alle nye abonnementer inkluderer en 1 måneds gratis prøveperiode. Du vil ikke bli belastet i løpet av denne prøveperioden, slik at du kan evaluere tjenesten fullt ut før betaling kreves.'}
                   </p>
                   <p>
-                    <strong>{locale === 'en' ? 'Refunds' : 'Refusjoner'}:</strong>{' '}
+                    <strong>{locale === 'en' ? 'Cancellation' : 'Kansellering'}:</strong>{' '}
                     {locale === 'en'
-                      ? 'As a general rule, payments for ENK Pilot are non-refundable. We offer a 1-month free trial for all subscriptions to evaluate the service before being charged.'
-                      : 'Som hovedregel er betalinger for ENK Pilot ikke-refunderbare. Vi tilbyr en 1 måneds gratis prøveperiode for alle abonnementer slik at tjenesten kan evalueres før betaling skjer.'}
+                      ? 'You can cancel your subscription at any time through your account settings. Upon cancellation, you will retain access to Pro features until the end of your current billing period. No refunds will be issued for partial billing periods.'
+                      : 'Du kan når som helst kansellere abonnementet ditt via kontoinnstillingene. Ved kansellering vil du beholde tilgangen til Pro-funksjoner frem til slutten av din nåværende faktureringsperiode. Ingen refusjon gis for delvise faktureringsperioder.'}
+                  </p>
+                  <p>
+                    <strong>{locale === 'en' ? 'Refund Policy' : 'Refusjonspolicy'}:</strong>{' '}
+                    {locale === 'en'
+                      ? 'Refunds may be issued within 14 days of payment in exceptional circumstances, including: (a) technical issues preventing access to the service that we are unable to resolve, (b) duplicate or erroneous charges, or (c) charges made after subscription cancellation due to system errors. Refund requests must be submitted via email to support@enkpilot.com with a detailed explanation.'
+                      : 'Refusjon kan gis innen 14 dager etter betaling under spesielle omstendigheter, inkludert: (a) tekniske problemer som hindrer tilgang til tjenesten som vi ikke kan løse, (b) dupliserte eller feilaktige belastninger, eller (c) belastninger etter abonnementskansellering på grunn av systemfeil. Refusjonsforespørsler må sendes via e-post til support@enkpilot.com med en detaljert forklaring.'}
+                  </p>
+                  <p>
+                    <strong>{locale === 'en' ? 'No Refunds For' : 'Ingen refusjon for'}:</strong>{' '}
+                    {locale === 'en'
+                      ? 'Refunds will not be issued for: change of mind, dissatisfaction with features after the trial period, failure to cancel before renewal, or unused portions of a subscription period.'
+                      : 'Refusjon gis ikke for: ombestemmelse, misnøye med funksjoner etter prøveperioden, manglende kansellering før fornyelse, eller ubrukte deler av en abonnementsperiode.'}
                   </p>
                 </div>
               </section>

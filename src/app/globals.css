@@ -128,6 +128,25 @@
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
+
+  /* Mac/Safari specific fixes */
+  a,
+  button {
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+  }
+
+  /* Ensure backdrop-blur works on Safari */
+  .backdrop-blur-md {
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+  }
+
+  /* Fix for Safari fixed positioning */
+  .fixed {
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+  }
 }
 
 @layer base {
