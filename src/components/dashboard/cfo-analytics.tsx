@@ -4,25 +4,25 @@ import { useState, useEffect, useMemo } from 'react'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { 
-  BarChart, 
-  Bar, 
-  XAxis, 
-  YAxis, 
-  CartesianGrid, 
-  Tooltip, 
-  ResponsiveContainer, 
-  PieChart, 
-  Pie, 
-  Cell, 
-  Legend 
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  PieChart,
+  Pie,
+  Cell,
+  Legend
 } from 'recharts'
-import { 
-  TrendingUp, 
-  PieChart as PieChartIcon, 
-  Lock, 
-  ArrowUpRight, 
-  ArrowDownRight, 
+import {
+  TrendingUp,
+  PieChart as PieChartIcon,
+  Lock,
+  ArrowUpRight,
+  ArrowDownRight,
   Wallet,
   Building2,
   Receipt,
@@ -66,19 +66,19 @@ export function CfoAnalytics({ isPro, seatsLeft, percentFull }: CfoAnalyticsProp
       ])
 
       setProfile(profileRes.data)
-      
+
       const combined = [
-        ...(allocationsRes.data || []).map(a => ({ 
-          ...a, 
-          trType: 'income', 
+        ...(allocationsRes.data || []).map(a => ({
+          ...a,
+          trType: 'income',
           amount: Number(a.amount) || 0,
-          date: new Date(a.created_at) 
+          date: new Date(a.created_at)
         })),
-        ...(receiptsRes.data || []).map(r => ({ 
-          ...r, 
-          trType: 'expense', 
-          amount: Number(r.amount) || 0, 
-          date: new Date(r.receipt_date || r.created_at) 
+        ...(receiptsRes.data || []).map(r => ({
+          ...r,
+          trType: 'expense',
+          amount: Number(r.amount) || 0,
+          date: new Date(r.receipt_date || r.created_at)
         }))
       ]
       setTransactions(combined)
@@ -88,6 +88,16 @@ export function CfoAnalytics({ isPro, seatsLeft, percentFull }: CfoAnalyticsProp
       setLoading(false)
     }
   }
+
+  const currentYear = 2026
+
+  const bizGross = useMemo(() => transactions
+    .filter(tr => tr.trType === 'income' && tr.date.getFullYear() === currentYear)
+    .reduce((acc, tr) => acc + tr.amount, 0), [transactions])
+
+  const expenses = useMemo(() => transactions
+    .filter(tr => tr.trType === 'expense' && tr.date.getFullYear() === currentYear)
+    .reduce((acc, tr) => acc + tr.amount, 0), [transactions])
 
   // Monthly breakdown for Bar Chart
   const monthlyData = useMemo(() => {
@@ -101,7 +111,7 @@ export function CfoAnalytics({ isPro, seatsLeft, percentFull }: CfoAnalyticsProp
 
     transactions.forEach(tr => {
       if (!tr.date || isNaN(tr.date.getTime())) return
-      
+
       // Strict year filtering: only show data for the current reporting year
       if (tr.date.getFullYear() !== currentYear) return
 
@@ -124,14 +134,12 @@ export function CfoAnalytics({ isPro, seatsLeft, percentFull }: CfoAnalyticsProp
   // Tax Burden for Pie Chart
   const taxBurdenData = useMemo(() => {
     if (!profile) return []
-    
+
     // CFO View should focus on the BUSINESS revenue distribution
-    const bizGross = Number(profile.ytd_gross_income) || 0
-    const expenses = Number(profile.ytd_expenses) || 0
     const externalSalary = Number(profile.external_salary_income) || 0
-    
+
     // MVA is a direct pass-through
-    const mvaReserve = profile.is_mva_registered ? (bizGross / 1.25) * 0.25 : 0 
+    const mvaReserve = profile.is_mva_registered ? (bizGross / 1.25) * 0.25 : 0
     const bizNetRevenue = bizGross - mvaReserve
     const bizProfit = Math.max(0, bizNetRevenue - expenses)
 
@@ -153,7 +161,7 @@ export function CfoAnalytics({ isPro, seatsLeft, percentFull }: CfoAnalyticsProp
   // Expense Categories for Analytics
   const expenseCategoryData = useMemo(() => {
     const categories: Record<string, number> = {}
-    
+
     transactions.forEach(tr => {
       if (tr.trType === 'expense') {
         const cat = tr.category || (locale === 'nb' ? 'Uspesifisert' : 'Uncategorized')
@@ -189,7 +197,7 @@ export function CfoAnalytics({ isPro, seatsLeft, percentFull }: CfoAnalyticsProp
       <p className="text-slate-600 text-sm max-w-xs mb-6">
         Unlock performance trends, tax burden visualizations, and strategic expense analytics.
       </p>
-      <Button 
+      <Button
         onClick={() => router.push('/upgrade')}
         className="bg-blue-600 hover:bg-blue-700 text-white font-bold px-8"
       >
@@ -220,19 +228,19 @@ export function CfoAnalytics({ isPro, seatsLeft, percentFull }: CfoAnalyticsProp
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={monthlyData}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
-                <XAxis 
-                  dataKey="month" 
-                  axisLine={false} 
-                  tickLine={false} 
-                  tick={{ fontSize: 10, fontWeight: 600, fill: '#64748b' }} 
+                <XAxis
+                  dataKey="month"
+                  axisLine={false}
+                  tickLine={false}
+                  tick={{ fontSize: 10, fontWeight: 600, fill: '#64748b' }}
                 />
-                <YAxis 
-                  axisLine={false} 
-                  tickLine={false} 
+                <YAxis
+                  axisLine={false}
+                  tickLine={false}
                   tick={{ fontSize: 10, fontWeight: 600, fill: '#64748b' }}
                   tickFormatter={(value) => `${(value / 1000).toFixed(0)}k`}
                 />
-                <Tooltip 
+                <Tooltip
                   cursor={{ fill: '#f1f5f9' }}
                   contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)' }}
                   formatter={(value: number | undefined) => [formatCurrency(value), '']}
@@ -271,9 +279,9 @@ export function CfoAnalytics({ isPro, seatsLeft, percentFull }: CfoAnalyticsProp
                   ))}
                 </Pie>
                 <Tooltip formatter={(value: number | undefined) => formatCurrency(value)} />
-                <Legend 
-                  verticalAlign="middle" 
-                  align="right" 
+                <Legend
+                  verticalAlign="middle"
+                  align="right"
                   layout="vertical"
                   iconType="circle"
                   wrapperStyle={{ paddingLeft: '20px', fontSize: '12px', fontWeight: 700 }}
@@ -289,8 +297,8 @@ export function CfoAnalytics({ isPro, seatsLeft, percentFull }: CfoAnalyticsProp
           <div className="px-6 pb-4">
             <div className="flex items-center gap-2 text-[10px] text-slate-500 bg-slate-50 p-2 rounded-lg border border-slate-100 italic">
               <Info className="h-3 w-3 shrink-0" />
-              {locale === 'nb' 
-                ? "Dette viser din ENK som en isolert enhet. Annen lønnsinntekt er filtrert ut for å gi et rent bilde av bedriftens resultat." 
+              {locale === 'nb'
+                ? "Dette viser din ENK som en isolert enhet. Annen lønnsinntekt er filtrert ut for å gi et rent bilde av bedriftens resultat."
                 : "This visualizes your ENK as a standalone entity. Other salary income is filtered out to show purely business performance."}
             </div>
           </div>
@@ -311,15 +319,15 @@ export function CfoAnalytics({ isPro, seatsLeft, percentFull }: CfoAnalyticsProp
               <BarChart data={expenseCategoryData} layout="vertical" margin={{ left: 40, right: 40 }}>
                 <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#e2e8f0" />
                 <XAxis type="number" hide />
-                <YAxis 
-                  dataKey="name" 
-                  type="category" 
-                  axisLine={false} 
-                  tickLine={false} 
+                <YAxis
+                  dataKey="name"
+                  type="category"
+                  axisLine={false}
+                  tickLine={false}
                   tick={{ fontSize: 11, fontWeight: 700, fill: '#1e293b' }}
                   width={120}
                 />
-                <Tooltip 
+                <Tooltip
                   cursor={{ fill: '#ecfdf5' }}
                   contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)' }}
                   formatter={(value: number | undefined) => [formatCurrency(value), '']}
@@ -356,14 +364,14 @@ export function CfoAnalytics({ isPro, seatsLeft, percentFull }: CfoAnalyticsProp
                 <span>Box 101</span>
                 <span>{t('box101')}</span>
               </div>
-              <p className="text-2xl font-bold font-outfit">{formatCurrency(profile?.ytd_gross_income || 0)}</p>
+              <p className="text-2xl font-bold font-outfit">{formatCurrency(bizGross)}</p>
             </div>
             <div className="bg-white/5 border border-white/10 rounded-xl p-4 space-y-2">
               <div className="flex items-center justify-between text-slate-400 text-[10px] uppercase font-bold tracking-widest">
                 <span>Box 401</span>
                 <span>{t('box401')}</span>
               </div>
-              <p className="text-2xl font-bold font-outfit">{formatCurrency(profile?.ytd_expenses || 0)}</p>
+              <p className="text-2xl font-bold font-outfit">{formatCurrency(expenses)}</p>
             </div>
             <div className="bg-white/5 border border-white/10 rounded-xl p-4 space-y-2">
               <div className="flex items-center justify-between text-slate-400 text-[10px] uppercase font-bold tracking-widest">
@@ -378,7 +386,7 @@ export function CfoAnalytics({ isPro, seatsLeft, percentFull }: CfoAnalyticsProp
                 <span>{t('box440')}</span>
               </div>
               <p className="text-2xl font-bold font-outfit text-emerald-400">
-                {formatCurrency((profile?.ytd_gross_income || 0) - (profile?.ytd_expenses || 0))}
+                {formatCurrency(bizGross - expenses)}
               </p>
             </div>
           </div>

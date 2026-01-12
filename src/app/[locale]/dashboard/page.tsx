@@ -79,16 +79,33 @@ export default async function DashboardPage({
     const percentFull = Math.round((currentTaken / virtualTotal) * 100)
 
     // Fetch aggregate data for Overview Pulse
+    const currentYear = new Date().getFullYear()
+    const startDate = `${currentYear}-01-01`
+
     const { data: allocations } = await supabase
         .from('allocations')
-        .select('safe_to_spend, tax_reserved, mva_reserved')
+        .select('gross_amount, safe_to_spend, tax_reserved, mva_reserved')
         .eq('user_id', user!.id)
+        .gte('date', startDate)
+
+    const { data: receipts } = await supabase
+        .from('receipts')
+        .select('amount')
+        .eq('user_id', user!.id)
+        .eq('is_processed', true)
+        .gte('receipt_date', startDate)
 
     const totals = (allocations || []).reduce((acc, curr) => ({
+        grossIncome: acc.grossIncome + (Number(curr.gross_amount) || 0),
         safeToSpend: acc.safeToSpend + (Number(curr.safe_to_spend) || 0),
         taxReserved: acc.taxReserved + (Number(curr.tax_reserved) || 0),
         mvaReserved: acc.mvaReserved + (Number(curr.mva_reserved) || 0),
-    }), { safeToSpend: 0, taxReserved: 0, mvaReserved: 0 })
+    }), { grossIncome: 0, safeToSpend: 0, taxReserved: 0, mvaReserved: 0 })
+
+    const totalExpenses = (receipts || []).reduce((acc, curr) => acc + (Number(curr.amount) || 0), 0)
+
+    // Real-time Safe to Spend should subtract actual expenses
+    const adjustedSafeToSpend = Math.max(0, totals.safeToSpend - totalExpenses)
 
     const upcomingDeadlines = getUpcomingDeadlines()
     const actualNextDeadline = upcomingDeadlines.filter(d => d.date.getTime() >= new Date().setHours(0, 0, 0, 0))[0]
@@ -269,11 +286,11 @@ export default async function DashboardPage({
                         {{
                             overview: (
                                 <OverviewPulse
-                                    totalSafeToSpend={totals.safeToSpend}
+                                    totalSafeToSpend={adjustedSafeToSpend}
                                     totalTaxReserved={totals.taxReserved}
                                     totalMvaReserved={totals.mvaReserved}
-                                    ytdProfit={profile?.ytd_gross_income || 0}
-                                    ytdExpenses={profile?.ytd_expenses || 0}
+                                    ytdProfit={totals.grossIncome}
+                                    ytdExpenses={totalExpenses}
                                     nextDeadline={actualNextDeadline ? {
                                         type: actualNextDeadline.type,
                                         date: actualNextDeadline.date,
@@ -292,8 +309,8 @@ export default async function DashboardPage({
                                     <SafeToSpendCalculator
                                         initialTaxRate={profile?.tax_rate_percent}
                                         isMvaRegistered={profile?.is_mva_registered}
-                                        ytdGrossIncome={profile?.ytd_gross_income}
-                                        ytdExpenses={profile?.ytd_expenses}
+                                        ytdGrossIncome={totals.grossIncome}
+                                        ytdExpenses={totalExpenses}
                                         externalSalary={profile?.external_salary_income}
                                         useManualTax={profile?.use_manual_tax}
                                         isPro={profile?.is_pro}
