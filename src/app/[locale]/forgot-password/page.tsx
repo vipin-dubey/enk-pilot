@@ -6,6 +6,7 @@ import { requestPasswordReset } from '../login/actions'
 import { Link } from '@/navigation'
 import { getTranslations } from 'next-intl/server'
 import { PublicFooter } from '@/components/layout/footer'
+import { SubmitButton } from '@/components/auth/submit-button'
 
 export default async function ForgotPasswordPage({
     params,
@@ -61,9 +62,9 @@ export default async function ForgotPasswordPage({
                                 />
                             </div>
                             <div className="pt-2">
-                                <Button formAction={requestPasswordReset} className="w-full bg-blue-600 hover:bg-blue-700 h-11 font-bold">
+                                <SubmitButton formAction={requestPasswordReset} className="w-full bg-blue-600 hover:bg-blue-700 h-11 font-bold">
                                     {t('submit')}
-                                </Button>
+                                </SubmitButton>
                             </div>
                         </form>
                     </CardContent>

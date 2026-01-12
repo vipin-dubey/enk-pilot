@@ -29,6 +29,7 @@ import {
     Globe,
     Gavel
 } from 'lucide-react'
+import { SubmitButton } from './submit-button'
 
 // Note: Using a simplified version of the Terms content for the dialog
 // In a real app, this might be fetched or shared via a component
@@ -208,13 +209,13 @@ export function SignupForm({ locale }: { locale: string }) {
             </Dialog>
 
             <div className="pt-2">
-                <Button
+                <SubmitButton
                     formAction={signup}
                     disabled={!accepted}
                     className="w-full bg-blue-600 hover:bg-blue-700 h-11 font-bold disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                     {t('submit')}
-                </Button>
+                </SubmitButton>
             </div>
         </form>
     )

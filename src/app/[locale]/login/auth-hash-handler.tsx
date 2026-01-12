@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { createClient } from '@/utils/supabase/client'
-import { useRouter } from 'next/navigation'
+import { useRouter } from '@/navigation'
 
 export default function AuthHashHandler() {
   const router = useRouter()
@@ -15,7 +15,7 @@ export default function AuthHashHandler() {
         setIsProcessing(true)
         const { data, error } = await supabase.auth.getSession()
         if (data.session && !error) {
-          router.push('/')
+          router.push('/dashboard')
           router.refresh()
         } else {
           setIsProcessing(false)

@@ -82,6 +82,26 @@ export default async function TermsPage({
                 </p>
               </section>
 
+              <section className="space-y-4">
+                <div className="flex items-center gap-3">
+                  <Info className="h-5 w-5 text-blue-600" />
+                  <h2 className="text-xl font-black uppercase tracking-tighter text-slate-900 font-outfit m-0">
+                    2. {locale === 'en' ? 'Company Information' : 'Firmainformasjon'}
+                  </h2>
+                </div>
+                <p className="text-sm font-medium leading-relaxed">
+                  {locale === 'en' ? (
+                    <>
+                      ENK Pilot is operated by <strong>ENK Pilot</strong>. For any legal inquiries, please contact us at support@enkpilot.com.
+                    </>
+                  ) : (
+                    <>
+                      ENK Pilot drives av <strong>ENK Pilot</strong>. For juridiske henvendelser, vennligst kontakt oss på support@enkpilot.com.
+                    </>
+                  )}
+                </p>
+              </section>
+
               {/* ... Other sections omitted for brevity, but I should probably include them to be safe or use what I read ... 
                   Actually I have the full content in Step 1964. I will just paste it all but with the fix.
               */}
@@ -90,7 +110,7 @@ export default async function TermsPage({
                 <div className="flex items-center gap-3">
                   <Info className="h-5 w-5 text-blue-600" />
                   <h2 className="text-xl font-black uppercase tracking-tighter text-slate-900 font-outfit m-0">
-                    2. {locale === 'en' ? 'No Professional Advice' : 'Ingen profesjonell rådgivning'}
+                    3. {locale === 'en' ? 'No Professional Advice' : 'Ingen profesjonell rådgivning'}
                   </h2>
                 </div>
                 <p className="text-sm font-medium leading-relaxed">
@@ -106,7 +126,7 @@ export default async function TermsPage({
                 <div className="flex items-center gap-3">
                   <Scale className="h-5 w-5 text-blue-600" />
                   <h2 className="text-xl font-black uppercase tracking-tighter text-slate-900 font-outfit m-0">
-                    3. {locale === 'en' ? 'Limitation of Liability' : 'Ansvarsbegrensning'}
+                    4. {locale === 'en' ? 'Limitation of Liability' : 'Ansvarsbegrensning'}
                   </h2>
                 </div>
                 <p className="text-sm font-medium leading-relaxed">
@@ -122,7 +142,7 @@ export default async function TermsPage({
                 <div className="flex items-center gap-3">
                   <User className="h-5 w-5 text-blue-600" />
                   <h2 className="text-xl font-black uppercase tracking-tighter text-slate-900 font-outfit m-0">
-                    4. {locale === 'en' ? 'User Responsibility' : 'Brukerens ansvar'}
+                    5. {locale === 'en' ? 'User Responsibility' : 'Brukerens ansvar'}
                   </h2>
                 </div>
                 <p className="text-sm font-medium leading-relaxed">
@@ -138,7 +158,7 @@ export default async function TermsPage({
                 <div className="flex items-center gap-3">
                   <Globe className="h-5 w-5 text-blue-600" />
                   <h2 className="text-xl font-black uppercase tracking-tighter text-slate-900 font-outfit m-0">
-                    5. {locale === 'en' ? 'Third-Party Services' : 'Tredjepartstjenester'}
+                    6. {locale === 'en' ? 'Third-Party Services' : 'Tredjepartstjenester'}
                   </h2>
                 </div>
                 <p className="text-sm font-medium leading-relaxed">
@@ -154,7 +174,7 @@ export default async function TermsPage({
                 <div className="flex items-center gap-3">
                   <CreditCard className="h-5 w-5 text-blue-600" />
                   <h2 className="text-xl font-black uppercase tracking-tighter text-slate-900 font-outfit m-0">
-                    6. {locale === 'en' ? 'Subscriptions & Billing' : 'Abonnement og fakturering'}
+                    7. {locale === 'en' ? 'Subscriptions & Billing' : 'Abonnement og fakturering'}
                   </h2>
                 </div>
                 <div className="text-sm font-medium leading-relaxed space-y-2">
@@ -176,34 +196,36 @@ export default async function TermsPage({
                 <div className="flex items-center gap-3">
                   <RefreshCw className="h-5 w-5 text-blue-600" />
                   <h2 className="text-xl font-black uppercase tracking-tighter text-slate-900 font-outfit m-0">
-                    7. {locale === 'en' ? 'Refund & Cancellation Policy' : 'Refusjon og kansellering'}
+                    8. {locale === 'en' ? 'Refund & Cancellation Policy' : 'Refusjon og kansellering'}
                   </h2>
                 </div>
-                <div className="text-sm font-medium leading-relaxed space-y-2">
-                  <p>
-                    <strong>{locale === 'en' ? 'Free Trial' : 'Gratis prøveperiode'}:</strong>{' '}
-                    {locale === 'en'
-                      ? 'All new subscriptions include a 1-month free trial period. You will not be charged during this trial, allowing you to fully evaluate the service before any payment is required.'
-                      : 'Alle nye abonnementer inkluderer en 1 måneds gratis prøveperiode. Du vil ikke bli belastet i løpet av denne prøveperioden, slik at du kan evaluere tjenesten fullt ut før betaling kreves.'}
-                  </p>
-                  <p>
-                    <strong>{locale === 'en' ? 'Cancellation' : 'Kansellering'}:</strong>{' '}
-                    {locale === 'en'
-                      ? 'You can cancel your subscription at any time through your account settings. Upon cancellation, you will retain access to Pro features until the end of your current billing period. No refunds will be issued for partial billing periods.'
-                      : 'Du kan når som helst kansellere abonnementet ditt via kontoinnstillingene. Ved kansellering vil du beholde tilgangen til Pro-funksjoner frem til slutten av din nåværende faktureringsperiode. Ingen refusjon gis for delvise faktureringsperioder.'}
-                  </p>
-                  <p>
-                    <strong>{locale === 'en' ? 'Refund Policy' : 'Refusjonspolicy'}:</strong>{' '}
-                    {locale === 'en'
-                      ? 'Refunds may be issued within 14 days of payment in exceptional circumstances, including: (a) technical issues preventing access to the service that we are unable to resolve, (b) duplicate or erroneous charges, or (c) charges made after subscription cancellation due to system errors. Refund requests must be submitted via email to support@enkpilot.com with a detailed explanation.'
-                      : 'Refusjon kan gis innen 14 dager etter betaling under spesielle omstendigheter, inkludert: (a) tekniske problemer som hindrer tilgang til tjenesten som vi ikke kan løse, (b) dupliserte eller feilaktige belastninger, eller (c) belastninger etter abonnementskansellering på grunn av systemfeil. Refusjonsforespørsler må sendes via e-post til support@enkpilot.com med en detaljert forklaring.'}
-                  </p>
-                  <p>
-                    <strong>{locale === 'en' ? 'No Refunds For' : 'Ingen refusjon for'}:</strong>{' '}
-                    {locale === 'en'
-                      ? 'Refunds will not be issued for: change of mind, dissatisfaction with features after the trial period, failure to cancel before renewal, or unused portions of a subscription period.'
-                      : 'Refusjon gis ikke for: ombestemmelse, misnøye med funksjoner etter prøveperioden, manglende kansellering før fornyelse, eller ubrukte deler av en abonnementsperiode.'}
-                  </p>
+                <div className="text-sm font-medium leading-relaxed space-y-4">
+                  <div className="space-y-2">
+                    <h3 className="text-slate-900 font-bold m-0 p-0">
+                      {locale === 'en' ? 'Cancellation' : 'Kansellering'}
+                    </h3>
+                    <p>
+                      {locale === 'en'
+                        ? 'You can cancel your subscription at any time through your account settings. Upon cancellation, you will retain access to Pro features until the end of your current billing period.'
+                        : 'Du kan når som helst kansellere abonnementet ditt via kontoinnstillingene. Ved kansellering vil du beholde tilgangen til Pro-funksjoner frem til slutten av din nåværende faktureringsperiode.'}
+                    </p>
+                  </div>
+                  <div className="space-y-2">
+                    <h3 className="text-slate-900 font-bold m-0 p-0">
+                      {locale === 'en' ? 'Refund Policy' : 'Refusjonspolicy'}
+                    </h3>
+                    <p>
+                      {locale === 'en'
+                        ? 'We provide a 14-day money-back guarantee for your initial subscription purchase. If you are not satisfied with the Service, you can request a full refund within 14 days of your first payment. No refunds are provided for recurring subscription renewals.'
+                        : 'Vi tilbyr en 14-dagers pengene-tilbake-garanti for ditt første abonnementskjøp. Hvis du ikke er fornøyd med tjenesten, kan du be om full refusjon innen 14 dager etter din første betaling. Det gis ingen refusjon for løpende abonnementsfornyelser.'}
+                    </p>
+                    <p>
+                      <strong>{locale === 'en' ? 'How to Request a Refund' : 'Slik ber du om refusjon'}:</strong>{' '}
+                      {locale === 'en'
+                        ? 'To request a refund, please email support@enkpilot.com with your account details. Refund requests are typically processed within 5-10 business days.'
+                        : 'For å be om refusjon, vennligst send en e-post til support@enkpilot.com med dine kontoopplysninger. Refusjonsforespørsler behandles vanligvis innen 5-10 virkedager.'}
+                    </p>
+                  </div>
                 </div>
               </section>
 
@@ -211,7 +233,7 @@ export default async function TermsPage({
                 <div className="flex items-center gap-3">
                   <AlertCircle className="h-5 w-5 text-blue-600" />
                   <h2 className="text-xl font-black uppercase tracking-tighter text-slate-900 font-outfit m-0">
-                    8. {locale === 'en' ? 'Changes to the Service' : 'Endringer i tjenesten'}
+                    9. {locale === 'en' ? 'Changes to the Service' : 'Endringer i tjenesten'}
                   </h2>
                 </div>
                 <p className="text-sm font-medium leading-relaxed">
@@ -227,7 +249,7 @@ export default async function TermsPage({
                 <div className="flex items-center gap-3">
                   <Mail className="h-5 w-5 text-blue-600" />
                   <h2 className="text-xl font-black uppercase tracking-tighter text-slate-900 font-outfit m-0">
-                    9. {locale === 'en' ? 'Contact Information' : 'Kontaktinformasjon'}
+                    10. {locale === 'en' ? 'Contact Information' : 'Kontaktinformasjon'}
                   </h2>
                 </div>
                 <p className="text-sm font-medium leading-relaxed">
@@ -259,7 +281,7 @@ export default async function TermsPage({
                 <div className="flex items-center gap-3">
                   <Scale className="h-5 w-5 text-blue-600" />
                   <h2 className="text-xl font-black uppercase tracking-tighter text-slate-900 font-outfit m-0">
-                    10. {locale === 'en' ? 'Governing Law' : 'Lovvalg og verneting'}
+                    11. {locale === 'en' ? 'Governing Law' : 'Lovvalg og verneting'}
                   </h2>
                 </div>
                 <p className="text-sm font-medium leading-relaxed">

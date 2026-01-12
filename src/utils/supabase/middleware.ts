@@ -160,10 +160,22 @@ export async function updateSession(request: NextRequest, response?: NextRespons
     return supabaseResponse
   }
 
-  if (isAppSubdomain && !user && !isAuthPath) {
-    const target = request.nextUrl.clone()
-    target.pathname = '/login'
-    return syncRedirect(target)
+  if (isAppSubdomain) {
+    const isLandingPage = pathname === '/' || pathname === '/en' || pathname === '/nb'
+
+    // Redirect logged in users from landing page to dashboard
+    if (user && isLandingPage) {
+      const target = request.nextUrl.clone()
+      const dashboardPath = currentLocale === defaultLocale ? '/dashboard' : `/${currentLocale}/dashboard`
+      target.pathname = dashboardPath
+      return syncRedirect(target)
+    }
+
+    if (!user && !isAuthPath && !isPublicPath) {
+      const target = request.nextUrl.clone()
+      target.pathname = '/login'
+      return syncRedirect(target)
+    }
   }
 
   const hasRefreshed = supabaseResponse.cookies.getAll().some(c => {

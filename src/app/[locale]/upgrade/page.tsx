@@ -269,7 +269,7 @@ export default function UpgradePage() {
 
                 {/* Back to Dashboard Link (Desktop) */}
                 <div className="hidden md:block text-center mt-8">
-                  <Link href="/" className="text-slate-400 hover:text-slate-600 text-sm font-bold transition-colors">
+                  <Link href="/dashboard" className="text-slate-400 hover:text-slate-600 text-sm font-bold transition-colors">
                     {locale === 'nb' ? 'Tilbake til dashbordet' : 'Back to Dashboard'}
                   </Link>
                 </div>

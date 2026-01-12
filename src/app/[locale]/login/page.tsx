@@ -7,6 +7,7 @@ import { Link } from '@/navigation'
 import { getTranslations } from 'next-intl/server'
 import AuthHashHandler from './auth-hash-handler'
 import { PublicFooter } from '@/components/layout/footer'
+import { SubmitButton } from '@/components/auth/submit-button'
 
 export default async function LoginPage({
   params,
@@ -72,9 +73,9 @@ export default async function LoginPage({
                 />
               </div>
               <div className="flex flex-col gap-2 pt-2">
-                <Button formAction={login} className="w-full bg-blue-600 hover:bg-blue-700 h-11 font-bold">
+                <SubmitButton formAction={login} className="w-full bg-blue-600 hover:bg-blue-700 h-11 font-bold">
                   {t('title')}
-                </Button>
+                </SubmitButton>
 
                 {(error || (message && message.toLowerCase().includes('email'))) && (
                   <Button
@@ -100,6 +101,9 @@ export default async function LoginPage({
             <div className="flex flex-col items-center gap-2">
               <Link href="/forgot-password" locale={locale} className="text-sm text-blue-600 hover:underline font-medium">
                 {t('forgotPassword')}
+              </Link>
+              <Link href="/" locale={locale} className="text-sm text-slate-500 hover:underline font-medium">
+                {locale === 'en' ? 'View Pricing & Features' : 'Se priser og funksjoner'}
               </Link>
               <div className="text-sm text-slate-600 pt-2">
                 {t('noAccount')}{' '}

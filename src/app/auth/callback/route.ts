@@ -5,7 +5,7 @@ export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url)
   const code = searchParams.get('code')
   // if "next" is in param, use it as the redirect URL
-  const next = searchParams.get('next') ?? '/'
+  const next = searchParams.get('next') ?? '/dashboard'
 
   if (code) {
     const supabase = await createClient()
@@ -19,6 +19,9 @@ export async function GET(request: Request) {
         : (forwardedHost ? `https://${forwardedHost}${next}?message=E-posten er bekreftet!` : `${origin}${next}?message=E-posten er bekreftet!`)
 
       return NextResponse.redirect(redirectUrl)
+    } else {
+      console.error('Auth callback error:', error.message)
+      return NextResponse.redirect(`${origin}/login?error=${encodeURIComponent(error.message)}`)
     }
   }
 

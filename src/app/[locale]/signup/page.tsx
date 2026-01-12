@@ -53,10 +53,15 @@ export default async function SignupPage({
                         <SignupForm locale={locale} />
                     </CardContent>
                     <CardFooter className="flex flex-col space-y-4 p-8 bg-white rounded-b-xl border-t border-slate-50">
-                        <div className="text-center text-sm text-slate-600">
-                            {t('hasAccount')}{' '}
-                            <Link href="/login" locale={locale} className="text-blue-600 hover:underline font-bold">
-                                {t('loginLink')}
+                        <div className="text-center flex flex-col items-center gap-2">
+                            <div className="text-sm text-slate-600">
+                                {t('hasAccount')}{' '}
+                                <Link href="/login" locale={locale} className="text-blue-600 hover:underline font-bold">
+                                    {t('loginLink')}
+                                </Link>
+                            </div>
+                            <Link href="/" locale={locale} className="text-sm text-slate-500 hover:underline font-medium">
+                                {locale === 'en' ? 'View Pricing & Features' : 'Se priser og funksjoner'}
                             </Link>
                         </div>
                     </CardFooter>
