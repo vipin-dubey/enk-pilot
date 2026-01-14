@@ -198,7 +198,8 @@ export function CfoAnalytics({ isPro, seatsLeft, percentFull }: CfoAnalyticsProp
         Unlock performance trends, tax burden visualizations, and strategic expense analytics.
       </p>
       <Button
-        onClick={() => router.push('/upgrade')}
+        // onClick={() => router.push('/upgrade')} // Removed - service is free
+        disabled
         className="bg-blue-600 hover:bg-blue-700 text-white font-bold px-8"
       >
         Upgrade to Pro

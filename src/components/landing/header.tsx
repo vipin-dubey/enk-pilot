@@ -37,7 +37,6 @@ export function LandingHeader({ loginUrl, signupUrl, labels }: {
                 <nav className="hidden lg:flex items-center gap-8">
                     <a href="#features" className="text-xs font-bold text-slate-600 hover:text-slate-900 transition-colors uppercase tracking-wider">{labels.features}</a>
                     <a href="#security" className="text-xs font-bold text-slate-600 hover:text-slate-900 transition-colors uppercase tracking-wider">{labels.security}</a>
-                    <a href="#pricing" className="text-xs font-bold text-slate-600 hover:text-slate-900 transition-colors uppercase tracking-wider">{labels.pricing}</a>
                 </nav>
 
                 <div className="flex items-center gap-1 sm:gap-2">
@@ -67,7 +66,6 @@ export function LandingHeader({ loginUrl, signupUrl, labels }: {
                     <nav className="flex flex-col p-6 gap-6">
                         <a href="#features" onClick={() => setIsMenuOpen(false)} className="text-lg font-black text-slate-900 uppercase tracking-tighter">{labels.features}</a>
                         <a href="#security" onClick={() => setIsMenuOpen(false)} className="text-lg font-black text-slate-900 uppercase tracking-tighter">{labels.security}</a>
-                        <a href="#pricing" onClick={() => setIsMenuOpen(false)} className="text-lg font-black text-slate-900 uppercase tracking-tighter">{labels.pricing}</a>
                         <hr className="border-slate-100" />
                         <a href={loginUrl} className="text-lg font-black text-blue-600 uppercase tracking-tighter">{labels.login}</a>
                     </nav>

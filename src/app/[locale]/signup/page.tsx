@@ -60,9 +60,6 @@ export default async function SignupPage({
                                     {t('loginLink')}
                                 </Link>
                             </div>
-                            <Link href="/" locale={locale} className="text-sm text-slate-500 hover:underline font-medium">
-                                {locale === 'en' ? 'View Pricing & Features' : 'Se priser og funksjoner'}
-                            </Link>
                         </div>
                     </CardFooter>
                 </Card>

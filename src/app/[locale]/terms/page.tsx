@@ -37,7 +37,7 @@ export default async function TermsPage({
               {locale === 'en' ? 'Terms of Service' : 'Vilkår for bruk'}
             </CardTitle>
             <CardDescription className="text-slate-500 font-medium pt-2 uppercase tracking-widest text-[10px]">
-              {locale === 'en' ? 'Last updated: January 8, 2026' : 'Sist oppdatert: 8. januar 2026'}
+              {locale === 'en' ? 'Last updated: January 14, 2026' : 'Sist oppdatert: 14. januar 2026'}
             </CardDescription>
           </CardHeader>
           <CardContent className="prose prose-slate max-w-none p-8 sm:p-12 bg-white">
@@ -51,14 +51,14 @@ export default async function TermsPage({
                   <p className="text-sm m-0 p-0 leading-relaxed font-medium">
                     {locale === 'en' ? (
                       <>
-                        ENK Pilot is an <strong>educational tool</strong> and decision support service. The service is provided "as-is".
+                        ENK Pilot is an <strong>experimental, non-commercial software project</strong> provided for educational and informational purposes only. The service is provided "as-is" and may be changed or discontinued at any time without notice.
                         We are not accountants, tax advisors, or lawyers. You are solely responsible for your own
                         financial decisions and tax compliance.
                       </>
                     ) : (
                       <>
-                        ENK Pilot er et <strong>pedagogisk verktøy</strong> og en beslutningsstøtte. Tjenesten leveres "som den er" (as-is).
-                        Vi er ikke regnskapsførere, skatterådgivere eller jurister. Du har selv det fulle og hele ansvaret for dine
+                        ENK Pilot er et <strong>eksperimentelt, ikke-kommersielt programvareprosjekt</strong> levert utelukkende for pedagogiske og informative formål. Tjenesten leveres "som den er" (as-is) og kan endres eller avsluttes når som helst uten forvarsel.
+                        Vi er ikke regnskapsførere, skatterådvivere eller jurister. Du har selv det fulle og hele ansvaret for dine
                         økonomiske beslutninger og skattekrav.
                       </>
                     )}
@@ -86,17 +86,21 @@ export default async function TermsPage({
                 <div className="flex items-center gap-3">
                   <Info className="h-5 w-5 text-blue-600" />
                   <h2 className="text-xl font-black uppercase tracking-tighter text-slate-900 font-outfit m-0">
-                    2. {locale === 'en' ? 'Company Information' : 'Firmainformasjon'}
+                    2. {locale === 'en' ? 'Operator Information' : 'Operatørinformasjon'}
                   </h2>
                 </div>
                 <p className="text-sm font-medium leading-relaxed">
                   {locale === 'en' ? (
                     <>
-                      ENK Pilot is operated by <strong>ENK Pilot</strong>. For any legal inquiries, please contact us at support@enkpilot.com.
+                      ENK Pilot is operated by a <strong>private individual</strong> in their personal capacity. This is a non-commercial, experimental project and does not constitute any form of trade or commercial activity.
+                      <br /><br />
+                      <strong>Contact Email:</strong> support@enkpilot.com
                     </>
                   ) : (
                     <>
-                      ENK Pilot drives av <strong>ENK Pilot</strong>. For juridiske henvendelser, vennligst kontakt oss på support@enkpilot.com.
+                      ENK Pilot drives av en <strong>privatperson</strong> i vedkommendes private kapasitet. Dette er et ikke-kommersielt, eksperimentelt prosjekt og utgjør ikke noen form for handel eller kommersiell aktivitet.
+                      <br /><br />
+                      <strong>E-post:</strong> support@enkpilot.com
                     </>
                   )}
                 </p>
@@ -110,30 +114,30 @@ export default async function TermsPage({
                 <div className="flex items-center gap-3">
                   <Info className="h-5 w-5 text-blue-600" />
                   <h2 className="text-xl font-black uppercase tracking-tighter text-slate-900 font-outfit m-0">
-                    3. {locale === 'en' ? 'No Professional Advice' : 'Ingen profesjonell rådgivning'}
+                    3. {locale === 'en' ? 'Disclaimer of Advice' : 'Ansvarsfraskrivelse for rådgivning'}
                   </h2>
                 </div>
                 <p className="text-sm font-medium leading-relaxed">
                   {locale === 'en' ? (
-                    'All content and calculations in ENK Pilot are intended for information and guidance only. While we strive for accuracy, laws and regulations can change quickly. You are strongly encouraged to verify all data and calculations with a certified accountant or directly with the Tax Administration (Skatteetaten) before submitting reports or making payments.'
+                    'All content and calculations in ENK Pilot are intended for information and guidance only. The service does not provide legal, tax, accounting, or financial advice. While we strive for accuracy, laws and regulations can change quickly. You are strongly encouraged to verify all data and calculations with a certified accountant or directly with the Tax Administration (Skatteetaten) before submitting reports or making payments.'
                   ) : (
-                    'Alt innhold og alle beregninger i ENK Pilot er kun ment som informasjon og veiledning. Selv om vi streber etter nøyaktighet, kan lover og regler endres raskt. Du oppfordres på det sterkeste til å verifisere alle data og beregninger med en autorisert regnskapsfører eller direkte med Skatteetaten før du sender inn meldinger eller foretar betalinger.'
+                    'Alt innhold og alle beregninger i ENK Pilot er kun ment som informasjon og veiledning. Tjenesten gir ikke juridisk, skattemessig, regnskapsmessig eller økonomisk rådgivning. Selv om vi streber etter nøyaktighet, kan lover og regler endres raskt. Du oppfordres på det sterkeste til å verifisere alle data og beregninger med en autorisert regnskapsfører eller direkte med Skatteetaten før du sender inn meldinger eller foretar betalinger.'
                   )}
                 </p>
               </section>
 
               <section className="space-y-4">
                 <div className="flex items-center gap-3">
-                  <Scale className="h-5 w-5 text-blue-600" />
+                  <Globe className="h-5 w-5 text-blue-600" />
                   <h2 className="text-xl font-black uppercase tracking-tighter text-slate-900 font-outfit m-0">
-                    4. {locale === 'en' ? 'Limitation of Liability' : 'Ansvarsbegrensning'}
+                    4. {locale === 'en' ? 'Intellectual Property' : 'Immaterialrett'}
                   </h2>
                 </div>
                 <p className="text-sm font-medium leading-relaxed">
                   {locale === 'en' ? (
-                    'ENK Pilot, its developers, or affiliates shall under no circumstances be held liable for any direct or indirect loss, tax interest, penalties from authorities, or other financial consequences arising from the use or inability to use the service.'
+                    'All software, content, and materials available through the Service are the property of the operator and are protected by applicable intellectual property laws. You are granted a limited, non-exclusive, revocable license to access and use the Service for personal, non-commercial purposes.'
                   ) : (
-                    'ENK Pilot, dets utviklere eller tilknyttede selskaper skal under ingen omstendigheter holdes ansvarlig for direkte eller indirekte tap, skatterenter, gebyrer fra myndigheter eller andre økonomiske konsekvenser som oppstår ved bruk eller manglende evne til å bruke tjenesten.'
+                    'All programvare, alt innhold og alt materiale tilgjengelig gjennom Tjenesten tilhører operatøren og er beskyttet av gjeldende lover om immaterialrett. Du får en begrenset, ikke-eksklusiv, tilbakekallelig lisens til å få tilgang til og bruke Tjenesten for personlige, ikke-kommersielle formål.'
                   )}
                 </p>
               </section>
@@ -142,7 +146,55 @@ export default async function TermsPage({
                 <div className="flex items-center gap-3">
                   <User className="h-5 w-5 text-blue-600" />
                   <h2 className="text-xl font-black uppercase tracking-tighter text-slate-900 font-outfit m-0">
-                    5. {locale === 'en' ? 'User Responsibility' : 'Brukerens ansvar'}
+                    5. {locale === 'en' ? 'User Data and Content' : 'Brukerdata og innhold'}
+                  </h2>
+                </div>
+                <p className="text-sm font-medium leading-relaxed">
+                  {locale === 'en' ? (
+                    'You retain ownership of the data you input into the Service. By using the Service, you grant the operator the right to process this data solely to provide the Service to you. You may request an export of your data at any time before your account is deleted.'
+                  ) : (
+                    'Du beholder eierskapet til dataene du legger inn i Tjenesten. Ved å bruke Tjenesten gir du operatøren rett til å behandle disse dataene utelukkende for å levere Tjenesten til deg. Du kan be om eksport av dine data når som helst før kontoen din slettes.'
+                  )}
+                </p>
+              </section>
+
+              <section className="space-y-4">
+                <div className="flex items-center gap-3">
+                  <Scale className="h-5 w-5 text-blue-600" />
+                  <h2 className="text-xl font-black uppercase tracking-tighter text-slate-900 font-outfit m-0">
+                    6. {locale === 'en' ? 'Limitation of Liability' : 'Ansvarsbegrensning'}
+                  </h2>
+                </div>
+                <p className="text-sm font-medium leading-relaxed">
+                  {locale === 'en' ? (
+                    'To the maximum extent permitted by applicable law, ENK Pilot and its operator shall under no circumstances be held liable for any direct, indirect, incidental, or consequential loss, tax interest, penalties from authorities, or other financial consequences arising from the use or inability to use the software. Total liability for any claim shall be capped at zero (0 NOK) while the software is provided as a free tool.'
+                  ) : (
+                    'I den grad det er tillatt etter gjeldende lov, skal ENK Pilot og dets operatør under ingen omstendigheter holdes ansvarlig for direkte, indirekte, tilfeldige tap eller følgetap, skatterenter, gebyrer fra myndigheter eller andre økonomiske konsekvenser som oppstår ved bruk eller manglende evne til å bruke programvaren. Samlet erstatningsansvar for ethvert krav skal være null (0 NOK) så lenge programvaren leveres som et gratis verktøy.'
+                  )}
+                </p>
+              </section>
+
+              <section className="space-y-4">
+                <div className="flex items-center gap-3">
+                  <AlertCircle className="h-5 w-5 text-blue-600" />
+                  <h2 className="text-xl font-black uppercase tracking-tighter text-slate-900 font-outfit m-0">
+                    7. {locale === 'en' ? 'Acceptable Use' : 'Akseptabel bruk'}
+                  </h2>
+                </div>
+                <p className="text-sm font-medium leading-relaxed">
+                  {locale === 'en' ? (
+                    'You agree to use the Service only for lawful purposes. Prohibited conduct includes, but is not limited to: abusing or misusing the Service, attempting to reverse engineer the software, or using the Service to provide illegal services or evade tax laws.'
+                  ) : (
+                    'Du samtykker i å bruke Tjenesten kun til lovlige formål. Forbudt oppførsel inkluderer, men er ikke begrenset til: misbruk av Tjenesten, forsøk på å dekode (reverse engineer) programvaren, eller bruk av Tjenesten for å levere ulovlige tjenester eller unndra skatt.'
+                  )}
+                </p>
+              </section>
+
+              <section className="space-y-4">
+                <div className="flex items-center gap-3">
+                  <User className="h-5 w-5 text-blue-600" />
+                  <h2 className="text-xl font-black uppercase tracking-tighter text-slate-900 font-outfit m-0">
+                    8. {locale === 'en' ? 'User Responsibility' : 'Brukerens ansvar'}
                   </h2>
                 </div>
                 <p className="text-sm font-medium leading-relaxed">
@@ -158,14 +210,14 @@ export default async function TermsPage({
                 <div className="flex items-center gap-3">
                   <Globe className="h-5 w-5 text-blue-600" />
                   <h2 className="text-xl font-black uppercase tracking-tighter text-slate-900 font-outfit m-0">
-                    6. {locale === 'en' ? 'Third-Party Services' : 'Tredjepartstjenester'}
+                    9. {locale === 'en' ? 'Third-Party Services' : 'Tredjepartstjenester'}
                   </h2>
                 </div>
                 <p className="text-sm font-medium leading-relaxed">
                   {locale === 'en' ? (
-                    'We use third parties such as Stripe/Lemon Squeezy for payments, Supabase for data storage, and Posthog for analysis. By using the service, you also agree to the terms of these providers.'
+                    'We use third parties such as Stripe/Lemon Squeezy for payments, Supabase for data storage, and Posthog for analysis. The operator disclaims responsibility for the content, privacy policies, or practices of any third-party services. By using the service, you also agree to the terms of these providers.'
                   ) : (
-                    'Vi benytter tredjeparter som Stripe/Lemon Squeezy for betalinger, Supabase for datalagring og Posthog for analyse. Ved å bruke tjenesten godtar du også vilkårene til disse leverandørene.'
+                    'Vi benytter tredjeparter som Stripe/Lemon Squeezy for betalinger, Supabase for datalagring og Posthog for analyse. Operatøren fraskriver seg ethvert ansvar for innholdet, personvernreglene eller praksisen til tredjepartstjenester. Ved å bruke tjenesten godtar du også vilkårene til disse leverandørene.'
                   )}
                 </p>
               </section>
@@ -174,20 +226,14 @@ export default async function TermsPage({
                 <div className="flex items-center gap-3">
                   <CreditCard className="h-5 w-5 text-blue-600" />
                   <h2 className="text-xl font-black uppercase tracking-tighter text-slate-900 font-outfit m-0">
-                    7. {locale === 'en' ? 'Subscriptions & Billing' : 'Abonnement og fakturering'}
+                    10. {locale === 'en' ? 'Subscriptions & Billing' : 'Abonnement og fakturering'}
                   </h2>
                 </div>
                 <div className="text-sm font-medium leading-relaxed space-y-2">
                   <p>
                     {locale === 'en'
-                      ? 'ENK Pilot offers subscription-based services. By subscribing, you authorize us (via our payment processors) to charge the applicable fees to your designated payment method.'
-                      : 'ENK Pilot tilbyr abonnementsbaserte tjenester. Ved å abonnere gir du oss (via våre betalingsformidlere) fullmakt til å belaste gjeldende gebyrer til din valgte betalingsmetode.'}
-                  </p>
-                  <p>
-                    <strong>{locale === 'en' ? 'Automatic Renewal' : 'Automatisk fornyelse'}:</strong>{' '}
-                    {locale === 'en'
-                      ? 'Subscriptions automatically renew at the end of each billing period unless cancelled at least 24 hours before the renewal date.'
-                      : 'Abonnementer fornyes automatisk ved slutten av hver faktureringsperiode med mindre de kanselleres minst 24 timer før fornyelsesdatoen.'}
+                      ? 'This software is provided free of charge as a non-commercial, experimental project. There are no costs associated with using this tool.'
+                      : 'Denne programvaren leveres gratis som et ikke-kommersielt, eksperimentelt prosjekt. Det er ingen kostnader forbundet med å bruke dette verktøyet.'}
                   </p>
                 </div>
               </section>
@@ -196,36 +242,15 @@ export default async function TermsPage({
                 <div className="flex items-center gap-3">
                   <RefreshCw className="h-5 w-5 text-blue-600" />
                   <h2 className="text-xl font-black uppercase tracking-tighter text-slate-900 font-outfit m-0">
-                    8. {locale === 'en' ? 'Refund & Cancellation Policy' : 'Refusjon og kansellering'}
+                    11. {locale === 'en' ? 'Refund & Cancellation Policy' : 'Refusjon og kansellering'}
                   </h2>
                 </div>
                 <div className="text-sm font-medium leading-relaxed space-y-4">
-                  <div className="space-y-2">
-                    <h3 className="text-slate-900 font-bold m-0 p-0">
-                      {locale === 'en' ? 'Cancellation' : 'Kansellering'}
-                    </h3>
-                    <p>
-                      {locale === 'en'
-                        ? 'You can cancel your subscription at any time through your account settings. Upon cancellation, you will retain access to Pro features until the end of your current billing period.'
-                        : 'Du kan når som helst kansellere abonnementet ditt via kontoinnstillingene. Ved kansellering vil du beholde tilgangen til Pro-funksjoner frem til slutten av din nåværende faktureringsperiode.'}
-                    </p>
-                  </div>
-                  <div className="space-y-2">
-                    <h3 className="text-slate-900 font-bold m-0 p-0">
-                      {locale === 'en' ? 'Refund Policy' : 'Refusjonspolicy'}
-                    </h3>
-                    <p>
-                      {locale === 'en'
-                        ? 'We provide a 14-day money-back guarantee for your initial subscription purchase. If you are not satisfied with the Service, you can request a full refund within 14 days of your first payment. No refunds are provided for recurring subscription renewals.'
-                        : 'Vi tilbyr en 14-dagers pengene-tilbake-garanti for ditt første abonnementskjøp. Hvis du ikke er fornøyd med tjenesten, kan du be om full refusjon innen 14 dager etter din første betaling. Det gis ingen refusjon for løpende abonnementsfornyelser.'}
-                    </p>
-                    <p>
-                      <strong>{locale === 'en' ? 'How to Request a Refund' : 'Slik ber du om refusjon'}:</strong>{' '}
-                      {locale === 'en'
-                        ? 'To request a refund, please email support@enkpilot.com with your account details. Refund requests are typically processed within 5-10 business days.'
-                        : 'For å be om refusjon, vennligst send en e-post til support@enkpilot.com med dine kontoopplysninger. Refusjonsforespørsler behandles vanligvis innen 5-10 virkedager.'}
-                    </p>
-                  </div>
+                  <p>
+                    {locale === 'en'
+                      ? 'As the Service is provided free of charge, no refund or cancellation policies apply. Users may stop using the Service and delete their account at any time without further obligation.'
+                      : 'Siden Tjenesten leveres gratis, gjelder ingen regler for refusjon eller kansellering. Brukere kan slutte å bruke Tjenesten og slette kontoen sin når som helst uten ytterligere forpliktelser.'}
+                  </p>
                 </div>
               </section>
 
@@ -233,14 +258,42 @@ export default async function TermsPage({
                 <div className="flex items-center gap-3">
                   <AlertCircle className="h-5 w-5 text-blue-600" />
                   <h2 className="text-xl font-black uppercase tracking-tighter text-slate-900 font-outfit m-0">
-                    9. {locale === 'en' ? 'Changes to the Service' : 'Endringer i tjenesten'}
+                    12. {locale === 'en' ? 'Termination and Changes' : 'Avslutning og endringer'}
                   </h2>
                 </div>
                 <p className="text-sm font-medium leading-relaxed">
                   {locale === 'en' ? (
-                    'We reserve the right to modify, suspend, or terminate the service at any time without notice. We may also change these terms, and your continued use of the service constitutes your acceptance of the new terms.'
+                    'The operator reserves the right to modify, suspend, or terminate the Service at any time without notice. Access may be revoked for any reason, including suspected breach of these terms. Upon termination, the right to access the Service ceases immediately.'
                   ) : (
-                    'Vi forbeholder oss retten til å endre, suspendere eller avslutte tjenesten når som helst uten forvarsel. Vi kan også endre disse vilkårene, og din fortsatte bruk av tjenesten utgjør din aksept av de nye vilkårene.'
+                    'Operatøren forbeholder seg retten til å endre, suspendere eller avslutte Tjenesten når som helst uten forvarsel. Tilgang kan trekkes tilbake av enhver grunn, inkludert mistanke om brudd på disse vilkårene. Ved avslutning opphører retten til å bruke Tjenesten umiddelbart.'
+                  )}
+                </p>
+              </section>
+
+              <section className="space-y-4">
+                <div className="flex items-center gap-3">
+                  <Globe className="h-5 w-5 text-blue-600" />
+                  <h2 className="text-xl font-black uppercase tracking-tighter text-slate-900 font-outfit m-0">
+                    13. {locale === 'en' ? 'Privacy and GDPR' : 'Personvern og GDPR'}
+                  </h2>
+                </div>
+                <p className="text-sm font-medium leading-relaxed">
+                  {locale === 'en' ? (
+                    <>
+                      Your privacy is important. Personal data is processed in accordance with our{' '}
+                      <Link href="/privacy" locale={locale} className="text-blue-600 hover:underline">
+                        Privacy Policy
+                      </Link>{' '}
+                      and EU GDPR regulations. You have the right to access, rectify, or delete your personal data as described in the policy.
+                    </>
+                  ) : (
+                    <>
+                      Ditt personvern er viktig. Personopplysninger behandles i samsvar med vår{' '}
+                      <Link href="/privacy" locale={locale} className="text-blue-600 hover:underline">
+                        personvernerklæring
+                      </Link>{' '}
+                      og EUs GDPR-forordning. Du har rett til innsyn, rettelse eller sletting av dine personopplysninger som beskrevet i erklæringen.
+                    </>
                   )}
                 </p>
               </section>
@@ -249,7 +302,7 @@ export default async function TermsPage({
                 <div className="flex items-center gap-3">
                   <Mail className="h-5 w-5 text-blue-600" />
                   <h2 className="text-xl font-black uppercase tracking-tighter text-slate-900 font-outfit m-0">
-                    10. {locale === 'en' ? 'Contact Information' : 'Kontaktinformasjon'}
+                    14. {locale === 'en' ? 'Contact Information' : 'Kontaktinformasjon'}
                   </h2>
                 </div>
                 <p className="text-sm font-medium leading-relaxed">
@@ -281,7 +334,7 @@ export default async function TermsPage({
                 <div className="flex items-center gap-3">
                   <Scale className="h-5 w-5 text-blue-600" />
                   <h2 className="text-xl font-black uppercase tracking-tighter text-slate-900 font-outfit m-0">
-                    11. {locale === 'en' ? 'Governing Law' : 'Lovvalg og verneting'}
+                    15. {locale === 'en' ? 'Governing Law' : 'Lovvalg og verneting'}
                   </h2>
                 </div>
                 <p className="text-sm font-medium leading-relaxed">

@@ -1,24 +1,24 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { 
-  Dialog, 
-  DialogContent, 
-  DialogTrigger, 
-  DialogTitle, 
+import {
+  Dialog,
+  DialogContent,
+  DialogTrigger,
+  DialogTitle,
   DialogDescription,
   DialogHeader
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
-import { 
-  Menu, 
-  X, 
-  LayoutDashboard, 
-  History, 
-  Settings, 
-  Sparkles, 
-  LogOut, 
-  Bell, 
+import {
+  Menu,
+  X,
+  LayoutDashboard,
+  History,
+  Settings,
+  Sparkles,
+  LogOut,
+  Bell,
   CreditCard,
   User,
   ChevronRight,
@@ -48,7 +48,6 @@ export function MobileMenu({ isPro, profile }: { isPro?: boolean, profile?: any 
     { icon: LayoutDashboard, label: tTabs('safeToSpend'), href: '/#safe-to-spend', tab: 'safe-to-spend' },
     { icon: LineChart, label: tTabs('analytics'), href: '/#analytics', badge: 'Pro', tab: 'analytics' },
     { icon: History, label: tTabs('history'), href: '/#history', tab: 'history' },
-    { icon: CreditCard, label: locale === 'nb' ? 'Oppgradering' : 'Upgrade', href: '/upgrade', highlight: !isPro },
     { icon: Settings, label: tCommon('settings'), href: '/settings' },
   ]
 
@@ -62,7 +61,7 @@ export function MobileMenu({ isPro, profile }: { isPro?: boolean, profile?: any 
       setHasHiddenInsights(hidden)
       setInsightCount(count)
     }
-    
+
     checkHidden()
     const interval = setInterval(checkHidden, 2000)
     return () => clearInterval(interval)
@@ -82,8 +81,8 @@ export function MobileMenu({ isPro, profile }: { isPro?: boolean, profile?: any 
           <Menu className="h-6 w-6 text-slate-900" />
         </Button>
       </DialogTrigger>
-      
-      <DialogContent 
+
+      <DialogContent
         showCloseButton={false}
         className="fixed inset-0 z-[100] w-screen h-screen max-w-none m-0 p-0 border-none bg-white flex flex-col sm:max-w-none translate-x-0 translate-y-0 top-0 left-0 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right duration-500"
       >
@@ -98,9 +97,9 @@ export function MobileMenu({ isPro, profile }: { isPro?: boolean, profile?: any 
             <img src="/logo.png" alt="ENK Pilot" className="h-7 w-auto object-contain" />
             <span className="sr-only">ENK Pilot</span>
           </Link>
-          <Button 
-            variant="ghost" 
-            size="icon" 
+          <Button
+            variant="ghost"
+            size="icon"
             onClick={() => setIsOpen(false)}
             className="h-8 w-8 rounded-full bg-slate-50 hover:bg-slate-100 transition-all"
           >
@@ -131,37 +130,35 @@ export function MobileMenu({ isPro, profile }: { isPro?: boolean, profile?: any 
           {/* Navigation Links - Ultra compact */}
           <nav className="space-y-2">
             {navItems.map((item, i) => (
-              <Link 
-                key={i} 
-                href={item.href} 
+              <Link
+                key={i}
+                href={item.href}
                 onClick={() => handleNavClick(item.tab)}
-                className={`flex items-center gap-3 p-3 rounded-xl transition-all border ${
-                  item.highlight 
-                    ? 'bg-blue-600 border-blue-600 text-white shadow-md' 
-                    : 'bg-white border-transparent hover:bg-slate-50 hover:border-slate-100 text-slate-600 hover:text-slate-900'
-                }`}
+                className={`flex items-center gap-3 p-3 rounded-xl transition-all border ${'highlight' in item && item.highlight
+                  ? 'bg-blue-600 border-blue-600 text-white shadow-md'
+                  : 'bg-white border-transparent hover:bg-slate-50 hover:border-slate-100 text-slate-600 hover:text-slate-900'
+                  }`}
               >
-                <div className={`h-8 w-8 rounded-lg flex items-center justify-center ${
-                  item.highlight ? 'bg-white/20' : 'bg-slate-50 border border-slate-100'
-                }`}>
-                  <item.icon className={`h-4 w-4 ${item.highlight ? 'text-white' : 'text-slate-500'}`} />
+                <div className={`h-8 w-8 rounded-lg flex items-center justify-center ${'highlight' in item && item.highlight ? 'bg-white/20' : 'bg-slate-50 border border-slate-100'
+                  }`}>
+                  <item.icon className={`h-4 w-4 ${'highlight' in item && item.highlight ? 'text-white' : 'text-slate-500'}`} />
                 </div>
                 <span className="font-outfit font-bold text-sm tracking-tight flex-1">
                   {item.label}
                 </span>
                 {item.badge && (
-                   <span className="text-[7px] font-black uppercase bg-blue-600 text-white px-1.5 py-0.5 rounded-full shadow-sm">{item.badge}</span>
+                  <span className="text-[7px] font-black uppercase bg-blue-600 text-white px-1.5 py-0.5 rounded-full shadow-sm">{item.badge}</span>
                 )}
-                {item.highlight && (
-                   <span className="text-[8px] font-black uppercase bg-white text-blue-600 px-1.5 py-0.5 rounded-full">New</span>
+                {'highlight' in item && item.highlight && (
+                  <span className="text-[8px] font-black uppercase bg-white text-blue-600 px-1.5 py-0.5 rounded-full">New</span>
                 )}
-                {!item.highlight && !item.badge && <ChevronRight className="h-3.5 w-3.5 opacity-20" />}
+                {!('highlight' in item && item.highlight) && !item.badge && <ChevronRight className="h-3.5 w-3.5 opacity-20" />}
               </Link>
             ))}
 
             {/* Special Mobile Insight Action - Ultra compact */}
             {hasHiddenInsights && insightCount > 0 && (
-              <button 
+              <button
                 onClick={restoreInsights}
                 className="w-full flex items-center gap-3 p-3 rounded-xl bg-blue-50 border border-blue-100 text-blue-600"
               >
@@ -191,8 +188,8 @@ export function MobileMenu({ isPro, profile }: { isPro?: boolean, profile?: any 
             </div>
 
             <form action={signout} className="w-full">
-              <Button 
-                variant="ghost" 
+              <Button
+                variant="ghost"
                 className="w-full justify-start h-10 px-1 rounded-xl text-rose-600 hover:text-rose-700 hover:bg-rose-50 border border-transparent transition-all gap-3"
               >
                 <div className="h-8 w-8 rounded-lg bg-rose-100/50 flex items-center justify-center">
@@ -217,7 +214,7 @@ export function MobileMenu({ isPro, profile }: { isPro?: boolean, profile?: any 
                 <span className="text-[9px] font-black uppercase tracking-wider text-slate-600">EU Data</span>
               </div>
             </div>
-            
+
             <div className="flex flex-col items-center gap-1">
               <p className="text-[9px] font-black uppercase tracking-widest text-slate-600">Built with 🇳🇴 in Norway</p>
               <p className="text-[8px] text-slate-400 font-medium text-center leading-relaxed px-4">

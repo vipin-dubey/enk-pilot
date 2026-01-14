@@ -90,7 +90,7 @@ export async function LandingPage({ locale, host: serverHost }: { locale: string
                     </p>
 
                     <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-4 animate-in fade-in slide-in-from-bottom-10 duration-1000 delay-300">
-                        <a href="#pricing">
+                        <a href={signupUrl}>
                             <Button size="lg" className="h-14 px-8 bg-slate-900 hover:bg-black text-white font-black text-base rounded-2xl shadow-xl shadow-slate-900/20 transition-all hover:-translate-y-1 active:scale-95">
                                 {t('hero.cta1')} <ArrowRight className="ml-2 h-4 w-4" />
                             </Button>
@@ -410,64 +410,6 @@ export async function LandingPage({ locale, host: serverHost }: { locale: string
                 </div>
             </section>
 
-            {/* Pricing Section */}
-            <section id="pricing" className="py-20 lg:py-32 bg-white border-t border-slate-100">
-                <div className="container mx-auto px-4">
-                    <div className="text-center mb-16">
-                        <h2 className="text-3xl lg:text-4xl font-black font-outfit tracking-tight text-slate-900 mb-3">{t('pricing.title')}</h2>
-                        <p className="text-slate-600 font-medium max-w-md mx-auto text-sm font-bold uppercase tracking-widest">{t('pricing.description')}</p>
-                    </div>
-                    <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-                        {/* Starter */}
-                        <div className="p-8 rounded-[2rem] border-2 border-slate-100 bg-white flex flex-col h-full bg-slate-50/10">
-                            <h3 className="text-lg font-black font-outfit text-slate-900 mb-1 uppercase tracking-tighter">{t('pricing.starter.title')}</h3>
-                            <div className="flex items-baseline gap-1 mb-6">
-                                <span className="text-3xl font-black text-slate-900 tracking-tight">{t('pricing.starter.price')}</span>
-                                <span className="text-slate-500 font-bold uppercase text-[10px] tracking-widest">{t('pricing.starter.unit')}</span>
-                            </div>
-                            <ul className="space-y-3 mb-8 flex-1">
-                                <PricingItem text={t('pricing.starter.f1')} /> <PricingItem text={t('pricing.starter.f2')} /> <PricingItem text={t('pricing.starter.f3')} /> <PricingItem text={t('pricing.starter.f4')} /> <PricingItem text={t('pricing.starter.f5')} /> <PricingItem text={t('pricing.starter.f6')} /> <PricingItem text={t('pricing.starter.f7')} /> <PricingItem text={t('pricing.starter.f8')} />
-                            </ul>
-                            <a href={signupUrl} className="w-full"><Button variant="outline" className="w-full h-12 rounded-xl border-2 border-slate-200 font-black hover:bg-slate-50 transition-all text-xs">{t('pricing.starter.cta')}</Button></a>
-                        </div>
-                        {/* Pro */}
-                        <div className="p-8 rounded-[2rem] border-2 border-slate-200 bg-white flex flex-col h-full relative group hover:border-blue-400 transition-all">
-                            <h3 className="text-lg font-black font-outfit text-slate-900 mb-1 uppercase tracking-tighter flex items-center gap-2">
-                                {t('pricing.pro.title')}
-                                <span className="text-[8px] bg-slate-100 text-slate-500 px-2 py-0.5 rounded-full tracking-widest">{locale === 'nb' ? 'KOMMER SNART' : 'COMING SOON'}</span>
-                            </h3>
-                            <div className="flex items-baseline gap-1 mb-6">
-                                <span className="text-3xl font-black text-slate-900 tracking-tight">{t('pricing.pro.price')}</span>
-                                <span className="text-slate-500 font-bold uppercase text-[10px] tracking-widest">{t('pricing.pro.unit')}</span>
-                            </div>
-                            <p className="text-[9px] text-blue-600 font-bold uppercase tracking-widest mb-6">{t('pricing.pro.trial')}</p>
-                            <ul className="space-y-3 mb-8 flex-1">
-                                <PricingItem text={t('pricing.pro.f1')} highlighted /> <PricingItem text={t('pricing.pro.f2')} /> <PricingItem text={t('pricing.pro.f3')} /> <PricingItem text={t('pricing.pro.f4')} /> <PricingItem text={t('pricing.pro.f5')} />
-                            </ul>
-                            <a href={signupUrl} className="w-full"><Button className="w-full h-12 rounded-xl bg-slate-900 hover:bg-black font-black shadow-lg shadow-slate-900/10 transition-all hover:-translate-y-0.5 active:scale-95 text-xs text-white">{t('pricing.pro.cta')}</Button></a>
-                        </div>
-                        {/* Founding */}
-                        <div className="p-8 rounded-[2rem] border-2 border-amber-200 bg-amber-50/30 flex flex-col h-full relative shadow-sm">
-                            <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-amber-500 text-white px-3 py-0.5 rounded-full font-black text-[8px] uppercase tracking-widest">{t('pricing.recommended')}</div>
-                            <h3 className="text-lg font-black font-outfit text-amber-900 mb-1 uppercase tracking-tighter flex items-center gap-2">
-                                {t('pricing.founding.title')}
-                                <span className="text-[8px] bg-amber-100/50 text-amber-700 px-2 py-0.5 rounded-full tracking-widest">{locale === 'nb' ? 'KOMMER SNART' : 'COMING SOON'}</span>
-                            </h3>
-                            <div className="mb-6">
-                                <div className="flex items-baseline gap-1"><span className="text-3xl font-black text-amber-900 tracking-tight">{t('pricing.founding.price')}</span><span className="text-amber-700 font-bold uppercase text-[10px] tracking-widest">{t('pricing.founding.unit')}</span></div>
-                                <div className="flex flex-col gap-1 mt-1">
-                                    <p className="text-[9px] text-amber-700 font-bold uppercase tracking-widest">{t('pricing.founding.trial')}</p>
-                                    <p className="text-[9px] text-amber-700/60 font-medium uppercase tracking-widest">{t('pricing.founding.renews')}</p>
-                                </div>
-                            </div>
-                            <ul className="space-y-3 mb-8 flex-1">
-                                <PricingItem text={t('pricing.founding.f1')} /> <PricingItem text={t('pricing.founding.f2')} highlighted /> <PricingItem text={t('pricing.founding.f3')} /> <PricingItem text={t('pricing.founding.f4')} /> <PricingItem text={t('pricing.founding.f5')} />
-                            </ul>
-                            <a href={signupUrl} className="w-full"><Button className="w-full h-12 rounded-xl bg-amber-900 hover:bg-amber-950 font-black shadow-lg shadow-amber-900/30 transition-all hover:-translate-y-0.5 active:scale-95 text-xs text-white">{t('pricing.founding.cta')}</Button></a>
-                        </div>
-                    </div>
-                </div>
-            </section>
 
             {/* CTA */}
             <section className="py-24 lg:py-40 bg-slate-900 text-white relative overflow-hidden">
@@ -480,7 +422,7 @@ export async function LandingPage({ locale, host: serverHost }: { locale: string
                         {t.rich('cta.title', { highlight: (chunks) => <span className="text-blue-400">{chunks}</span> })}
                     </h2>
                     <p className="max-w-md mx-auto text-slate-200 font-medium text-lg mb-12">{t('cta.description')}</p>
-                    <a href="#pricing"><Button size="lg" className="h-20 px-16 bg-white text-slate-900 hover:bg-slate-100 font-black text-2xl rounded-2xl shadow-2xl transition-all hover:-translate-y-1 active:scale-95">{t('cta.button')}</Button></a>
+                    <a href={signupUrl}><Button size="lg" className="h-20 px-16 bg-white text-slate-900 hover:bg-slate-100 font-black text-2xl rounded-2xl shadow-2xl transition-all hover:-translate-y-1 active:scale-95">{t('cta.button')}</Button></a>
                 </div>
             </section>
 

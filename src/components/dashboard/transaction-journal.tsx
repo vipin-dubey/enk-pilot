@@ -147,7 +147,7 @@ export function TransactionJournal({ isPro = false, trialExportsUsed = 0, seatsL
 
   const handleExport = async () => {
     if (!isPro && trialExportsUsed >= 1) {
-      router.push('/upgrade')
+      // router.push('/upgrade') // Removed - service is free
       return
     }
 

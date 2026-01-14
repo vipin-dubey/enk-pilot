@@ -57,7 +57,7 @@ export function SmartTaxAssistant({ isPro, seatsLeft, percentFull }: { isPro?: b
       ])
 
       setProfile(profileRes.data)
-      
+
       const combined = [
         ...(allocationsRes.data || []).map(a => ({ ...a, trType: 'income' })),
         ...(receiptsRes.data || []).map(r => ({ ...r, trType: 'expense', amount: Number(r.amount) }))
@@ -75,9 +75,9 @@ export function SmartTaxAssistant({ isPro, seatsLeft, percentFull }: { isPro?: b
     const list: Insight[] = []
 
     // 1. Depreciation Warning (> 15,000 NOK)
-    const expensiveItems = transactions.filter(tr => 
-      tr.trType === 'expense' && 
-      tr.amount >= 15000 && 
+    const expensiveItems = transactions.filter(tr =>
+      tr.trType === 'expense' &&
+      tr.amount >= 15000 &&
       (
         ['Equipment', 'IT', 'Software', 'Tools', 'Hardware'].includes(tr.category) ||
         tr.vendor?.toLowerCase().includes('apple') ||
@@ -91,7 +91,7 @@ export function SmartTaxAssistant({ isPro, seatsLeft, percentFull }: { isPro?: b
         id: 'depreciation',
         type: 'warning',
         title: locale === 'nb' ? 'Husk avskrivning' : 'Hardware Depreciation',
-        description: locale === 'nb' 
+        description: locale === 'nb'
           ? `Du har kjøp over 15 000 kr (${expensiveItems[0].vendor}). Disse må vanligvis avskrives over flere år i stedet for å fradragsføres med en gang.`
           : `You have purchases over 15,000 NOK (e.g., ${expensiveItems[0].vendor}). These assets typically must be depreciated over several years for tax purposes.`,
         impact: locale === 'nb' ? 'Skatte-etterlevelse' : 'Regulatory Compliance',
@@ -102,15 +102,15 @@ export function SmartTaxAssistant({ isPro, seatsLeft, percentFull }: { isPro?: b
     // 2. Missed Monthly Internet/Phone
     const last30Days = new Date()
     last30Days.setDate(last30Days.getDate() - 30)
-    const telcoTr = transactions.filter(tr => 
-      tr.trType === 'expense' && 
+    const telcoTr = transactions.filter(tr =>
+      tr.trType === 'expense' &&
       new Date(tr.receipt_date || tr.created_at) > last30Days &&
       (
-        tr.category?.toLowerCase() === 'internet' || 
-        tr.category?.toLowerCase() === 'communication' || 
+        tr.category?.toLowerCase() === 'internet' ||
+        tr.category?.toLowerCase() === 'communication' ||
         tr.category?.toLowerCase() === 'phone' ||
-        tr.vendor?.toLowerCase().includes('telenor') || 
-        tr.vendor?.toLowerCase().includes('telia') || 
+        tr.vendor?.toLowerCase().includes('telenor') ||
+        tr.vendor?.toLowerCase().includes('telia') ||
         tr.vendor?.toLowerCase().includes('ice') ||
         tr.vendor?.toLowerCase().includes('altibox')
       )
@@ -129,8 +129,8 @@ export function SmartTaxAssistant({ isPro, seatsLeft, percentFull }: { isPro?: b
     }
 
     // 3. Professional Membership Cap
-    const membershipTr = transactions.filter(tr => 
-      tr.trType === 'expense' && 
+    const membershipTr = transactions.filter(tr =>
+      tr.trType === 'expense' &&
       (tr.category === 'Membership' || tr.vendor?.toLowerCase().includes('fagforening') || tr.vendor?.toLowerCase().includes('kontingent'))
     )
     const totalMembership = membershipTr.reduce((acc, curr) => acc + curr.amount, 0)
@@ -173,8 +173,8 @@ export function SmartTaxAssistant({ isPro, seatsLeft, percentFull }: { isPro?: b
   const handleAction = (insight: Insight) => {
     if (insight.id === 'telco' || insight.id === 'membership') {
       // The ultimate fix: Dispatch a custom event that DashboardTabs is listening for
-      window.dispatchEvent(new CustomEvent('switch-dashboard-tab', { 
-        detail: { tab: 'receipts' } 
+      window.dispatchEvent(new CustomEvent('switch-dashboard-tab', {
+        detail: { tab: 'receipts' }
       }))
       window.scrollTo({ top: 150, behavior: 'smooth' })
     } else if (insight.id === 'mva-threshold') {
@@ -197,16 +197,17 @@ export function SmartTaxAssistant({ isPro, seatsLeft, percentFull }: { isPro?: b
           <p className="text-[10px] text-slate-300 max-w-[200px] mb-4">
             We found {insights.length} ways to optimize your taxes. Upgrade to Pro to see your personalized alerts.
           </p>
-          <Button 
-            size="sm" 
-            onClick={() => router.push('/upgrade')}
+          <Button
+            size="sm"
+            // onClick={() => router.push('/upgrade')} // Removed - service is free
+            disabled
             className="h-8 bg-blue-600 hover:bg-blue-700 text-white font-bold mb-2 w-full max-w-[160px]"
           >
             Unlock Intelligence
           </Button>
-          <Button 
-            variant="ghost" 
-            size="sm" 
+          <Button
+            variant="ghost"
+            size="sm"
             onClick={dismiss}
             className="h-8 text-slate-400 hover:text-white hover:bg-white/10 text-[10px] uppercase font-bold tracking-widest"
           >
@@ -214,7 +215,7 @@ export function SmartTaxAssistant({ isPro, seatsLeft, percentFull }: { isPro?: b
           </Button>
         </div>
       )}
-      
+
       <CardHeader className="pb-2 border-b border-white/5">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -230,9 +231,9 @@ export function SmartTaxAssistant({ isPro, seatsLeft, percentFull }: { isPro?: b
             <Badge className="bg-blue-600 text-white border-none uppercase text-[9px] tracking-widest font-black hidden sm:inline-flex">
               {t('proFeature')}
             </Badge>
-            <Button 
-              variant="ghost" 
-              size="icon" 
+            <Button
+              variant="ghost"
+              size="icon"
               className="h-8 w-8 rounded-full hover:bg-white/10 text-slate-400"
               onClick={dismiss}
             >
@@ -248,12 +249,12 @@ export function SmartTaxAssistant({ isPro, seatsLeft, percentFull }: { isPro?: b
             <div key={insight.id} className="p-4 hover:bg-white/5 transition-colors group">
               <div className="flex gap-4">
                 <div className={`mt-1 h-8 w-8 rounded-full flex items-center justify-center shrink-0 
-                  ${insight.type === 'opportunity' ? 'bg-emerald-500/10 text-emerald-400' : 
-                    insight.type === 'warning' ? 'bg-amber-500/10 text-amber-400' : 
-                    'bg-blue-500/10 text-blue-400'}`}>
-                  {insight.type === 'opportunity' ? <TrendingUp className="h-4 w-4" /> : 
-                   insight.type === 'warning' ? <AlertCircle className="h-4 w-4" /> : 
-                   <Lightbulb className="h-4 w-4" />}
+                  ${insight.type === 'opportunity' ? 'bg-emerald-500/10 text-emerald-400' :
+                    insight.type === 'warning' ? 'bg-amber-500/10 text-amber-400' :
+                      'bg-blue-500/10 text-blue-400'}`}>
+                  {insight.type === 'opportunity' ? <TrendingUp className="h-4 w-4" /> :
+                    insight.type === 'warning' ? <AlertCircle className="h-4 w-4" /> :
+                      <Lightbulb className="h-4 w-4" />}
                 </div>
                 <div className="flex-1 space-y-1">
                   <div className="flex items-center justify-between">
@@ -271,8 +272,8 @@ export function SmartTaxAssistant({ isPro, seatsLeft, percentFull }: { isPro?: b
                   </p>
                   {insight.actionLabel && (
                     <div className="pt-1">
-                      <Button 
-                        variant="link" 
+                      <Button
+                        variant="link"
                         className="h-auto p-0 text-blue-400 text-xs font-bold group-hover:translate-x-1 transition-transform"
                         onClick={() => handleAction(insight)}
                       >

@@ -102,9 +102,6 @@ export default async function LoginPage({
               <Link href="/forgot-password" locale={locale} className="text-sm text-blue-600 hover:underline font-medium">
                 {t('forgotPassword')}
               </Link>
-              <Link href="/" locale={locale} className="text-sm text-slate-500 hover:underline font-medium">
-                {locale === 'en' ? 'View Pricing & Features' : 'Se priser og funksjoner'}
-              </Link>
               <div className="text-sm text-slate-600 pt-2">
                 {t('noAccount')}{' '}
                 <Link href="/signup" locale={locale} className="text-blue-600 hover:underline font-bold">

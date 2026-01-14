@@ -31,7 +31,7 @@
     },
     "signup": {
       "title": "Create Account",
-      "description": "Join ENK Pilot and take full control of your business finances.",
+      "description": "Join ENK Pilot and take full control of your ENK finances.",
       "hasAccount": "Already have an account?",
       "loginLink": "Log in here",
       "submit": "Sign up",
@@ -76,7 +76,7 @@
   },
   "overview": {
     "safeToSpend": "Safe to Spend",
-    "businessHealth": "Business Pulse",
+    "businessHealth": "ENK Pulse",
     "healthDescription": "Live overview of your sole proprietorship's financial health.",
     "ytdProfit": "YTD Net Profit",
     "ytdExpenses": "YTD Expenses",
@@ -214,7 +214,7 @@
     "registered": "Registered",
     "notRegistered": "Not Registered",
     "mvaThresholdWarning": "MVA Threshold Warning",
-    "mvaThresholdDescription": "Your total income has crossed 50,000 NOK. In Norway, this means you are now liable for MVA (VAT). You must register your business in the MVA Register immediately.",
+    "mvaThresholdDescription": "Your total income has crossed 50,000 NOK. In Norway, this means you are now liable for MVA (VAT). You must register in the MVA Register immediately.",
     "mvaAction": "Register on Skatteetaten",
     "mvaGuideTitle": "What should I do?",
     "mvaGuideStep1": "1. Send your invoice as usual (without MVA for now).",
@@ -283,10 +283,10 @@
     "localeUpdateSuccess": "Default language updated",
     "localeUpdateError": "Failed to update language",
     "backToDashboard": "Back to Dashboard",
-    "business": "Business Profile",
-    "businessDescription": "Manage your business status and tax context.",
+    "business": "ENK Profile",
+    "businessDescription": "Manage your ENK status and tax context.",
     "mvaStatus": "MVA Registered",
-    "mvaDescription": "Enable this if your business is registered in the MVA Register.",
+    "mvaDescription": "Enable this if you are registered in the MVA Register.",
     "ytdIncome": "YTD Gross Income",
     "ytdExpenses": "YTD Expenses",
     "externalSalary": "Annual External Salary (from other jobs)",
@@ -295,7 +295,7 @@
     "scanPrepaid": "Scan Receipt",
     "prepaidDetected": "Detected {amount} NOK in prepaid tax! Click save to apply.",
     "prepaidNotFound": "No amount found in PDF. Please enter manually.",
-    "saveSuccess": "Business settings updated",
+    "saveSuccess": "Profile settings updated",
     "save": "Save Settings",
     "saveError": "Failed to update settings",
     "deleteAccount": "Delete Account",
@@ -308,7 +308,7 @@
     "deleteAccountSuccess": "Your account has been scheduled for deletion. You will be logged out now."
   },
   "dashboardSummary": {
-    "title": "Business Snapshot",
+    "title": "ENK Snapshot",
     "netProfit": "Net Profit (YTD)",
     "effectiveTax": "Effective Tax Rate",
     "liquidity": "Liquidity",
@@ -347,8 +347,8 @@
     "description": "Unlock extra tax savings with standard Norwegian ENK deductions.",
     "homeOffice": "Home Office Allowance",
     "homeOfficeDesc": "Work from a dedicated room at home? You can claim ~{amount} NOK/year.",
-    "mileage": "Business Mileage",
-    "mileageDesc": "Drive your personal car for business? Deduct per kilometer.",
+    "mileage": "Work-Related Mileage",
+    "mileageDesc": "Drive your personal car for work? Deduct per kilometer.",
     "savings": "Estimated Tax Savings",
     "savingsDesc": "By claiming these deductions, you reduce your taxable profit by {amount} NOK.",
     "totalSaved": "Total Tax Saved: {amount} NOK",
@@ -386,21 +386,21 @@
     "performanceTitle": "Performance Trends",
     "performanceDesc": "Monthly breakdown of income vs. profit.",
     "burdenTitle": "Tax Burden Breakdown",
-    "burdenDesc": "Focus strictly on business economy. External salaries are excluded.",
+    "burdenDesc": "Focus strictly on ENK economy. External salaries are excluded.",
     "expenseTitle": "Expense Analytics",
     "expenseDesc": "Top spending categories for the current year.",
     "preCheckTitle": "Skatteetaten Pre-Check",
-    "preCheckDesc": "Map your business values directly to the official Tax Return form.",
+    "preCheckDesc": "Map your ENK values directly to the official Tax Return form.",
     "box101": "Revenue",
     "box401": "Expenses",
     "box711": "Personal Allowance",
-    "box440": "Net Business Result"
+    "box440": "Net ENK Result"
   },
   "legal": {
     "disclaimerTitle": "Legal Disclaimer & Limitation of Liability",
-    "disclaimerText": "ENK Pilot is a decision-support tool provided 'as-is' for informational and educational purposes only. It is not a substitute for professional accounting, tax, or legal advice. By using this service, you acknowledge and agree that you are solely responsible for your own financial decisions and tax compliance. The developer(s) of ENK Pilot assume zero liability for any errors, omissions, financial losses, or tax penalties resulting from the use of this software, nor for any service disruptions or data inaccuracies. Always verify calculations with a certified professional and officially cross-check with Skatteetaten before filing.",
-    "footerNote": "Educational tool only. Not professional advice.",
-    "legalFootnote": "Educational decision-support tool. Not professional tax advice. User assumes 100% financial and legal responsibility for all filings."
+    "disclaimerText": "ENK Pilot is an experimental decision-support tool provided 'as-is' for informational and educational purposes only. It is not a substitute for accounting, tax, or legal advice. By using this software, you acknowledge and agree that you are solely responsible for your own financial decisions and tax compliance. The developer(s) of ENK Pilot assume zero liability for any errors, omissions, financial losses, or tax penalties resulting from the use of this software, nor for any disruptions or data inaccuracies. Always verify calculations with a certified accountant and officially cross-check with Skatteetaten before filing.",
+    "footerNote": "Educational tool only. Not advice.",
+    "legalFootnote": "Educational decision-support tool. Not tax advice. User assumes 100% financial and legal responsibility for all filings."
   },
   "pricing": {
     "title": "Upgrade to Pro",
@@ -459,7 +459,7 @@
       "title": "ENK Pilot",
       "subtitle": "Never Get Tax Shocked as an ENK Again",
       "description": "ENK Pilot shows you exactly how much tax and VAT you need to set aside – and how much is safe to spend – in real-time.",
-      "cta1": "Start 30-Day Free Trial",
+      "cta1": "Join Free",
       "cta2": "See How It Works",
       "builtInNorway": "Built in Norway for Norwegian sole proprietors. No commitment.",
       "safeToSpend": "Safe to Spend",
@@ -478,7 +478,7 @@
     },
     "explainer": {
       "title": "What is ENK Pilot?",
-      "description": "ENK Pilot is a smart tax calculator and cash flow assistant for sole proprietors. You enter income and expenses, and we automatically calculate tax, VAT, and a safe buffer – so you always know what you can spend without getting into trouble with the Tax Authority."
+      "description": "ENK Pilot is a smart tax calculator and cash flow assistant for sole proprietors. You enter income and expenses, and it automatically calculates tax, VAT, and a safe buffer – so you always know what you can spend without getting into trouble with the Tax Authority."
     },
     "howItWorks": {
       "title": "How ENK Pilot Works",
@@ -487,8 +487,8 @@
         "desc": "Connect your account or register income and costs manually. ENK Pilot understands Norwegian ENK finances – including VAT liability, prepaid tax, and deductions."
       },
       "step2": {
-        "title": "We Calculate Tax, VAT, and Buffer",
-        "desc": "Based on sole proprietor regulations, we calculate how much you should set aside for prepaid tax, bracket tax, and employer contributions where relevant. The rest goes into your virtual tax and VAT vault."
+        "title": "Tax, VAT, and Buffer Calculated Automatically",
+        "desc": "Based on sole proprietor regulations, the tool calculates how much you should set aside for prepaid tax, bracket tax, and employer contributions where relevant. The rest goes into your virtual tax and VAT vault."
       },
       "step3": {
         "title": "You See Your 'Safe to Spend' Balance in Real-Time",
@@ -504,9 +504,9 @@
       "buffer3": "Automatic alerts when buffer gets too low",
       "bufferSource": "Based on Tax Authority rates",
       "receiptsTitle": "Receipt App for ENK – with AI",
-      "receiptsSubtitle": "Snap a Photo – We Do the Rest",
+      "receiptsSubtitle": "Snap a Photo – Automatic Processing",
       "receipts1": "Take photos of receipts directly in ENK Pilot",
-      "receipts2": "We read amount, date, and vendor, suggest category and VAT handling",
+      "receipts2": "Automatic extraction of amount, date, and vendor, with suggested category and VAT handling",
       "receiptsPrivacy": "Everything Happens in Your Browser",
       "receiptsPrivacy1": "All AI scanning runs locally – no receipt images sent out",
       "receiptsPrivacy2": "Privacy and Norwegian law first",
@@ -536,7 +536,7 @@
     "security": {
       "badge": "Enterprise-Grade Security",
       "title": "Privacy first. <highlight>Local-First Intelligence</highlight>.",
-      "description": "Encryption for your data and mandatory GDPR compliance. Our <strong>Smart Scanning</strong> and AI tasks happen directly in your browser—we never send your sensitive financial documents to external servers for processing.",
+      "description": "Encryption for your data and mandatory GDPR compliance. <strong>Smart Scanning</strong> and AI tasks happen directly in your browser—your sensitive financial documents never leave your device for processing.",
       "localAI": "Local-Only AI Scan",
       "mfa": "2FA Available",
       "gdpr": "GDPR Compliant"
@@ -568,7 +568,7 @@
         "price": "0",
         "unit": "kr / mo",
         "cta": "Join Free",
-        "f1": "Business Pulse",
+        "f1": "ENK Pulse",
         "f2": "Full Safe to Spend™ Engine",
         "f3": "Deadline Guard",
         "f4": "One Time Audit Ready Export",
@@ -617,9 +617,9 @@
       "q3": "Is it safe?",
       "a3": "Yes – HTTPS, local AI scanning, EU data. Export/delete anytime.",
       "q4": "Is my data safe?",
-      "a4": "Yes. We use industry-standard encryption and all AI scanning happens locally in your browser. We never see your sensitive document content.",
+      "a4": "Yes. Industry-standard encryption is used and all AI scanning happens locally in your browser. Your sensitive document content never leaves your device.",
       "q5": "Can I cancel my subscription?",
-      "a5": "Anytime. No hidden fees or lock-in periods. You stay in control."
+      "a5": "The service is completely free and provided as-is. You can delete your account and all your data at any time."
     }
   }
 }

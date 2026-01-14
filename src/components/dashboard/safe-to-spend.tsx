@@ -298,7 +298,7 @@ export function SafeToSpendCalculator({
                         value={currency}
                         onValueChange={(v) => {
                           if (!isPro && v !== 'NOK') {
-                            router.push('/upgrade')
+                            // router.push('/upgrade') // Removed - service is free
                             return
                           }
                           setCurrency(v)

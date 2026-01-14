@@ -76,7 +76,7 @@
   },
   "overview": {
     "safeToSpend": "Trygt å bruke",
-    "businessHealth": "Bedriftspuls",
+    "businessHealth": "ENK-puls",
     "healthDescription": "Live oversikt over ditt enkeltpersonforetaks økonomiske helse.",
     "ytdProfit": "Årets overskudd (Hittil)",
     "ytdExpenses": "Årets kostnader",
@@ -283,8 +283,8 @@
     "localeUpdateSuccess": "Standard språk ble oppdatert",
     "localeUpdateError": "Kunne ikke oppdatere språk",
     "backToDashboard": "Tilbake til dashbord",
-    "business": "Bedriftsprofil",
-    "businessDescription": "Administrer din bedriftsstatus og skattekontekst.",
+    "business": "ENK-profil",
+    "businessDescription": "Administrer din ENK-status og skattekontekst.",
     "mvaStatus": "MVA-registrert",
     "mvaDescription": "Aktiver dette hvis bedriften din er registrert i MVA-registeret.",
     "ytdIncome": "Bruttoinntekt hittil i år",
@@ -397,9 +397,9 @@
   },
   "legal": {
     "disclaimerTitle": "Ansvarsfraskrivelse og ansvarsbegrensninger",
-    "disclaimerText": "ENK Pilot er et beslutningsstøtteverktøy som leveres 'som det er' (as-is) kun for informasjons- og utdanningsformål. Det er ikke en erstatning for profesjonell regnskaps-, skatte- eller juridisk rådgivning. Ved å bruke denne tjenesten bekrefter og godtar du at du alene er ansvarlig for dine egne økonomiske beslutninger og etterlevelse av skatteregler. Utvikleren(e) av ENK Pilot påtar seg intet ansvar (null ansvar) for feil, mangler, økonomiske tap eller skattegebyrer som følge av bruk av denne programvaren, heller ikke for tjenesteavbrudd eller datamangler. Verifiser alltid beregninger med en autorisert regnskapsfører og dobbeltsjekk offisielt med Skatteetaten før innsending.",
-    "footerNote": "Kun et verktøy. Ikke profesjonell rådgivning.",
-    "legalFootnote": "Verktøy for beslutningsstøtte. Ikke profesjonell skatterådgivning. Bruker påtar seg 100 % økonomisk og juridisk ansvar for alle innsendinger."
+    "disclaimerText": "ENK Pilot er et eksperimentelt beslutningsstøtteverktøy som leveres 'som det er' (as-is) kun for informasjons- og utdanningsformål. Det er ikke en erstatning for regnskaps-, skatte- eller juridisk rådgivning. Ved å bruke denne programvaren bekrefter og godtar du at du alene er ansvarlig for dine egne økonomiske beslutninger og etterlevelse av skatteregler. Utvikleren(e) av ENK Pilot påtar seg intet ansvar (null ansvar) for feil, mangler, økonomiske tap eller skattegebyrer som følge av bruk av denne programvaren, heller ikke for avbrudd eller datamangler. Verifiser alltid beregninger med en autorisert regnskapsfører og dobbeltsjekk offisielt med Skatteetaten før innsending.",
+    "footerNote": "Kun et verktøy. Ikke rådgivning.",
+    "legalFootnote": "Verktøy for beslutningsstøtte. Ikke skatterådgivning. Bruker påtar seg 100 % økonomisk og juridisk ansvar for alle innsendinger."
   },
   "pricing": {
     "title": "Oppgrader til Pro",
@@ -458,7 +458,7 @@
       "title": "ENK Pilot",
       "subtitle": "Aldri mer skattesjokk som ENK",
       "description": "ENK Pilot viser deg nøyaktig hvor mye skatt og MVA du må sette av – og hvor mye som er trygt å bruke – i sanntid.",
-      "cta1": "Start 30 dagers gratis prøve",
+      "cta1": "Bli med gratis",
       "cta2": "Se hvordan det fungerer",
       "builtInNorway": "Bygget i Norge for norske enkeltpersonforetak. Ingen bindingstid.",
       "safeToSpend": "Trygt å bruke",
@@ -477,7 +477,7 @@
     },
     "explainer": {
       "title": "Hva er ENK Pilot?",
-      "description": "ENK Pilot er en smart skattekalkulator og kontantstrøm-assistent for enkeltpersonforetak. Du legger inn inntekter og utgifter, så beregner vi automatisk skatt, MVA og en trygg buffer – slik at du alltid vet hva du kan bruke uten å få problemer med Skatteetaten."
+      "description": "ENK Pilot er en smart skattekalkulator og kontantstrøm-assistent for enkeltpersonforetak. Du legger inn inntekter og utgifter, så beregner verktøyet automatisk skatt, MVA og en trygg buffer – slik at du alltid vet hva du kan bruke uten å få problemer med Skatteetaten."
     },
     "howItWorks": {
       "title": "Slik fungerer ENK Pilot",
@@ -486,8 +486,8 @@
         "desc": "Koble til kontoen din eller registrer inntekter og kostnader manuelt. ENK Pilot forstår norsk ENK-økonomi – inkludering MVA-plikt, forskuddsskatt og fradrag."
       },
       "step2": {
-        "title": "Vi beregner skatt, MVA og buffer",
-        "desc": "Basert på regelverket for enkeltpersonforetak beregner vi hvor mye du bør sette av til forskuddsskatt, trinnskatt og arbeidsgiveravgift der det er relevant. Resten går inn i ditt virtuelle skatt- og MVA-hvelv."
+        "title": "Skatt, MVA og buffer beregnes automatisk",
+        "desc": "Basert på regelverket for enkeltpersonforetak beregner verktøyet hvor mye du bør sette av til forskuddsskatt, trinnskatt og arbeidsgiveravgift der det er relevant. Resten går inn i ditt virtuelle skatt- og MVA-hvelv."
       },
       "step3": {
         "title": "Du ser 'trygt å bruke'-saldoen din i sanntid",
@@ -503,9 +503,9 @@
       "buffer3": "Automatiske varsler når bufferen blir for lav",
       "bufferSource": "Basert på Skatteetaten sine satser",
       "receiptsTitle": "Kvitteringsapp for ENK – med AI",
-      "receiptsSubtitle": "Ta bilde – vi gjør resten",
+      "receiptsSubtitle": "Ta bilde – automatisk behandling",
       "receipts1": "Ta bilde av kvitteringer direkte i ENK Pilot",
-      "receipts2": "Vi leser beløp, dato og leverandør, foreslår kategori og MVA-håndtering",
+      "receipts2": "Automatisk utlesing av beløp, dato og leverandør, med foreslått kategori og MVA-håndtering",
       "receiptsPrivacy": "Alt skjer i din nettleser",
       "receiptsPrivacy1": "All AI-skanning kjører lokalt – ingen kvitteringsbilder sendes ut",
       "receiptsPrivacy2": "Personvern og norsk lovverk først",
@@ -535,7 +535,7 @@
     "security": {
       "badge": "Sikkerhet i toppklasse",
       "title": "Personvern først. <highlight>Lokalt fokusert intelligens</highlight>.",
-      "description": "Kryptering av dine data og full GDPR-etterlevelse. Vår <strong>Smarte skanning</strong> og AI-oppgaver skjer direkte i din nettleser—vi sender aldri dine sensitive dokumenter til eksterne servere for behandling.",
+      "description": "Kryptering av dine data og full GDPR-etterlevelse. Vår <strong>Smarte skanning</strong> og AI-oppgaver skjer direkte i din nettleser—dine sensitive dokumenter forlater aldri enheten din for behandling.",
       "localAI": "Lokal AI-skanning",
       "mfa": "2FA tilgjengelig",
       "gdpr": "GDPR-kompatibel"
@@ -616,9 +616,9 @@
       "q3": "Er det trygt?",
       "a3": "Ja – HTTPS, lokal AI-skanning, EU-data. Eksporter/slett når som helst.",
       "q4": "Er mine data trygge?",
-      "a4": "Ja. Vi bruker industristandard kryptering og all AI-skanning skjer lokalt i din nettleser. Vi ser aldri innholdet i dine sensitive dokumenter.",
+      "a4": "Ja. Industristandard kryptering brukes og all AI-skanning skjer lokalt i din nettleser. Innholdet i dine sensitive dokumenter forlater aldri enheten din.",
       "q5": "Kan jeg kansellere abonnementet mitt?",
-      "a5": "Når som helst. Ingen skjulte gebyrer eller bindingstider. Du beholder kontrollen."
+      "a5": "Tjenesten er helt gratis og leveres som den er. Du kan slette kontoen din og alle dine data når som helst."
     }
   }
 }

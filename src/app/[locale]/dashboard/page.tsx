@@ -236,48 +236,7 @@ export default async function DashboardPage({
                                         </span>
                                     </div>
                                 )}
-                                {!profile?.is_pro && (
-                                    <Link href="/upgrade" className="max-w-sm w-full">
-                                        <Card className="w-full bg-gradient-to-br from-indigo-600 via-blue-600 to-blue-700 text-white border-none shadow-xl overflow-hidden relative group transition-all hover:shadow-2xl hover:-translate-y-0.5 animate-in fade-in slide-in-from-right duration-700 cursor-pointer">
-                                            <div className="absolute top-0 right-0 p-3 opacity-10 group-hover:opacity-20 transition-opacity">
-                                                <Sparkles className="h-12 w-12" />
-                                            </div>
-
-                                            <div className="absolute top-2 left-2 flex items-center gap-1.5 px-2 py-0.5 bg-white/20 backdrop-blur-md rounded-full border border-white/20">
-                                                <span className="relative flex h-2 w-2">
-                                                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
-                                                    <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-500"></span>
-                                                </span>
-                                                <span className="text-[9px] font-black uppercase tracking-tighter text-white">
-                                                    {locale === 'nb' ? 'Begrenset tid' : 'Limited Time'}
-                                                </span>
-                                            </div>
-
-                                            <div className="p-5 pt-8 flex items-center gap-4 relative z-0">
-                                                <div className="h-10 w-10 shrink-0 rounded-full bg-white/20 flex items-center justify-center backdrop-blur-sm border border-white/30">
-                                                    <Sparkles className="h-5 w-5 text-white" />
-                                                </div>
-                                                <div className="flex-1 min-w-0">
-                                                    <p className="text-sm font-black tracking-tight">{locale === 'nb' ? 'Grunnlegger-tilbud' : 'Founding Offer'}</p>
-                                                    <div className="flex items-center gap-2 mt-0.5">
-                                                        <p className="text-[11px] text-blue-100 font-medium leading-tight line-clamp-1">
-                                                            {locale === 'nb' ? `${seatsLeft} plasser igjen!` : `${seatsLeft} seats left!`}
-                                                        </p>
-                                                        <div className="flex-1 h-1 bg-white/20 rounded-full overflow-hidden max-w-[60px]">
-                                                            <div
-                                                                className="h-full bg-amber-400 transition-all duration-1000"
-                                                                style={{ width: `${percentFull}%` }}
-                                                            ></div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <Button size="sm" variant="secondary" className="bg-white text-blue-700 hover:bg-blue-50 border-none font-black shadow-sm h-8 px-4">
-                                                    kr 299
-                                                </Button>
-                                            </div>
-                                        </Card>
-                                    </Link>
-                                )}
+                                {/* Upgrade card removed - service is free */}
                             </div>
                         </div>
                     </div>

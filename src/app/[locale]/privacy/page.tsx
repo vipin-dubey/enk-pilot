@@ -71,7 +71,6 @@ export default async function PrivacyPage({
                   <li>{locale === 'en' ? 'Email address (for login and notifications)' : 'E-postadresse (for innlogging og varsler)'}</li>
                   <li>{locale === 'en' ? 'Tax rate and financial totals that you enter yourself' : 'Skattesats og økonomiske summer som du selv legger inn'}</li>
                   <li>{locale === 'en' ? 'Receipt images and vouchers (for storage and export, unless you opt out)' : 'Kvitteringsbilder og bilag (for lagring og eksport, dersom du ikke velger det bort)'}</li>
-                  <li>{locale === 'en' ? 'Payment information (handled by third parties – we never see your card details)' : 'Betalingsinformasjon (håndteres av tredjepart – vi ser aldri dine kortdetaljer)'}</li>
                 </ul>
               </section>
 
@@ -120,8 +119,7 @@ export default async function PrivacyPage({
                 <ul className="text-sm font-medium space-y-2 list-disc pl-5">
                   <li><strong>Resend</strong>: {locale === 'en' ? 'Sending email notifications.' : 'Utsendelse av e-postvarsler.'}</li>
                   <li><strong>Posthog</strong>: {locale === 'en' ? 'Anonymized usage statistics to improve the service.' : 'Anonymisert bruksstatistikk for å forbedre tjenesten.'}</li>
-                  <li><strong>Stripe / Lemon Squeezy</strong>: {locale === 'en' ? 'Subscription and payment handling.' : 'Håndtering av abonnement og betaling.'}</li>
-                  <li><strong>Google Analytics</strong>: {locale === 'en' ? 'Potentially for marketing analysis (if you have accepted cookies).' : 'Eventuelt for markedsføringsanalyse (dersom du har godtatt cookies).'}</li>
+                  <li><strong>Google Analytics</strong>: {locale === 'en' ? 'Potentially for usage analysis (if you have accepted cookies).' : 'Eventuelt for bruksanalyse (dersom du har godtatt cookies).'}</li>
                 </ul>
               </section>
 

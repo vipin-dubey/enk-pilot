@@ -109,11 +109,9 @@ export function MfaSettings({ isPro }: MfaSettingsProps) {
             <p className="text-xs text-slate-500 leading-normal mb-4">
               {t('proFeatureDesc')}
             </p>
-            <Link href="/upgrade">
-              <Button size="sm" className="bg-slate-900 hover:bg-black text-white font-bold h-9 text-xs px-4 rounded-xl shadow-lg shadow-slate-900/10 transition-all active:scale-[0.98]">
-                {t('upgradeNow') || 'Upgrade to Enable'}
-              </Button>
-            </Link>
+            <Button size="sm" disabled className="bg-slate-900 hover:bg-black text-white font-bold h-9 text-xs px-4 rounded-xl shadow-lg shadow-slate-900/10 transition-all active:scale-[0.98]">
+              {t('upgradeNow') || 'Upgrade to Enable'}
+            </Button>
           </div>
         </div>
       </div>
@@ -131,8 +129,8 @@ export function MfaSettings({ isPro }: MfaSettingsProps) {
         <div className="space-y-6">
           <div className="flex flex-col md:flex-row gap-6 items-center">
             <div className="bg-white p-2 rounded-xl border-4 border-slate-50 shadow-sm">
-              <img 
-                src={enrollData.totp.qr_code} 
+              <img
+                src={enrollData.totp.qr_code}
                 alt="2FA QR Code"
                 className="w-40 h-40"
               />
@@ -159,8 +157,8 @@ export function MfaSettings({ isPro }: MfaSettingsProps) {
                 onChange={(e) => setVerificationCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
                 className="text-center font-mono text-lg tracking-[0.5em] h-12"
               />
-              <Button 
-                onClick={handleVerifyAndEnable} 
+              <Button
+                onClick={handleVerifyAndEnable}
                 disabled={busy || verificationCode.length !== 6}
                 className="px-8 h-12 bg-blue-600 hover:bg-blue-700"
               >
@@ -191,10 +189,10 @@ export function MfaSettings({ isPro }: MfaSettingsProps) {
               {activeFactor ? t('statusEnabled') : t('statusDisabled')}
             </p>
             {!activeFactor ? (
-              <Button 
-                variant="outline" 
-                size="sm" 
-                onClick={handleStartEnroll} 
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleStartEnroll}
                 disabled={busy}
                 className="font-bold text-xs"
               >
@@ -203,10 +201,10 @@ export function MfaSettings({ isPro }: MfaSettingsProps) {
                 {t('enable')}
               </Button>
             ) : (
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                onClick={handleDisable} 
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleDisable}
                 disabled={busy}
                 className="text-red-500 hover:text-red-600 hover:bg-red-50 font-bold text-xs"
               >
