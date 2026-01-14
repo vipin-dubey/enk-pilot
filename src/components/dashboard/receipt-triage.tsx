@@ -41,6 +41,7 @@ export function ReceiptTriage() {
   const [isSaving, setIsSaving] = useState(false)
   const [expandedYears, setExpandedYears] = useState<string[]>([])
   const [isDragging, setIsDragging] = useState(false)
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const supabase = createClient()
 
   useEffect(() => {
@@ -75,7 +76,7 @@ export function ReceiptTriage() {
     // Filter by search query (vendor or amount)
     if (searchQuery) {
       const query = searchQuery.toLowerCase()
-      filtered = filtered.filter(r => 
+      filtered = filtered.filter(r =>
         r.vendor?.toLowerCase().includes(query) ||
         r.amount?.toString().includes(query)
       )
@@ -112,7 +113,7 @@ export function ReceiptTriage() {
       const { data } = await supabase.storage
         .from('receipts')
         .createSignedUrl(receipt.storage_path, 3600) // 1 hour expiry
-      
+
       if (data?.signedUrl) {
         window.open(data.signedUrl, '_blank')
       }
@@ -148,8 +149,8 @@ export function ReceiptTriage() {
       if (error) throw error
 
       // Update local state
-      setReceipts(receipts.map(r => 
-        r.id === editingReceipt.id 
+      setReceipts(receipts.map(r =>
+        r.id === editingReceipt.id
           ? { ...r, vendor: editVendor, category: editCategory, amount: parsedAmount, mva_amount: parseFloat(editMva) || 0, receipt_date: editDate }
           : r
       ))
@@ -170,6 +171,13 @@ export function ReceiptTriage() {
   }
 
   const processFile = async (file: File) => {
+    setErrorMessage(null)
+    // 1. Size check (5MB)
+    const MAX_SIZE = 5 * 1024 * 1024 // 5MB
+    if (file.size > MAX_SIZE) {
+      setErrorMessage(locale === 'nb' ? 'Filen er for stor (maks 5MB)' : 'File is too large (max 5MB)')
+      return
+    }
 
     setIsProcessing(true)
     setStatus('processing')
@@ -178,30 +186,51 @@ export function ReceiptTriage() {
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) throw new Error('Unauthorized')
 
+      // 2. Quota check (10 per month)
+      const now = new Date()
+      const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).toISOString()
+
+      const { count, error: countError } = await supabase
+        .from('receipts')
+        .select('*', { count: 'exact', head: true })
+        .eq('user_id', user.id)
+        .gte('created_at', startOfMonth)
+
+      if (countError) throw countError
+
+      if (count !== null && count >= 10) {
+        setErrorMessage(locale === 'nb'
+          ? 'Du har nådd grensen på 10 kvitteringer denne måneden.'
+          : 'You have reached the limit of 10 receipts this month.')
+        setStatus('idle')
+        setIsProcessing(false)
+        return
+      }
+
       // Handle HEIC conversion (Native browser support only - works on Safari/Mac)
       if (file.name.toLowerCase().endsWith('.heic') || file.type === 'image/heic') {
         try {
           console.log('Attempting native HEIC conversion for:', file.name)
-          
+
           const convertedFile = await new Promise<File>((resolve, reject) => {
             const url = URL.createObjectURL(file!)
             const img = new Image()
-            
+
             img.onload = () => {
               try {
                 const canvas = document.createElement('canvas')
                 canvas.width = img.width
                 canvas.height = img.height
                 const ctx = canvas.getContext('2d')
-                
+
                 if (!ctx) {
                   URL.revokeObjectURL(url)
                   reject(new Error('Canvas context creation failed'))
                   return
                 }
-                
+
                 ctx.drawImage(img, 0, 0)
-                
+
                 canvas.toBlob((blob) => {
                   URL.revokeObjectURL(url)
                   if (!blob) {
@@ -209,8 +238,8 @@ export function ReceiptTriage() {
                     return
                   }
                   const newFile = new File(
-                    [blob], 
-                    file!.name.replace(/\.[^/.]+$/, "") + ".jpg", 
+                    [blob],
+                    file!.name.replace(/\.[^/.]+$/, "") + ".jpg",
                     { type: 'image/jpeg' }
                   )
                   resolve(newFile)
@@ -220,12 +249,12 @@ export function ReceiptTriage() {
                 reject(err)
               }
             }
-            
+
             img.onerror = () => {
               URL.revokeObjectURL(url)
               reject(new Error('Your browser does not support HEIC files. Please convert to JPG first or use Safari.'))
             }
-            
+
             img.src = url
           })
 
@@ -242,6 +271,25 @@ export function ReceiptTriage() {
       const { data: { text } } = await worker.recognize(file)
       await worker.terminate()
 
+      // 3. Content Validation
+      const lowercaseText = text.toLowerCase()
+      const receiptKeywords = [
+        'total', 'sum', 'mva', 'vat', 'org.nr', 'orgnr', 'kvittering', 'receipt',
+        'beløp', 'dato', 'date', 'kjøp', 'kr', 'nok', 'terminal: '
+      ]
+
+      const hasKeywords = receiptKeywords.some(keyword => lowercaseText.includes(keyword))
+      const hasEnoughText = text.length > 30
+
+      if (!hasKeywords || !hasEnoughText) {
+        setErrorMessage(locale === 'nb'
+          ? 'Bildet ser ikke ut som en gyldig kvittering. Vennligst last opp et bilde med tydelig tekst.'
+          : 'The image doesn\'t look like a valid receipt. Please upload an image with clear text.')
+        setStatus('error')
+        setIsProcessing(false)
+        return
+      }
+
       console.log('=== FULL OCR TEXT ===')
       console.log(text)
       console.log('=== END OCR TEXT ===')
@@ -253,7 +301,7 @@ export function ReceiptTriage() {
       // 3. Smart regex for total amount
       // First, try to find "TOTAL" or similar keywords followed by an amount
       let amount = 0
-      
+
       // Pattern 1: Look for TOTAL, SUM, TOTALT (Norwegian), etc. followed by amount
       // Handle various spacing and formatting issues from OCR
       const totalPatterns = [
@@ -269,7 +317,7 @@ export function ReceiptTriage() {
         // Fallback with more spacing tolerance
         /(?:TOTAL|TOTALT|Total|Totalt|fotalt)[:\s]*[^\d]*(\d+[\s,.]?\d{3}[.,]\d{2})/i,
       ]
-      
+
       for (const pattern of totalPatterns) {
         const match = text.match(pattern)
         if (match && match[1]) {
@@ -280,7 +328,7 @@ export function ReceiptTriage() {
           break
         }
       }
-      
+
       // Pattern 2: If no TOTAL found, look for amounts near "BankAxcept" or "Terminal" (payment section)
       if (amount === 0) {
         const bankPattern = /(?:BankAxcept|Terminal|Ci\s*hake)[^\d]*(\d+[\s,.]?\d{3}[.,]\d{2}|\d+[.,]\d{2})/i
@@ -291,7 +339,7 @@ export function ReceiptTriage() {
           console.log('Found amount near payment section:', amount)
         }
       }
-      
+
       // Pattern 3: If still no amount, look for the largest amount (likely the total)
       if (amount === 0) {
         const allAmounts = text.match(/\d+[\s,.]?\d{3}[.,]\d{2}|\d+[.,]\d{2}/g)
@@ -316,7 +364,7 @@ export function ReceiptTriage() {
           .eq('user_id', user.id)
           .eq('vendor', vendor)
           .limit(1)
-        
+
         if (historicalData && historicalData.length > 0) {
           category = historicalData[0].category
           console.log('Using historical category for vendor:', category)
@@ -342,13 +390,13 @@ export function ReceiptTriage() {
 
       // Safety check for NaN and apply smart MVA rates
       const finalAmount = isNaN(amount) ? 0 : amount
-      
+
       // Calculate MVA based on category-specific rates
       const mvaRate = CATEGORY_MVA_RATES[category] || 0.25
       const finalMva = isNaN(amount) ? 0 : (amount - (amount / (1 + mvaRate)))
 
       console.log('4. Saving metadata to DB...', { vendor, amount: finalAmount, date: receiptDate, mvaRate })
-      
+
       const insertData: any = {
         user_id: user.id,
         storage_path: storageData.path,
@@ -409,39 +457,41 @@ export function ReceiptTriage() {
     <div className="grid gap-6">
       <Card id="receipt-upload">
         <CardHeader className="pb-4">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div>
-            <CardTitle className="text-2xl font-bold font-outfit">{t('title')}</CardTitle>
-            <CardDescription>{t('description')}</CardDescription>
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div>
+              <CardTitle className="text-2xl font-bold font-outfit">{t('title')}</CardTitle>
+              <CardDescription>{t('description')}</CardDescription>
+            </div>
+            <div className="flex items-center gap-2 px-3 py-1.5 bg-emerald-50 rounded-full border border-emerald-100/50 self-start md:self-center">
+              <ShieldCheck className="h-3.5 w-3.5 text-emerald-600" />
+              <span className="text-[10px] font-black uppercase tracking-tight text-emerald-700">
+                {locale === 'nb' ? 'Privat & Sikker: Lokal skanning • EU-lagring' : 'Private & Secure: Local Scanning • EU Storage'}
+              </span>
+            </div>
           </div>
-          <div className="flex items-center gap-2 px-3 py-1.5 bg-emerald-50 rounded-full border border-emerald-100/50 self-start md:self-center">
-            <ShieldCheck className="h-3.5 w-3.5 text-emerald-600" />
-            <span className="text-[10px] font-black uppercase tracking-tight text-emerald-700">
-              {locale === 'nb' ? 'Privat & Sikker: Lokal skanning • EU-lagring' : 'Private & Secure: Local Scanning • EU Storage'}
-            </span>
-          </div>
-        </div>
-      </CardHeader>
+        </CardHeader>
         <CardContent>
-          <div 
+          <div
             className={cn(
               "flex flex-col items-center justify-center border-2 border-dashed rounded-xl p-12 transition-all duration-200 cursor-pointer relative overflow-hidden",
-              isDragging 
-                ? "border-blue-500 bg-blue-50/50 scale-[0.99] shadow-inner" 
-                : "border-slate-200 bg-slate-50/50 hover:bg-slate-50 hover:border-slate-300"
+              isDragging
+                ? "border-blue-500 bg-blue-50/50 scale-[0.99] shadow-inner"
+                : errorMessage
+                  ? "border-red-200 bg-red-50/30 hover:bg-red-50/40 hover:border-red-300"
+                  : "border-slate-200 bg-slate-50/50 hover:bg-slate-50 hover:border-slate-300"
             )}
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
             onDrop={handleDrop}
           >
-            <input 
-              type="file" 
-              accept="image/*,.heic" 
+            <input
+              type="file"
+              accept="image/*,.heic"
               onChange={handleFileUpload}
               className="absolute inset-0 opacity-0 cursor-pointer"
               disabled={isProcessing}
             />
-            
+
             {/* Animated Drag Indicator */}
             {isDragging && (
               <div className="absolute inset-0 pointer-events-none flex items-center justify-center bg-blue-500/5 animate-pulse">
@@ -452,12 +502,15 @@ export function ReceiptTriage() {
             <div className={cn(
               "flex h-14 w-14 items-center justify-center rounded-full shadow-sm mb-4 transition-transform duration-200",
               isDragging ? "bg-blue-600 scale-110 rotate-3" : "bg-white",
-              status === 'success' ? "bg-green-50" : ""
+              status === 'success' ? "bg-green-50" : "",
+              errorMessage ? "bg-red-50" : ""
             )}>
               {isProcessing ? (
                 <Loader2 className="h-7 w-7 text-blue-600 animate-spin" />
               ) : status === 'success' ? (
                 <Check className="h-7 w-7 text-green-600" />
+              ) : errorMessage ? (
+                <X className="h-7 w-7 text-red-600" />
               ) : isDragging ? (
                 <Upload className="h-7 w-7 text-white" />
               ) : (
@@ -468,11 +521,11 @@ export function ReceiptTriage() {
             <div className="text-center relative z-10">
               <p className={cn(
                 "font-bold text-lg mb-1 transition-colors",
-                isDragging ? "text-blue-700" : "text-slate-900"
+                isDragging ? "text-blue-700" : errorMessage ? "text-red-700" : "text-slate-900"
               )}>
-                {isProcessing ? t('processing') : isDragging ? "Drop your receipt here!" : t('dragDrop')}
+                {isProcessing ? t('processing') : isDragging ? "Drop your receipt here!" : errorMessage ? errorMessage : t('dragDrop')}
               </p>
-              <p className="text-sm text-slate-500 mb-6">PNG, JPG, HEIC up to 10MB</p>
+              <p className="text-sm text-slate-500 mb-6">PNG, JPG, HEIC up to 5MB • 10/month</p>
             </div>
 
             <div className={cn(
