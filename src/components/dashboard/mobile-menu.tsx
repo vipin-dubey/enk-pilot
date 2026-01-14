@@ -149,9 +149,9 @@ export function MobileMenu({ isPro, profile }: { isPro?: boolean, profile?: any 
                 {item.badge && (
                   <span className="text-[7px] font-black uppercase bg-blue-600 text-white px-1.5 py-0.5 rounded-full shadow-sm">{item.badge}</span>
                 )}
-                {'highlight' in item && item.highlight && (
+                {('highlight' in item && item.highlight) ? (
                   <span className="text-[8px] font-black uppercase bg-white text-blue-600 px-1.5 py-0.5 rounded-full">New</span>
-                )}
+                ) : null}
                 {!('highlight' in item && item.highlight) && !item.badge && <ChevronRight className="h-3.5 w-3.5 opacity-20" />}
               </Link>
             ))}
