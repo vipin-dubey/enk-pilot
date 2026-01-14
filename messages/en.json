@@ -457,11 +457,11 @@
     "hero": {
       "badge": "Modern Tax Safety for ENK",
       "title": "ENK Pilot",
-      "subtitle": "Never Get Tax Shocked as an ENK Again",
-      "description": "ENK Pilot shows you exactly how much tax and VAT you need to set aside – and how much is safe to spend – in real-time.",
+      "subtitle": "Finally Understand Your ENK Cashflow",
+      "description": "See how much you should reserve for tax and VAT — so you worry less and avoid tax surprises.",
       "cta1": "Join Free",
       "cta2": "See How It Works",
-      "builtInNorway": "Built in Norway for Norwegian sole proprietors. No commitment.",
+      "builtInNorway": "Built for ENK owners in Norway — designed around real tax rules and deadlines.",
       "safeToSpend": "Safe to Spend",
       "joinNow": "Join Now",
       "foundingSeats": "Limited Founding Seats remaining",
@@ -481,18 +481,18 @@
       "description": "ENK Pilot is a smart tax calculator and cash flow assistant for sole proprietors. You enter income and expenses, and it automatically calculates tax, VAT, and a safe buffer – so you always know what you can spend without getting into trouble with the Tax Authority."
     },
     "howItWorks": {
-      "title": "How ENK Pilot Works",
+      "title": "How It Helps You",
       "step1": {
-        "title": "Enter Income and Expenses",
-        "desc": "Connect your account or register income and costs manually. ENK Pilot understands Norwegian ENK finances – including VAT liability, prepaid tax, and deductions."
+        "title": "Capture your numbers",
+        "desc": "In one place — manual or automated."
       },
       "step2": {
-        "title": "Tax, VAT, and Buffer Calculated Automatically",
-        "desc": "Based on sole proprietor regulations, the tool calculates how much you should set aside for prepaid tax, bracket tax, and employer contributions where relevant. The rest goes into your virtual tax and VAT vault."
+        "title": "Ongoing clarity",
+        "desc": "About your tax and VAT liabilities."
       },
       "step3": {
-        "title": "You See Your 'Safe to Spend' Balance in Real-Time",
-        "desc": "ENK Pilot always shows you how much is safe to spend, after tax and VAT are set aside. No more surprises when the Tax Authority comes calling."
+        "title": "Spend comfortably",
+        "desc": "No surprise tax bills."
       }
     },
     "features": {
@@ -500,12 +500,12 @@
       "description": "Automated calculations and tools specifically designed for Norwegian sole proprietorships.",
       "bufferTitle": "Tax Buffer and 'Safe to Spend' Balance",
       "buffer1": "Tax buffer you can trust (based on Tax Authority rules)",
-      "buffer2": "See what you can actually spend – one simple balance",
-      "buffer3": "Automatic alerts when buffer gets too low",
+      "buffer2": "Avoid Guessing — Plan Ahead With Confidence",
+      "buffer3": "See a practical estimate of what you can use vs what you should set aside.",
       "bufferSource": "Based on Tax Authority rates",
       "receiptsTitle": "Receipt App for ENK – with AI",
-      "receiptsSubtitle": "Snap a Photo – Automatic Processing",
-      "receipts1": "Take photos of receipts directly in ENK Pilot",
+      "receiptsSubtitle": "Quick Receipt Capture",
+      "receipts1": "Take a photo of receipts and categorize them without hassle.",
       "receipts2": "Automatic extraction of amount, date, and vendor, with suggested category and VAT handling",
       "receiptsPrivacy": "Everything Happens in Your Browser",
       "receiptsPrivacy1": "All AI scanning runs locally – no receipt images sent out",
@@ -518,9 +518,9 @@
       "reminders1": "Alerts before prepaid tax and VAT submission",
       "reminders2": "Avoid the guilt of missing deadlines",
       "saftTitle": "Ready for Accountant and SAF-T",
-      "saftSubtitle": "Export Data in Seconds",
+      "saftSubtitle": "Easier Hand-Off to Accountant .",
       "saft1": "One click to format accountants understand",
-      "saft2": "SAF-T file where necessary",
+      "saft2": "Clean data for exports if you need professional help.",
       "supplementSubtitle": "Supplement to Fiken or Conta",
       "supplement1": "ENK Pilot doesn't replace accounting, but provides overview and clean data"
     },
@@ -610,8 +610,8 @@
     },
     "faq": {
       "title": "Frequently Asked <highlight>Questions</highlight>",
-      "q1": "Does ENK Pilot replace Fiken/Conta?",
-      "a1": "No – this is a supplement for overview and tax buffer.",
+      "q1": "What does ENK Pilot help with?",
+      "a1": "ENK Pilot helps you understand how much money you can safely use versus what should be set aside for tax and VAT during the year.\nIt focuses on financial overview and planning, not invoicing, bookkeeping, or official tax submissions.",
       "q2": "How do you calculate taxes?",
       "a2": "Based on Tax Authority rules for ENK: minimum tax, national insurance, bracket tax, VAT. Advanced calculator, not personal advice.",
       "q3": "Is it safe?",

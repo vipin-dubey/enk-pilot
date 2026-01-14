@@ -456,11 +456,11 @@
     "hero": {
       "badge": "Moderne skattesikkerhet for ENK",
       "title": "ENK Pilot",
-      "subtitle": "Aldri mer skattesjokk som ENK",
-      "description": "ENK Pilot viser deg nøyaktig hvor mye skatt og MVA du må sette av – og hvor mye som er trygt å bruke – i sanntid.",
+      "subtitle": "Endelig forstå din ENK-kontantstrøm",
+      "description": "Se hvor mye du bør sette av til skatt og MVA — slik at du bekymrer deg mindre og unngår skattesjokk.",
       "cta1": "Bli med gratis",
       "cta2": "Se hvordan det fungerer",
-      "builtInNorway": "Bygget i Norge for norske enkeltpersonforetak. Ingen bindingstid.",
+      "builtInNorway": "Bygget for ENK-eiere i Norge — designet rundt faktiske skatteregler og frister.",
       "safeToSpend": "Trygt å bruke",
       "joinNow": "Bli med nå",
       "foundingSeats": "Begrenset antall Grunnlegger-plasser igjen",
@@ -480,18 +480,18 @@
       "description": "ENK Pilot er en smart skattekalkulator og kontantstrøm-assistent for enkeltpersonforetak. Du legger inn inntekter og utgifter, så beregner verktøyet automatisk skatt, MVA og en trygg buffer – slik at du alltid vet hva du kan bruke uten å få problemer med Skatteetaten."
     },
     "howItWorks": {
-      "title": "Slik fungerer ENK Pilot",
+      "title": "Slik hjelper den deg",
       "step1": {
-        "title": "Legg inn inntekter og utgifter",
-        "desc": "Koble til kontoen din eller registrer inntekter og kostnader manuelt. ENK Pilot forstår norsk ENK-økonomi – inkludering MVA-plikt, forskuddsskatt og fradrag."
+        "title": "Samle tallene dine",
+        "desc": "På ett sted — manuelt eller automatisert."
       },
       "step2": {
-        "title": "Skatt, MVA og buffer beregnes automatisk",
-        "desc": "Basert på regelverket for enkeltpersonforetak beregner verktøyet hvor mye du bør sette av til forskuddsskatt, trinnskatt og arbeidsgiveravgift der det er relevant. Resten går inn i ditt virtuelle skatt- og MVA-hvelv."
+        "title": "Løpende oversikt",
+        "desc": "Over dine skatte- og MVA-forpliktelser."
       },
       "step3": {
-        "title": "Du ser 'trygt å bruke'-saldoen din i sanntid",
-        "desc": "ENK Pilot viser deg alltid hvor mye som er trygt å bruke, etter at skatt og MVA er satt av. Ingen flere overraskelser når Skatteetaten skal ha sitt."
+        "title": "Bruk penger trygt",
+        "desc": "Ingen overraskelser i skatten."
       }
     },
     "features": {
@@ -499,12 +499,12 @@
       "description": "Automatiserte beregninger og verktøy designet spesifikt for norske enkeltpersonforetak.",
       "bufferTitle": "Skattebuffer og 'trygt å bruke'-saldo",
       "buffer1": "Skattebuffer du kan stole på (basert på Skatteetaten-regler)",
-      "buffer2": "Se hva du faktisk kan bruke – én enkel saldo",
-      "buffer3": "Automatiske varsler når bufferen blir for lav",
+      "buffer2": "Unngå gjettelek — Planlegg med selvtillit",
+      "buffer3": "Se et praktisk estimat over hva du kan bruke kontra hva som bør settes av.",
       "bufferSource": "Basert på Skatteetaten sine satser",
       "receiptsTitle": "Kvitteringsapp for ENK – med AI",
-      "receiptsSubtitle": "Ta bilde – automatisk behandling",
-      "receipts1": "Ta bilde av kvitteringer direkte i ENK Pilot",
+      "receiptsSubtitle": "Enkel kvitteringshåndtering",
+      "receipts1": "Ta bilde av kvitteringer og kategoriser dem uten stress.",
       "receipts2": "Automatisk utlesing av beløp, dato og leverandør, med foreslått kategori og MVA-håndtering",
       "receiptsPrivacy": "Alt skjer i din nettleser",
       "receiptsPrivacy1": "All AI-skanning kjører lokalt – ingen kvitteringsbilder sendes ut",
@@ -517,9 +517,9 @@
       "reminders1": "Varsler før forskuddsskatt og MVA-innlevering",
       "reminders2": "Slippe å sitte med dårlig samvittighet",
       "saftTitle": "Klar for regnskapsfører og SAF-T",
-      "saftSubtitle": "Eksporter data på sekunder",
+      "saftSubtitle": "Enklere overlevering til regnskapsfører.",
       "saft1": "Ett klikk til format regnskapsfører forstår",
-      "saft2": "SAF-T-fil der det er nødvendig",
+      "saft2": "Ryddige eksportdata hvis du trenger profesjonell hjelp.",
       "supplementSubtitle": "Supplement til Fiken eller Conta",
       "supplement1": "ENK Pilot erstatter ikke regnskap, men gir oversikt og ryddige data"
     },
@@ -609,8 +609,8 @@
     },
     "faq": {
       "title": "Ofte stilte <highlight>spørsmål</highlight>",
-      "q1": "Erstatter ENK Pilot Fiken/Conta?",
-      "a1": "Nei – dette er et supplement for oversikt og skattbuffer.",
+      "q1": "Hva hjelper ENK Pilot med?",
+      "a1": "ENK Pilot hjelper deg å forstå hvor mye penger du trygt kan bruke kontra hva som bør settes av til skatt og MVA i løpet av året.\nDen fokuserer på økonomisk oversikt og planlegging, ikke fakturering, bokføring eller offisielle skattemeldinger.",
       "q2": "Hvordan beregner dere skatten?",
       "a2": "Basert på Skatteetaten-regler for ENK: minsteskatt, trygdeavgift, trinnskatt, MVA. Avansert kalkulator, ikke personlig rådgivning.",
       "q3": "Er det trygt?",

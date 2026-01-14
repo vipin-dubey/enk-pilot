@@ -269,7 +269,6 @@ export async function LandingPage({ locale, host: serverHost }: { locale: string
                             <div className="pt-4 border-t border-slate-50 space-y-4">
                                 <ListRow text={t('features.buffer2')} />
                                 <ListRow text={t('features.buffer3')} />
-                                <ListRow text={t('features.bufferSource')} />
                             </div>
                         </div>
 
@@ -285,8 +284,6 @@ export async function LandingPage({ locale, host: serverHost }: { locale: string
 
                             <div className="pt-4 border-t border-slate-50 space-y-4">
                                 <ListRow text={t('features.receipts1')} />
-                                <ListRow text={t('features.receipts2')} />
-                                <ListRow text={t('features.receiptsPrivacy')} />
                             </div>
                         </div>
 
@@ -318,9 +315,7 @@ export async function LandingPage({ locale, host: serverHost }: { locale: string
                             </p>
 
                             <div className="pt-4 border-t border-slate-50 space-y-4">
-                                <ListRow text={t('features.saft1')} />
                                 <ListRow text={t('features.saft2')} />
-                                <ListRow text={t('features.supplement1')} />
                             </div>
                         </div>
 
