@@ -157,7 +157,15 @@ export default async function DashboardPage({
                                         </span>
                                     </div>
                                 )}
-                                {(!profile?.plan_type || profile?.plan_type === 'free') && !profile?.is_founding_user && (
+                                {profile?.is_pro && !profile?.is_founding_user && (
+                                    <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 bg-blue-50 border border-blue-200 rounded-full shadow-sm animate-in fade-in zoom-in duration-500">
+                                        <Sparkles className="h-3 w-3 text-blue-600" />
+                                        <span className="text-[10px] font-bold text-blue-700 uppercase tracking-wider">
+                                            {t('proAccount')}
+                                        </span>
+                                    </div>
+                                )}
+                                {(!profile?.plan_type || profile?.plan_type === 'free') && !profile?.is_founding_user && !profile?.is_pro && (
                                     <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 bg-slate-50 border border-slate-200 rounded-full shadow-sm animate-in fade-in zoom-in duration-500">
                                         <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">
                                             {tCommon('freePlan')}
@@ -196,7 +204,7 @@ export default async function DashboardPage({
                     </div>
                 </header>
 
-                <main className="container mx-auto px-4 pt-8 pb-4 max-w-6xl">
+                <main className="container mx-auto px-4 pt-3 md:pt-8 pb-4 max-w-6xl">
                     {(message || restored === 'true') && (
                         <div className="mb-6 p-4 bg-emerald-50 border border-emerald-200 rounded-xl flex items-center gap-3 text-emerald-700 animate-in fade-in slide-in-from-top-4 duration-500">
                             <ShieldCheck className="h-5 w-5" />
@@ -205,12 +213,15 @@ export default async function DashboardPage({
                             </p>
                         </div>
                     )}
-                    <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-6">
+                    <div className="flex flex-col md:flex-row md:items-end justify-between mb-2 md:mb-8 gap-6">
                         <div className="flex items-start justify-between w-full md:w-auto gap-4">
                             <div className="space-y-1">
-                                <h2 className="text-3xl font-bold tracking-tight text-slate-900 font-outfit">
-                                    {t('title')}
-                                </h2>
+                                <div className="flex items-center gap-3">
+                                    <h2 className="text-3xl font-bold tracking-tight text-slate-900 font-outfit">
+                                        {t('title')}
+                                    </h2>
+                                    <DashboardHeaderActions />
+                                </div>
                                 <p className="text-slate-500 text-sm md:text-base truncate max-w-[200px] xs:max-w-none">
                                     {t('welcome', { name: profile?.full_name || user!.email?.split('@')[0] })}
                                 </p>
@@ -225,17 +236,9 @@ export default async function DashboardPage({
                             </div>
                         </div>
 
-                        <div className="flex flex-col items-center md:items-end gap-3">
-                            <DashboardHeaderActions />
-
+                        <div className="flex flex-col items-center md:items-end gap-3 px-4 md:px-0">
                             <div className="flex flex-col items-center md:items-end gap-4">
-                                {profile?.is_pro && (
-                                    <div className="flex items-center gap-2">
-                                        <span className="inline-flex items-center rounded-full bg-blue-50 px-3 py-1 text-xs font-bold text-blue-700 ring-1 ring-inset ring-blue-700/10">
-                                            {t('proAccount')}
-                                        </span>
-                                    </div>
-                                )}
+                                {/* Pro badge moved to header */}
                                 {/* Upgrade card removed - service is free */}
                             </div>
                         </div>
@@ -267,7 +270,7 @@ export default async function DashboardPage({
                                 />
                             ),
                             safeToSpend: (
-                                <div className="space-y-6">
+                                <>
                                     <SafeToSpendCalculator
                                         initialTaxRate={profile?.tax_rate_percent}
                                         isMvaRegistered={profile?.is_mva_registered}
@@ -285,14 +288,14 @@ export default async function DashboardPage({
                                     />
                                     <DeductionOptimizer />
                                     {profile?.is_mva_registered && <MvaSummary />}
-                                </div>
+                                </>
                             ),
                             deadlines: <DeadlineTracker />,
                             receipts: (
-                                <div className="space-y-6">
+                                <>
                                     <ReceiptAnalytics />
                                     <ReceiptTriage />
-                                </div>
+                                </>
                             ),
                             history: (
                                 <TransactionJournal
@@ -308,7 +311,7 @@ export default async function DashboardPage({
                                     seatsLeft={seatsLeft}
                                     percentFull={percentFull}
                                 />
-                            )
+                            ),
                         }}
                     </DashboardTabs>
 

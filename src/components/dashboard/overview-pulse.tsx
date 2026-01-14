@@ -54,7 +54,7 @@ export function OverviewPulse({
     const dashArrayValue = Math.round(safePercentage * 283) // 283 is approx circumference
 
     return (
-        <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
+        <div className="space-y-4 md:space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 {/* Main Gauge Card */}
                 <Card className="lg:col-span-2 overflow-hidden border-none shadow-xl bg-gradient-to-br from-white to-slate-50/50 relative group">
@@ -62,8 +62,8 @@ export function OverviewPulse({
                         <TrendingUp className="h-32 w-32 text-blue-600" />
                     </div>
 
-                    <CardContent className="p-8 lg:p-12">
-                        <div className="flex flex-col md:flex-row items-center gap-12">
+                    <CardContent className="px-6 py-4 sm:p-8 lg:p-12">
+                        <div className="flex flex-col md:flex-row items-center gap-4 md:gap-12">
                             <div className="relative w-64 h-64 shrink-0">
                                 {/* Gauge SVG - Restored to original exactly */}
                                 <svg className="w-full h-full transform -rotate-90 drop-shadow-sm">
@@ -85,20 +85,20 @@ export function OverviewPulse({
                                     <span className="text-lg sm:text-xl lg:text-2xl font-black font-outfit text-slate-900 tracking-tighter leading-none whitespace-nowrap">
                                         {formatCurrency(totalSafeToSpend)}
                                     </span>
-                                    <div className="mt-4 flex items-center gap-2 px-3 py-1 bg-emerald-50 rounded-full border border-emerald-100 shadow-sm">
+                                    <div className="mt-2 sm:mt-4 flex items-center gap-2 px-3 py-1 bg-emerald-50 rounded-full border border-emerald-100 shadow-sm">
                                         <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
                                         <span className="text-[10px] font-bold text-emerald-600 uppercase tracking-tighter">Real-time</span>
                                     </div>
                                 </div>
                             </div>
 
-                            <div className="flex-1 w-full space-y-8">
+                            <div className="flex-1 w-full space-y-4 md:space-y-8">
                                 <div className="space-y-1">
                                     <h3 className="text-2xl font-black font-outfit text-slate-900 tracking-tight">{t('businessHealth')}</h3>
                                     <p className="text-slate-500 font-medium text-sm">{t('healthDescription')}</p>
                                 </div>
 
-                                <div className="grid grid-cols-2 gap-8">
+                                <div className="grid grid-cols-2 gap-4 sm:gap-8">
                                     <div className="space-y-2">
                                         <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{t('ytdProfit')}</p>
                                         <div className="flex items-baseline gap-2">
@@ -115,7 +115,7 @@ export function OverviewPulse({
                                     </div>
                                 </div>
 
-                                <div className="pt-6 border-t border-slate-100 flex gap-6">
+                                <div className="pt-3 sm:pt-6 border-t border-slate-100 flex gap-6">
                                     <div className="flex flex-col">
                                         <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">{t('taxReserved')}</span>
                                         <span className="font-bold text-blue-600">{formatCurrency(totalTaxReserved)}</span>

@@ -46,7 +46,7 @@ export function DashboardTabs({ children, sharedContent }: DashboardTabsProps) {
   }, [])
 
   return (
-    <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6 md:space-y-8 text-slate-900">
+    <Tabs value={activeTab} onValueChange={setActiveTab} className="text-slate-900 flex flex-col gap-1.5 md:gap-8">
       <div className="flex items-center justify-between bg-white/90 backdrop-blur-sm p-1 md:p-1.5 rounded-2xl md:rounded-xl border border-slate-200/60 shadow-sm sticky top-2 z-10 mx-auto w-full max-w-full overflow-hidden">
         <div className="overflow-x-auto scrollbar-hide flex-1">
           <TabsList className="bg-transparent border-none h-11 md:h-10 flex w-max md:w-full justify-start md:justify-start px-2 md:px-0 gap-1 md:gap-0">
@@ -81,11 +81,7 @@ export function DashboardTabs({ children, sharedContent }: DashboardTabsProps) {
         </div>
       </div>
 
-      {sharedContent && (
-        <div className="animate-in fade-in slide-in-from-top-4 duration-500">
-          {sharedContent}
-        </div>
-      )}
+      {sharedContent}
 
       <TabsContent value="overview" className="mt-0 border-none p-0 focus-visible:ring-0">
         {children.overview}

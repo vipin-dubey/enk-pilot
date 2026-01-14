@@ -188,7 +188,7 @@ export function SafeToSpendCalculator({
   const currentProfit = (ytdGrossIncome + externalSalary) - ytdExpenses;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 md:space-y-6">
       {/* Redesigned MVA Warning Card */}
       {calculations.crossesMvaThreshold && (
         <Card className="overflow-hidden border-l-4 border-l-amber-500 border-amber-100 bg-gradient-to-br from-amber-50/50 to-white shadow-md animate-in fade-in slide-in-from-top-4 duration-500">
@@ -253,7 +253,7 @@ export function SafeToSpendCalculator({
         <Card className="md:col-span-2 lg:col-span-3 border-none shadow-none bg-transparent">
           <CardContent className="p-0">
             <div className="grid gap-4 md:gap-6 md:grid-cols-2 items-start">
-              <div className="space-y-4 bg-white border rounded-xl p-6 shadow-sm flex flex-col">
+              <div className="space-y-4 bg-white border rounded-xl p-4 sm:p-6 shadow-sm flex flex-col">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4 gap-4">
                   <div className="space-y-1">
                     <h3 className="text-lg font-bold font-outfit flex items-center gap-2 whitespace-nowrap">
@@ -400,7 +400,7 @@ export function SafeToSpendCalculator({
               </div>
 
               {/* Context Summary Box */}
-              <div className="bg-slate-900 text-white border rounded-xl p-6 shadow-sm flex flex-col">
+              <div className="bg-slate-900 text-white border rounded-xl p-4 sm:p-6 shadow-sm flex flex-col">
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-2 text-slate-400">
                     <Info className="h-4 w-4" />

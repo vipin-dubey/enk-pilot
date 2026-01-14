@@ -325,11 +325,11 @@ export function TransactionJournal({ isPro = false, trialExportsUsed = 0, seatsL
             <CardTitle className="text-xl font-bold font-outfit text-slate-900">{t('title')}</CardTitle>
             <CardDescription className="text-slate-500">{t('description')}</CardDescription>
           </div>
-          <div className="flex flex-col items-end gap-1.5">
+          <div className="flex flex-col items-center md:items-end gap-1.5 w-full md:w-auto">
             <Button
               variant={(!isPro && trialExportsUsed >= 1) ? "secondary" : "default"}
               size="sm"
-              className={`gap-2 font-bold shadow-md transition-all h-10 ${(!isPro && trialExportsUsed >= 1) ? 'bg-slate-100 text-slate-500 hover:bg-slate-200' : 'bg-slate-900 hover:bg-black text-white'}`}
+              className={`w-full md:w-auto gap-2 font-bold shadow-md transition-all h-10 ${(!isPro && trialExportsUsed >= 1) ? 'bg-slate-100 text-slate-500 hover:bg-slate-200' : 'bg-slate-900 hover:bg-black text-white'}`}
               onClick={handleExport}
               disabled={isExporting}
             >
@@ -350,7 +350,7 @@ export function TransactionJournal({ isPro = false, trialExportsUsed = 0, seatsL
               )}
             </Button>
             {!isPro && trialExportsUsed >= 1 && (
-              <p className="text-[10px] text-slate-400 font-bold uppercase tracking-tight text-right flex items-center gap-1">
+              <p className="text-[10px] text-slate-400 font-bold uppercase tracking-tight text-center md:text-right flex items-center justify-center md:justify-end gap-1 w-full">
                 <FileBox className="h-3 w-3" />
                 {locale === 'nb'
                   ? 'Lås opp SAF-T koder & regnskapsformater'
@@ -372,17 +372,17 @@ export function TransactionJournal({ isPro = false, trialExportsUsed = 0, seatsL
               className="pl-10 h-10 border-slate-200"
             />
           </div>
-          <div className="flex bg-slate-100 rounded-lg p-1 border shadow-inner self-start">
+          <div className="flex bg-slate-100 rounded-lg p-1 border shadow-inner w-full md:w-auto">
             <button
               onClick={() => setTypeFilter('all')}
-              className={`px-4 py-1.5 text-xs font-bold rounded-md transition-all ${typeFilter === 'all' ? "bg-white text-slate-900 shadow-sm" : "text-slate-500 hover:text-slate-900"
+              className={`flex-1 md:flex-none px-4 py-1.5 text-xs font-bold rounded-md transition-all ${typeFilter === 'all' ? "bg-white text-slate-900 shadow-sm" : "text-slate-500 hover:text-slate-900"
                 }`}
             >
               All
             </button>
             <button
               onClick={() => setTypeFilter('income')}
-              className={`px-4 py-1.5 text-xs font-bold rounded-md transition-all flex items-center gap-1.5 ${typeFilter === 'income' ? "bg-emerald-600 text-white shadow-sm" : "text-slate-500 hover:text-emerald-600"
+              className={`flex-1 md:flex-none px-4 py-1.5 text-xs font-bold rounded-md transition-all flex items-center justify-center gap-1.5 ${typeFilter === 'income' ? "bg-emerald-600 text-white shadow-sm" : "text-slate-500 hover:text-emerald-600"
                 }`}
             >
               <ArrowUpRight className="h-3 w-3" />
@@ -390,7 +390,7 @@ export function TransactionJournal({ isPro = false, trialExportsUsed = 0, seatsL
             </button>
             <button
               onClick={() => setTypeFilter('expense')}
-              className={`px-4 py-1.5 text-xs font-bold rounded-md transition-all flex items-center gap-1.5 ${typeFilter === 'expense' ? "bg-amber-600 text-white shadow-sm" : "text-slate-500 hover:text-amber-600"
+              className={`flex-1 md:flex-none px-4 py-1.5 text-xs font-bold rounded-md transition-all flex items-center justify-center gap-1.5 ${typeFilter === 'expense' ? "bg-amber-600 text-white shadow-sm" : "text-slate-500 hover:text-amber-600"
                 }`}
             >
               <ArrowDownRight className="h-3 w-3" />
@@ -398,19 +398,19 @@ export function TransactionJournal({ isPro = false, trialExportsUsed = 0, seatsL
             </button>
           </div>
 
-          <div className="flex-1 flex flex-col items-end gap-1">
+          <div className="flex-1 flex flex-col items-center md:items-end gap-1 w-full md:w-auto">
             <Button
               variant="ghost"
               size="sm"
               onClick={() => setShowAccountantView(!showAccountantView)}
-              className={`gap-2 font-bold transition-all h-9 ${showAccountantView ? 'bg-blue-50 text-blue-700 hover:bg-blue-100 ring-1 ring-blue-200' : 'text-slate-400 hover:text-slate-900'}`}
+              className={`w-full md:w-auto gap-2 font-bold transition-all h-9 ${showAccountantView ? 'bg-blue-50 text-blue-700 hover:bg-blue-100 ring-1 ring-blue-200' : 'text-slate-400 hover:text-slate-900'}`}
             >
               <FileBox className="h-4 w-4" />
               {locale === 'nb' ? 'Regnskap-visning' : 'Accountant View'}
               {showAccountantView && <Badge className="bg-blue-600 text-white border-none ml-1 text-[8px] h-4 px-1 uppercase tracking-tighter shadow-sm">SAF-T</Badge>}
             </Button>
             {showAccountantView && (
-              <p className="text-[9px] text-blue-600/60 font-medium tracking-tight animate-in fade-in slide-in-from-right-1">
+              <p className="text-[9px] text-blue-600/60 font-medium tracking-tight animate-in fade-in slide-in-from-top-1 md:slide-in-from-right-1 text-center md:text-right w-full">
                 {locale === 'nb'
                   ? 'Viser offisielle SAF-T koder for Skatteetaten'
                   : 'Showing official SAF-T codes for Tax Authorities'}
