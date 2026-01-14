@@ -241,7 +241,15 @@ export default async function DashboardPage({
                         </div>
                     </div>
 
-                    <DashboardTabs>
+                    <DashboardTabs
+                        sharedContent={
+                            <SmartTaxAssistant
+                                isPro={profile?.is_pro}
+                                seatsLeft={seatsLeft}
+                                percentFull={percentFull}
+                            />
+                        }
+                    >
                         {{
                             overview: (
                                 <OverviewPulse
@@ -260,11 +268,6 @@ export default async function DashboardPage({
                             ),
                             safeToSpend: (
                                 <div className="space-y-6">
-                                    <SmartTaxAssistant
-                                        isPro={profile?.is_pro}
-                                        seatsLeft={seatsLeft}
-                                        percentFull={percentFull}
-                                    />
                                     <SafeToSpendCalculator
                                         initialTaxRate={profile?.tax_rate_percent}
                                         isMvaRegistered={profile?.is_mva_registered}

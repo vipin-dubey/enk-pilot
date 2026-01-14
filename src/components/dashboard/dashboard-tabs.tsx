@@ -7,6 +7,7 @@ import { useTranslations } from 'next-intl'
 import { DashboardHeaderActions } from './header-actions'
 
 interface DashboardTabsProps {
+  sharedContent?: React.ReactNode
   children: {
     overview: React.ReactNode
     safeToSpend: React.ReactNode
@@ -17,7 +18,7 @@ interface DashboardTabsProps {
   }
 }
 
-export function DashboardTabs({ children }: DashboardTabsProps) {
+export function DashboardTabs({ children, sharedContent }: DashboardTabsProps) {
   const tTabs = useTranslations('tabs')
   const [activeTab, setActiveTab] = useState('overview')
 
@@ -79,6 +80,12 @@ export function DashboardTabs({ children }: DashboardTabsProps) {
           </TabsList>
         </div>
       </div>
+
+      {sharedContent && (
+        <div className="animate-in fade-in slide-in-from-top-4 duration-500">
+          {sharedContent}
+        </div>
+      )}
 
       <TabsContent value="overview" className="mt-0 border-none p-0 focus-visible:ring-0">
         {children.overview}
