@@ -40,3 +40,29 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Android / IntelliJ
+/android/.gradle/
+/android/local.properties
+/android/.idea/
+/android/.idea/caches/
+/android/.idea/libraries/
+/android/.idea/modules.xml
+/android/.idea/workspace.xml
+/android/.idea/navEditor.xml
+/android/.idea/assetWizardSettings.xml
+/android/*.iml
+/android/build/
+/android/*/build/
+/android/*.jks
+/android/*.p12
+/android/*.key
+/android/captures/
+/android/.externalNativeBuild/
+/android/.cxx/
+/android/google-services.json
+
+# Kotlin-specific
+*.stackdump
+.kotlin/
+
