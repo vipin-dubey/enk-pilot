@@ -9,10 +9,11 @@ import com.enkpilot.app.data.entities.TransactionEntry
 import net.zetetic.database.sqlcipher.SQLiteDatabase
 import net.zetetic.database.sqlcipher.SupportOpenHelperFactory
 
-@Database(entities = [TransactionEntry::class, BusinessProfile::class], version = 2, exportSchema = true)
+@Database(entities = [TransactionEntry::class, BusinessProfile::class, com.enkpilot.app.data.entities.DeadlineEntry::class], version = 3, exportSchema = true)
 abstract class VaultDatabase : RoomDatabase() {
 
     abstract fun vaultDao(): VaultDao
+    abstract fun deadlineDao(): com.enkpilot.app.data.dao.DeadlineDao
 
     companion object {
         @Volatile

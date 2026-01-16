@@ -1,6 +1,7 @@
 package com.enkpilot.app.ui.settings
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -25,11 +26,11 @@ fun SettingsScreen(onNavigateToEnkProfile: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Slate50.copy(alpha = 0.5f))
+            .background(MaterialTheme.colorScheme.background)
     ) {
         // Header
         Surface(
-            color = Color.White,
+            color = Color.Transparent,
             tonalElevation = 0.dp,
             modifier = Modifier.fillMaxWidth()
         ) {
@@ -38,12 +39,12 @@ fun SettingsScreen(onNavigateToEnkProfile: () -> Unit) {
                     "Innstillinger",
                     style = MaterialTheme.typography.headlineMedium,
                     fontWeight = FontWeight.Black,
-                    color = Slate900
+                    color = MaterialTheme.colorScheme.onSurface
                 )
                 Text(
                     "Administrer din profil og app-innstillinger",
                     style = MaterialTheme.typography.bodySmall,
-                    color = Slate500
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
         }
@@ -78,19 +79,19 @@ fun SettingsCategory(title: String, items: List<SettingsItem>) {
             title.uppercase(),
             style = MaterialTheme.typography.labelSmall,
             fontWeight = FontWeight.Black,
-            color = Slate400,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
             letterSpacing = 1.sp
         )
         Surface(
             shape = RoundedCornerShape(20.dp),
-            color = Color.White,
-            border = androidx.compose.foundation.BorderStroke(1.dp, Slate100)
+            color = Color.Transparent,
+            border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f))
         ) {
             Column {
                 items.forEachIndexed { index, item ->
                     SettingsRow(item)
                     if (index < items.size - 1) {
-                        Divider(color = Slate50, modifier = Modifier.padding(horizontal = 16.dp))
+                        HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.2f), modifier = Modifier.padding(horizontal = 16.dp))
                     }
                 }
             }
@@ -110,13 +111,14 @@ fun SettingsRow(item: SettingsItem) {
         Box(
             modifier = Modifier
                 .size(36.dp)
-                .background(if (item.enabled) Blue50 else Slate50, CircleShape),
+                .background(Color.Transparent, CircleShape)
+                .border(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f), CircleShape),
             contentAlignment = Alignment.Center
         ) {
             Icon(
                 item.icon, 
                 null, 
-                tint = if (item.enabled) Blue600 else Slate400, 
+                tint = if (item.enabled) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant, 
                 modifier = Modifier.size(18.dp)
             )
         }
@@ -126,25 +128,26 @@ fun SettingsRow(item: SettingsItem) {
                 item.title, 
                 style = MaterialTheme.typography.bodyMedium, 
                 fontWeight = FontWeight.Bold,
-                color = if (item.enabled) Slate900 else Slate400
+                color = if (item.enabled) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurfaceVariant
             )
             Text(
                 item.subtitle, 
                 style = MaterialTheme.typography.labelSmall, 
-                color = Slate400
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
         if (item.enabled) {
-            Icon(Icons.Default.ChevronRight, null, tint = Slate300, modifier = Modifier.size(20.dp))
+            Icon(Icons.Default.ChevronRight, null, tint = MaterialTheme.colorScheme.outline, modifier = Modifier.size(20.dp))
         } else {
             Surface(
-                color = Slate100,
-                shape = RoundedCornerShape(4.dp)
+                color = Color.Transparent,
+                shape = RoundedCornerShape(4.dp),
+                border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f))
             ) {
                 Text(
                     "Snart", 
                     modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
-                    style = TextStyle(fontSize = 8.sp, fontWeight = FontWeight.Bold, color = Slate400)
+                    style = TextStyle(fontSize = 8.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 )
             }
         }

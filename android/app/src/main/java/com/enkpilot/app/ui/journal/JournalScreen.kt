@@ -1,6 +1,9 @@
 package com.enkpilot.app.ui.journal
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -31,60 +34,29 @@ fun JournalScreen(viewModel: JournalViewModel) {
     val typeFilter by viewModel.typeFilter.collectAsState()
     val showAccountantView by viewModel.showAccountantView.collectAsState()
 
+    var transactionToEdit by remember { mutableStateOf<com.enkpilot.app.data.entities.TransactionEntry?>(null) }
+    var transactionToDelete by remember { mutableStateOf<com.enkpilot.app.data.entities.TransactionEntry?>(null) }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
     ) {
-        // Header
-        Surface(
-            color = MaterialTheme.colorScheme.surface,
-            tonalElevation = 0.dp
-        ) {
-            Column(modifier = Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Column(modifier = Modifier.weight(1f)) {
-                        Text(
-                            "Transaksjonsjournal",
-                            style = MaterialTheme.typography.headlineSmall,
-                            fontWeight = FontWeight.Black,
-                            color = Slate900
-                        )
-                        Text(
-                            "En kronologisk oversikt over alt registrert",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = Slate500
-                        )
-                    }
-                    Button(
-                        onClick = { viewModel.exportTransactions() },
-                        colors = ButtonDefaults.buttonColors(containerColor = Slate900),
-                        shape = RoundedCornerShape(12.dp),
-                        contentPadding = PaddingValues(horizontal = 12.dp, vertical = 8.dp)
-                    ) {
-                        Icon(Icons.Default.Download, null, modifier = Modifier.size(16.dp))
-                        Spacer(Modifier.width(8.dp))
-                        Text("Eksport", style = MaterialTheme.typography.labelMedium)
-                    }
-                }
-
-                TextField(
+        // Search and Filters
+        Column(modifier = Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
+                OutlinedTextField(
                     value = searchQuery,
                     onValueChange = { viewModel.setSearchQuery(it) },
                     modifier = Modifier.fillMaxWidth(),
-                    placeholder = { Text("Søk på butikk eller beløp...", color = Slate400, fontSize = 14.sp) },
-                    leadingIcon = { Icon(Icons.Default.Search, contentDescription = null, tint = Slate400, modifier = Modifier.size(20.dp)) },
+                    placeholder = { Text("Søk på butikk eller beløp...", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp) },
+                    leadingIcon = { Icon(Icons.Default.Search, contentDescription = null, tint = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.size(20.dp)) },
                     singleLine = true,
                     shape = RoundedCornerShape(16.dp),
-                    colors = TextFieldDefaults.colors(
-                        focusedContainerColor = Slate100,
-                        unfocusedContainerColor = Slate100,
-                        focusedIndicatorColor = Color.Transparent,
-                        unfocusedIndicatorColor = Color.Transparent,
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedContainerColor = Color.Transparent,
+                        unfocusedContainerColor = Color.Transparent,
+                        focusedBorderColor = MaterialTheme.colorScheme.primary,
+                        unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)
                     )
                 )
                 
@@ -95,8 +67,9 @@ fun JournalScreen(viewModel: JournalViewModel) {
                 ) {
                     // Type Filters
                     Surface(
-                        color = Slate100,
+                        color = Color.Transparent,
                         shape = RoundedCornerShape(12.dp),
+                        border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)),
                         modifier = Modifier.padding(vertical = 4.dp)
                     ) {
                         Row(modifier = Modifier.padding(4.dp)) {
@@ -106,24 +79,29 @@ fun JournalScreen(viewModel: JournalViewModel) {
                         }
                     }
 
-                    // Accountant Toggle
-                    IconButton(onClick = { viewModel.toggleAccountantView() }) {
-                        Icon(
-                            Icons.Default.Description, 
-                            null, 
-                            tint = if (showAccountantView) Blue600 else Slate400,
-                            modifier = Modifier.size(24.dp)
-                        )
+                    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                        // Export Button
+                        IconButton(onClick = { viewModel.exportTransactions() }) {
+                            Icon(Icons.Default.Download, null, tint = MaterialTheme.colorScheme.onSurface, modifier = Modifier.size(24.dp))
+                        }
+                        // Accountant Toggle
+                        IconButton(onClick = { viewModel.toggleAccountantView() }) {
+                            Icon(
+                                Icons.Default.Description, 
+                                null, 
+                                tint = if (showAccountantView) Blue600 else MaterialTheme.colorScheme.onSurfaceVariant,
+                                modifier = Modifier.size(24.dp)
+                            )
+                        }
                     }
                 }
-            }
         }
 
         if (transactions.isEmpty()) {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                    Icon(Icons.Default.History, "", modifier = Modifier.size(48.dp), tint = Slate200)
-                    Text("Ingen transaksjoner funnet", color = Slate500, style = MaterialTheme.typography.bodyLarge)
+                    Icon(Icons.Default.History, "", modifier = Modifier.size(48.dp), tint = MaterialTheme.colorScheme.outlineVariant)
+                    Text("Ingen transaksjoner funnet", color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.bodyLarge)
                 }
             }
         } else {
@@ -141,11 +119,53 @@ fun JournalScreen(viewModel: JournalViewModel) {
                             MonthHeader(month = "$month $year")
                         }
                         items(monthTransactions) { transaction ->
-                            JournalItem(transaction = transaction, showAccountantInfo = showAccountantView)
+                            JournalItem(
+                                transaction = transaction,
+                                showAccountantInfo = showAccountantView,
+                                onEdit = { transactionToEdit = it },
+                                onDelete = { transactionToDelete = it }
+                            )
                         }
                     }
                 }
             }
+        }
+
+        // Edit Dialog
+        transactionToEdit?.let { transaction ->
+            com.enkpilot.app.ui.shared.EditTransactionDialog(
+                transaction = transaction,
+                onDismiss = { transactionToEdit = null },
+                onSave = { 
+                    viewModel.updateTransaction(it)
+                    transactionToEdit = null
+                }
+            )
+        }
+
+        // Delete Confirmation Dialog
+        transactionToDelete?.let { transaction ->
+            AlertDialog(
+                onDismissRequest = { transactionToDelete = null },
+                title = { Text("Slett transaksjon") },
+                text = { Text("Er du sikker på at du vil slette denne transaksjonen fra ${transaction.vendor}?") },
+                confirmButton = {
+                    TextButton(
+                        onClick = {
+                            viewModel.deleteTransaction(transaction)
+                            transactionToDelete = null
+                        },
+                        colors = ButtonDefaults.textButtonColors(contentColor = Color.Red)
+                    ) {
+                        Text("Slett")
+                    }
+                },
+                dismissButton = {
+                    TextButton(onClick = { transactionToDelete = null }) {
+                        Text("Avbryt")
+                    }
+                }
+            )
         }
     }
 }
@@ -154,7 +174,7 @@ fun JournalScreen(viewModel: JournalViewModel) {
 fun FilterSegment(label: String, selected: Boolean, icon: androidx.compose.ui.graphics.vector.ImageVector? = null, iconColor: Color = Color.Unspecified, onClick: () -> Unit) {
     Surface(
         onClick = onClick,
-        color = if (selected) Color.White else Color.Transparent,
+        color = if (selected) MaterialTheme.colorScheme.surface else Color.Transparent,
         shape = RoundedCornerShape(8.dp),
         shadowElevation = if (selected) 2.dp else 0.dp
     ) {
@@ -164,14 +184,14 @@ fun FilterSegment(label: String, selected: Boolean, icon: androidx.compose.ui.gr
             horizontalArrangement = Arrangement.Center
         ) {
             if (icon != null) {
-                Icon(icon, null, tint = if (selected) iconColor else Slate400, modifier = Modifier.size(12.dp))
+                Icon(icon, null, tint = if (selected) iconColor else MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.size(12.dp))
                 Spacer(Modifier.width(4.dp))
             }
             Text(
                 label, 
                 style = MaterialTheme.typography.labelSmall, 
                 fontWeight = if (selected) FontWeight.Bold else FontWeight.Medium,
-                color = if (selected) Slate900 else Slate500
+                color = if (selected) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
     }
@@ -182,7 +202,7 @@ fun MonthHeader(month: String) {
     Text(
         text = month.uppercase(),
         style = MaterialTheme.typography.labelSmall,
-        color = Slate400,
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
         fontWeight = FontWeight.Black,
         modifier = Modifier
             .fillMaxWidth()
@@ -191,31 +211,45 @@ fun MonthHeader(month: String) {
     )
 }
 
+@OptIn(androidx.compose.foundation.ExperimentalFoundationApi::class)
 @Composable
-fun JournalItem(transaction: TransactionEntry, showAccountantInfo: Boolean) {
+fun JournalItem(
+    transaction: TransactionEntry,
+    showAccountantInfo: Boolean,
+    onEdit: (TransactionEntry) -> Unit,
+    onDelete: (TransactionEntry) -> Unit
+) {
+    var showMenu by remember { mutableStateOf(false) }
+
     Surface(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 12.dp, vertical = 4.dp),
+            .padding(horizontal = 12.dp, vertical = 4.dp)
+            .combinedClickable(
+                onClick = { /* Could show details */ },
+                onLongClick = { showMenu = true }
+            ),
         shape = RoundedCornerShape(16.dp),
-        color = MaterialTheme.colorScheme.surface,
-        border = androidx.compose.foundation.BorderStroke(1.dp, Slate100)
+        color = Color.Transparent,
+        border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f))
     ) {
-        Row(
-            modifier = Modifier.padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
+        Box {
+            Row(
+                modifier = Modifier.padding(16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
             val isIncome = transaction.type == TransactionType.INCOME
             Box(
                 modifier = Modifier
                     .size(40.dp)
-                    .background(if (isIncome) Color(0xFFECFDF5) else Slate50, CircleShape),
+                    .background(if (isIncome) Color(0xFF10B981).copy(alpha = 0.1f) else Color.Transparent, CircleShape)
+                    .then(if (!isIncome) Modifier.border(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f), CircleShape) else Modifier),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
                     if (isIncome) Icons.Default.ArrowUpward else Icons.Default.Receipt, 
                     "", 
-                    tint = if (isIncome) Color(0xFF10B981) else Slate500, 
+                    tint = if (isIncome) Color(0xFF10B981) else MaterialTheme.colorScheme.onSurfaceVariant, 
                     modifier = Modifier.size(20.dp)
                 )
             }
@@ -227,18 +261,18 @@ fun JournalItem(transaction: TransactionEntry, showAccountantInfo: Boolean) {
                     transaction.vendor, 
                     style = MaterialTheme.typography.bodyMedium, 
                     fontWeight = FontWeight.Bold,
-                    color = Slate900
+                    color = MaterialTheme.colorScheme.onSurface
                 )
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
                         formatJournalDate(transaction.date), 
                         style = MaterialTheme.typography.labelSmall,
-                        color = Slate400
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                     if (showAccountantInfo) {
                         Spacer(Modifier.width(8.dp))
                         Surface(
-                            color = Blue50,
+                            color = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.5f),
                             shape = RoundedCornerShape(4.dp),
                             modifier = Modifier.padding(vertical = 2.dp)
                         ) {
@@ -257,17 +291,41 @@ fun JournalItem(transaction: TransactionEntry, showAccountantInfo: Boolean) {
                     "${if (isIncome) "+" else ""}${transaction.amount.toInt()} kr", 
                     style = MaterialTheme.typography.bodyLarge,
                     fontWeight = FontWeight.Black,
-                    color = if (isIncome) Color(0xFF059669) else Slate900
+                    color = if (isIncome) Color(0xFF10B981) else MaterialTheme.colorScheme.onSurface
                 )
                 if (showAccountantInfo && transaction.mvaCode != null) {
                     Text(
                         "MVA Kode ${transaction.mvaCode}", 
-                        style = androidx.compose.ui.text.TextStyle(fontSize = 9.sp, fontWeight = FontWeight.Bold, color = Slate400)
+                        style = androidx.compose.ui.text.TextStyle(fontSize = 9.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurfaceVariant)
                     )
                 }
             }
         }
+
+        DropdownMenu(
+            expanded = showMenu,
+            onDismissRequest = { showMenu = false },
+            modifier = Modifier.background(MaterialTheme.colorScheme.surface)
+        ) {
+            DropdownMenuItem(
+                text = { Text("Rediger") },
+                onClick = {
+                    showMenu = false
+                    onEdit(transaction)
+                },
+                leadingIcon = { Icon(Icons.Default.Edit, contentDescription = null, modifier = Modifier.size(18.dp)) }
+            )
+            DropdownMenuItem(
+                text = { Text("Slett", color = Color.Red) },
+                onClick = {
+                    showMenu = false
+                    onDelete(transaction)
+                },
+                leadingIcon = { Icon(Icons.Default.Delete, contentDescription = null, tint = Color.Red, modifier = Modifier.size(18.dp)) }
+            )
+        }
     }
+}
 }
 
 fun groupJournalTransactions(transactions: List<TransactionEntry>): Map<Int, Map<String, List<TransactionEntry>>> {

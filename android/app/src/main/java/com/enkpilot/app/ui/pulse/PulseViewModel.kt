@@ -15,6 +15,7 @@ data class PulseUiState(
     val ytdExpenses: Double = 0.0,
     val taxReserved: Double = 0.0,
     val mvaReserved: Double = 0.0,
+    val taxBreakdown: com.enkpilot.app.util.AnnualTaxBreakdown = com.enkpilot.app.util.AnnualTaxBreakdown(0.0, 0.0, 0.0, 0.0, 0.0),
     val isLoading: Boolean = true
 )
 
@@ -44,10 +45,7 @@ class PulseViewModel(private val repository: VaultRepository) : ViewModel() {
         val journalExpenses = transactions.filter { it.type == TransactionType.EXPENSE }.sumOf { it.amount }
         val totalYtdExpenses = profile.ytdExpenseOverride + journalExpenses
 
-        // 3. Calculate Net Profit (for Tax)
-        val netProfit = (totalYtdIncome + profile.externalSalary) - totalYtdExpenses
-
-        // 4. Calculate MVA Reserved (20% of Gross Revenue if MVA registered)
+        // 3. Calculate MVA Reserved (20% of Gross Revenue if MVA registered)
         // Norwegian logic: 25% MVA means it's 20% of the gross amount paid by customer.
         val mvaReserved = if (profile.isMvaRegistered) {
             totalYtdIncome * (0.25 / 1.25)
@@ -55,19 +53,23 @@ class PulseViewModel(private val repository: VaultRepository) : ViewModel() {
             0.0
         }
 
+        // 4. Calculate Net Profit (for Tax) - MUST exclude MVA
+        val netProfit = (totalYtdIncome - mvaReserved + profile.externalSalary) - totalYtdExpenses
+
         // 5. Calculate Tax Reserved (Using engine's annual logic)
-        val taxReserved = TaxCalculator.calculateAnnualTax(netProfit)
+        val taxBreakdown = TaxCalculator.calculateAnnualTaxBreakdown(netProfit)
 
         // 6. Calculate Safe to Spend
-        // Formula: Gross Income - MVA - Expenses - Tax
-        val safeToSpend = (totalYtdIncome - mvaReserved) - totalYtdExpenses - taxReserved
+        // Formula: Net Income (Gross - MVA) - Expenses - Tax
+        val safeToSpend = (totalYtdIncome - mvaReserved) - totalYtdExpenses - taxBreakdown.totalTax
 
         return PulseUiState(
             safeToSpend = maxOf(0.0, safeToSpend),
             ytdIncome = totalYtdIncome,
             ytdExpenses = totalYtdExpenses,
-            taxReserved = taxReserved,
-            mvaReserved = mvaReserved
+            taxReserved = taxBreakdown.totalTax,
+            mvaReserved = mvaReserved,
+            taxBreakdown = taxBreakdown
         )
     }
 }

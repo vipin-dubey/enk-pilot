@@ -39,7 +39,7 @@ fun EnkProfileScreen(viewModel: SettingsViewModel, onBack: () -> Unit) {
             TopAppBar(
                 title = { 
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        Icon(Icons.Default.BusinessCenter, null, tint = Blue600, modifier = Modifier.size(24.dp))
+                        Icon(Icons.Default.BusinessCenter, null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(24.dp))
                         Spacer(Modifier.width(12.dp))
                         Text("ENK-profil", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Black)
                     }
@@ -49,21 +49,22 @@ fun EnkProfileScreen(viewModel: SettingsViewModel, onBack: () -> Unit) {
                         Icon(Icons.Default.ArrowBack, null)
                     }
                 },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.White)
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.background)
             )
         },
         bottomBar = {
             Surface(
                 modifier = Modifier.fillMaxWidth(),
-                color = Color.White,
-                tonalElevation = 8.dp
+                color = MaterialTheme.colorScheme.background,
+                tonalElevation = 0.dp,
+                border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f))
             ) {
                 Box(modifier = Modifier.padding(20.dp).windowInsetsPadding(WindowInsets.navigationBars)) {
                     Button(
                         onClick = { viewModel.saveSettings() },
                         modifier = Modifier.fillMaxWidth().height(56.dp),
                         shape = RoundedCornerShape(16.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = Slate900),
+                        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
                         enabled = !isSaving
                     ) {
                         if (isSaving) {
@@ -86,7 +87,7 @@ fun EnkProfileScreen(viewModel: SettingsViewModel, onBack: () -> Unit) {
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-                .background(Slate50.copy(alpha = 0.5f))
+                .background(MaterialTheme.colorScheme.background)
                 .verticalScroll(rememberScrollState())
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
@@ -94,8 +95,8 @@ fun EnkProfileScreen(viewModel: SettingsViewModel, onBack: () -> Unit) {
             Surface(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(24.dp),
-                color = Color.White,
-                border = androidx.compose.foundation.BorderStroke(1.dp, Slate100)
+                color = Color.Transparent,
+                border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f))
             ) {
                 Column(modifier = Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(24.dp)) {
                     // MVA Toggle
@@ -105,17 +106,17 @@ fun EnkProfileScreen(viewModel: SettingsViewModel, onBack: () -> Unit) {
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Column(modifier = Modifier.weight(1f).padding(end = 16.dp)) {
-                            Text("MVA-registrert", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold, color = Slate900)
-                            Text("Aktiver dette hvis bedriften din er registrert i MVA-registeret.", style = MaterialTheme.typography.bodySmall, color = Slate500)
+                            Text("MVA-registrert", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurface)
+                            Text("Aktiver dette hvis bedriften din er registrert i MVA-registeret.", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                         }
                         Checkbox(
                             checked = isMvaRegistered,
                             onCheckedChange = { viewModel.setMvaRegistered(it) },
-                            colors = CheckboxDefaults.colors(checkedColor = Slate900)
+                            colors = CheckboxDefaults.colors(checkedColor = MaterialTheme.colorScheme.primary)
                         )
                     }
 
-                    Divider(color = Slate100, thickness = 1.dp)
+                    HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f), thickness = 1.dp)
 
                     // YTD Row
                     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
@@ -151,7 +152,7 @@ fun EnkProfileScreen(viewModel: SettingsViewModel, onBack: () -> Unit) {
                                     "FORVENTET ÅRSRESULTAT", 
                                     style = MaterialTheme.typography.labelSmall, 
                                     fontWeight = FontWeight.Black, 
-                                    color = Slate500
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
                             }
                             OutlinedTextField(
@@ -159,13 +160,13 @@ fun EnkProfileScreen(viewModel: SettingsViewModel, onBack: () -> Unit) {
                                 onValueChange = { viewModel.setAnnualIncomeEstimate(it) },
                                 modifier = Modifier.fillMaxWidth(),
                                 shape = RoundedCornerShape(12.dp),
-                                textStyle = TextStyle(fontWeight = FontWeight.Bold, fontSize = 15.sp, color = Slate900),
-                                suffix = { Text("NOK/Y", style = TextStyle(fontSize = 9.sp, fontWeight = FontWeight.Bold, color = Slate400)) },
+                                textStyle = TextStyle(fontWeight = FontWeight.Bold, fontSize = 15.sp, color = MaterialTheme.colorScheme.onSurface),
+                                suffix = { Text("NOK/Y", style = TextStyle(fontSize = 9.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurfaceVariant)) },
                                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                                 singleLine = true,
                                 colors = OutlinedTextFieldDefaults.colors(
-                                    unfocusedBorderColor = Slate200,
-                                    focusedBorderColor = Slate900,
+                                    unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant,
+                                    focusedBorderColor = MaterialTheme.colorScheme.primary,
                                     unfocusedContainerColor = Color.Transparent,
                                     focusedContainerColor = Color.Transparent
                                 )
@@ -183,7 +184,7 @@ fun EnkProfileScreen(viewModel: SettingsViewModel, onBack: () -> Unit) {
                                         "ÅRLIG SKATT", 
                                         style = MaterialTheme.typography.labelSmall, 
                                         fontWeight = FontWeight.Black, 
-                                        color = Slate500,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                                         modifier = Modifier.weight(1f)
                                     )
                                     Row(
@@ -193,9 +194,9 @@ fun EnkProfileScreen(viewModel: SettingsViewModel, onBack: () -> Unit) {
                                             .padding(horizontal = 4.dp, vertical = 2.dp),
                                         verticalAlignment = Alignment.CenterVertically
                                     ) {
-                                        Icon(Icons.Default.PictureAsPdf, null, modifier = Modifier.size(12.dp), tint = Blue600)
+                                        Icon(Icons.Default.PictureAsPdf, null, modifier = Modifier.size(12.dp), tint = MaterialTheme.colorScheme.primary)
                                         Spacer(Modifier.width(4.dp))
-                                        Text("Skann", style = TextStyle(fontSize = 10.sp, fontWeight = FontWeight.Bold, color = Blue600))
+                                        Text("Skann", style = TextStyle(fontSize = 10.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primary))
                                     }
                                 }
                             }
@@ -204,13 +205,13 @@ fun EnkProfileScreen(viewModel: SettingsViewModel, onBack: () -> Unit) {
                                 onValueChange = { viewModel.setAdvanceTaxPaid(it) },
                                 modifier = Modifier.fillMaxWidth(),
                                 shape = RoundedCornerShape(12.dp),
-                                textStyle = TextStyle(fontWeight = FontWeight.Bold, fontSize = 15.sp, color = Slate900),
-                                suffix = { Text("NOK/Y", style = TextStyle(fontSize = 9.sp, fontWeight = FontWeight.Bold, color = Slate400)) },
+                                textStyle = TextStyle(fontWeight = FontWeight.Bold, fontSize = 15.sp, color = MaterialTheme.colorScheme.onSurface),
+                                suffix = { Text("NOK/Y", style = TextStyle(fontSize = 9.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurfaceVariant)) },
                                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                                 singleLine = true,
                                 colors = OutlinedTextFieldDefaults.colors(
-                                    unfocusedBorderColor = Slate200,
-                                    focusedBorderColor = Slate900,
+                                    unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant,
+                                    focusedBorderColor = MaterialTheme.colorScheme.primary,
                                     unfocusedContainerColor = Color.Transparent,
                                     focusedContainerColor = Color.Transparent
                                 )
@@ -231,7 +232,7 @@ fun SettingsField(label: String, value: String, onValueChange: (String) -> Unit,
                 label, 
                 style = MaterialTheme.typography.labelSmall, 
                 fontWeight = FontWeight.Black, 
-                color = Slate500,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
                 maxLines = 2
             )
         }
@@ -240,13 +241,13 @@ fun SettingsField(label: String, value: String, onValueChange: (String) -> Unit,
             onValueChange = onValueChange,
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(12.dp),
-            textStyle = TextStyle(fontWeight = FontWeight.Bold, fontSize = 15.sp, color = Slate900),
-            suffix = { Text(suffix, style = TextStyle(fontSize = 9.sp, fontWeight = FontWeight.Bold, color = Slate400)) },
+            textStyle = TextStyle(fontWeight = FontWeight.Bold, fontSize = 15.sp, color = MaterialTheme.colorScheme.onSurface),
+            suffix = { Text(suffix, style = TextStyle(fontSize = 9.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurfaceVariant)) },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             singleLine = true,
             colors = OutlinedTextFieldDefaults.colors(
-                unfocusedBorderColor = Slate200,
-                focusedBorderColor = Slate900,
+                unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant,
+                focusedBorderColor = MaterialTheme.colorScheme.primary,
                 unfocusedContainerColor = Color.Transparent,
                 focusedContainerColor = Color.Transparent
             )

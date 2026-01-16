@@ -13,5 +13,5 @@ class VaultApplication : Application() {
     private val databasePassphrase = "debug-passphrase-placeholder-2026".toByteArray()
     
     val database by lazy { VaultDatabase.getDatabase(this, databasePassphrase) }
-    val repository by lazy { VaultRepository(database.vaultDao()) }
+    val repository by lazy { VaultRepository(database.vaultDao(), database.deadlineDao()) }
 }

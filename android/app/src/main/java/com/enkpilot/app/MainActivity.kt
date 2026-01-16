@@ -40,7 +40,13 @@ import com.enkpilot.app.ui.journal.JournalViewModel
 import com.enkpilot.app.ui.settings.SettingsScreen
 import com.enkpilot.app.ui.settings.EnkProfileScreen
 import com.enkpilot.app.ui.settings.SettingsViewModel
+import com.enkpilot.app.ui.deadlines.DeadlinesScreen
+import com.enkpilot.app.ui.deadlines.DeadlinesViewModel
+import com.enkpilot.app.ui.analysis.AnalysisScreen
+import com.enkpilot.app.ui.analysis.AnalysisViewModel
 import com.enkpilot.app.ui.theme.*
+import androidx.work.*
+import java.util.concurrent.TimeUnit
 
 @OptIn(ExperimentalMaterial3Api::class)
 class MainActivity : ComponentActivity() {
@@ -86,12 +92,26 @@ class MainActivity : ComponentActivity() {
             }
         })[PulseViewModel::class.java]
 
+        val deadlinesViewModel = ViewModelProvider(this, object : ViewModelProvider.Factory {
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                return DeadlinesViewModel(app.repository) as T
+            }
+        })[DeadlinesViewModel::class.java]
+
+        val analysisViewModel = ViewModelProvider(this, object : ViewModelProvider.Factory {
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                return AnalysisViewModel(app.repository) as T
+            }
+        })[AnalysisViewModel::class.java]
+
+        setupDeadlineWorker()
+
         enableEdgeToEdge()
         setContent {
             ENKPilotTheme {
                 val navController = rememberNavController()
                 val navBackStackEntry by navController.currentBackStackEntryAsState()
-                val currentRoute = navBackStackEntry?.destination?.route
+                val currentRoute = navBackStackEntry?.destination?.route ?: NavRoute.Pulse.route
                 var showMoreMenu by remember { mutableStateOf(false) }
 
                 if (showMoreMenu) {
@@ -99,7 +119,7 @@ class MainActivity : ComponentActivity() {
                         onDismissRequest = { showMoreMenu = false },
                         shape = RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp),
                         containerColor = MaterialTheme.colorScheme.surface,
-                        dragHandle = { BottomSheetDefaults.DragHandle(color = Slate200) }
+                        dragHandle = { BottomSheetDefaults.DragHandle(color = MaterialTheme.colorScheme.outlineVariant) }
                     ) {
                         Column(
                             modifier = Modifier
@@ -116,23 +136,20 @@ class MainActivity : ComponentActivity() {
                             Surface(
                                 modifier = Modifier.fillMaxWidth(),
                                 shape = RoundedCornerShape(20.dp),
-                                color = Slate50
+                                color = Color.Transparent,
+                                border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f))
                             ) {
                                 Column {
                                     MenuRow(Icons.Default.ReceiptLong, "Kvitteringer") { 
                                         showMoreMenu = false 
                                         navController.navigate(NavRoute.Receipts.route)
                                     }
-                                    Divider(color = Color.White, thickness = 1.dp, modifier = Modifier.padding(horizontal = 16.dp))
-                                    MenuRow(Icons.Default.Book, "Journal") { 
+                                    HorizontalDivider(color = MaterialTheme.colorScheme.surface, thickness = 1.dp, modifier = Modifier.padding(horizontal = 16.dp))
+                                    MenuRow(Icons.Default.Event, "Frister") { 
                                         showMoreMenu = false 
-                                        navController.navigate(NavRoute.Journal.route)
+                                        navController.navigate(NavRoute.Deadlines.route)
                                     }
-                                    Divider(color = Color.White, thickness = 1.dp, modifier = Modifier.padding(horizontal = 16.dp))
-                                    MenuRow(Icons.Default.Event, "Frister") { showMoreMenu = false }
-                                    Divider(color = Color.White, thickness = 1.dp, modifier = Modifier.padding(horizontal = 16.dp))
-                                    MenuRow(Icons.Default.BarChart, "Analyse") { showMoreMenu = false }
-                                    Divider(color = Color.White, thickness = 1.dp, modifier = Modifier.padding(horizontal = 16.dp))
+                                    HorizontalDivider(color = MaterialTheme.colorScheme.surface, thickness = 1.dp, modifier = Modifier.padding(horizontal = 16.dp))
                                     MenuRow(Icons.Default.Settings, "Innstillinger") { 
                                         showMoreMenu = false 
                                         navController.navigate(NavRoute.Settings.route)
@@ -145,6 +162,44 @@ class MainActivity : ComponentActivity() {
 
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
+                    topBar = {
+                        val headerInfo = getHeaderInfo(currentRoute)
+                        if (headerInfo != null) {
+                            Surface(
+                                color = MaterialTheme.colorScheme.background,
+                                modifier = Modifier.statusBarsPadding()
+                            ) {
+                                Column(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(horizontal = 20.dp, vertical = 24.dp)
+                                ) {
+                                    Text(
+                                        text = headerInfo.first,
+                                        style = MaterialTheme.typography.headlineMedium,
+                                        fontWeight = FontWeight.Black,
+                                        color = MaterialTheme.colorScheme.onSurface
+                                    )
+                                    Text(
+                                        text = headerInfo.second,
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                                    )
+                                }
+                            }
+                        }
+                    },
+                    floatingActionButton = {
+                        FloatingActionButton(
+                            onClick = { navController.navigate(NavRoute.Eye.route) },
+                            containerColor = MaterialTheme.colorScheme.primary,
+                            contentColor = MaterialTheme.colorScheme.onPrimary,
+                            shape = CircleShape,
+                            modifier = Modifier.padding(bottom = 8.dp)
+                        ) {
+                            Icon(Icons.Default.PhotoCamera, contentDescription = "The Eye")
+                        }
+                    },
                     bottomBar = {
                         NavigationBar(
                             containerColor = MaterialTheme.colorScheme.surface,
@@ -152,13 +207,15 @@ class MainActivity : ComponentActivity() {
                             modifier = Modifier.clip(RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp))
                         ) {
                             NavigationBarItem(
-                                icon = { Icon(Icons.Default.Dashboard, contentDescription = "Pulse") },
-                                label = { Text("Pulse", style = MaterialTheme.typography.labelSmall) },
+                                icon = { Icon(Icons.Default.Dashboard, contentDescription = "Puls") },
+                                label = { Text("Puls", style = MaterialTheme.typography.labelSmall) },
                                 selected = currentRoute == NavRoute.Pulse.route,
                                 colors = NavigationBarItemDefaults.colors(
-                                    selectedIconColor = Blue600,
-                                    selectedTextColor = Blue600,
-                                    indicatorColor = Blue50
+                                    selectedIconColor = MaterialTheme.colorScheme.primary,
+                                    selectedTextColor = MaterialTheme.colorScheme.primary,
+                                    indicatorColor = Color.Transparent,
+                                    unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant
                                 ),
                                 onClick = {
                                     navController.navigate(NavRoute.Pulse.route) {
@@ -168,13 +225,33 @@ class MainActivity : ComponentActivity() {
                                 }
                             )
                             NavigationBarItem(
-                                icon = { Icon(Icons.Default.Calculate, contentDescription = "Safe to Spend") },
+                                icon = { Icon(Icons.Default.BarChart, contentDescription = "Analyse") },
+                                label = { Text("Analyse", style = MaterialTheme.typography.labelSmall) },
+                                selected = currentRoute == NavRoute.Analysis.route,
+                                colors = NavigationBarItemDefaults.colors(
+                                    selectedIconColor = MaterialTheme.colorScheme.primary,
+                                    selectedTextColor = MaterialTheme.colorScheme.primary,
+                                    indicatorColor = Color.Transparent,
+                                    unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant
+                                ),
+                                onClick = {
+                                    navController.navigate(NavRoute.Analysis.route) {
+                                        popUpTo(navController.graph.startDestinationId)
+                                        launchSingleTop = true
+                                    }
+                                }
+                            )
+                            NavigationBarItem(
+                                icon = { Icon(Icons.Default.Calculate, contentDescription = "Kalkulator") },
                                 label = { Text("Kalk", style = MaterialTheme.typography.labelSmall) },
                                 selected = currentRoute == NavRoute.Calculator.route,
                                 colors = NavigationBarItemDefaults.colors(
-                                    selectedIconColor = Blue600,
-                                    selectedTextColor = Blue600,
-                                    indicatorColor = Blue50
+                                    selectedIconColor = MaterialTheme.colorScheme.primary,
+                                    selectedTextColor = MaterialTheme.colorScheme.primary,
+                                    indicatorColor = Color.Transparent,
+                                    unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant
                                 ),
                                 onClick = {
                                     navController.navigate(NavRoute.Calculator.route) {
@@ -184,16 +261,18 @@ class MainActivity : ComponentActivity() {
                                 }
                             )
                             NavigationBarItem(
-                                icon = { Icon(Icons.Default.PhotoCamera, contentDescription = "The Eye") },
-                                label = { Text("The Eye", style = MaterialTheme.typography.labelSmall) },
-                                selected = currentRoute == NavRoute.Eye.route,
+                                icon = { Icon(Icons.Default.Book, contentDescription = "Journal") },
+                                label = { Text("Journal", style = MaterialTheme.typography.labelSmall) },
+                                selected = currentRoute == NavRoute.Journal.route,
                                 colors = NavigationBarItemDefaults.colors(
-                                    selectedIconColor = Blue600,
-                                    selectedTextColor = Blue600,
-                                    indicatorColor = Blue50
+                                    selectedIconColor = MaterialTheme.colorScheme.primary,
+                                    selectedTextColor = MaterialTheme.colorScheme.primary,
+                                    indicatorColor = Color.Transparent,
+                                    unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant
                                 ),
                                 onClick = {
-                                    navController.navigate(NavRoute.Eye.route) {
+                                    navController.navigate(NavRoute.Journal.route) {
                                         popUpTo(navController.graph.startDestinationId)
                                         launchSingleTop = true
                                     }
@@ -204,17 +283,18 @@ class MainActivity : ComponentActivity() {
                                 label = { Text("Mer", style = MaterialTheme.typography.labelSmall) },
                                 selected = showMoreMenu,
                                 colors = NavigationBarItemDefaults.colors(
-                                    selectedIconColor = Blue600,
-                                    selectedTextColor = Blue600,
-                                    indicatorColor = Blue50,
-                                    unselectedIconColor = Slate400,
-                                    unselectedTextColor = Slate400
+                                    selectedIconColor = MaterialTheme.colorScheme.primary,
+                                    selectedTextColor = MaterialTheme.colorScheme.primary,
+                                    indicatorColor = MaterialTheme.colorScheme.primaryContainer,
+                                    unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant
                                 ),
                                 onClick = { showMoreMenu = true }
                             )
                         }
                     }
-                ) { innerPadding ->
+                )
+ { innerPadding ->
                     NavHost(
                         navController = navController,
                         startDestination = NavRoute.Pulse.route,
@@ -244,10 +324,46 @@ class MainActivity : ComponentActivity() {
                         composable(NavRoute.EnkProfile.route) {
                             EnkProfileScreen(viewModel = settingsViewModel, onBack = { navController.popBackStack() })
                         }
+                        composable(NavRoute.Deadlines.route) {
+                            DeadlinesScreen(viewModel = deadlinesViewModel)
+                        }
+                        composable(NavRoute.Analysis.route) {
+                            AnalysisScreen(viewModel = analysisViewModel)
+                        }
                     }
                 }
             }
         }
+    }
+
+    private fun getHeaderInfo(route: String?): Pair<String, String>? {
+        return when (route) {
+            NavRoute.Pulse.route -> "ENK-puls" to "Live oversikt over ditt enkeltpersonforetaks økonomiske helse."
+            NavRoute.Analysis.route -> "Analyse" to "Dypere innsikt i din økonomiske utvikling."
+            NavRoute.Calculator.route -> "Kalkulator" to "Beregn skatt og MVA for dine inntekter."
+            NavRoute.Journal.route -> "Journal" to "En kronologisk oversikt over alt registrert."
+            NavRoute.Receipts.route -> "Kvitteringer" to "Oversikt over alle dine scannede kvitteringer."
+            NavRoute.Settings.route -> "Innstillinger" to "Administrer din profil og app-innstillinger."
+            NavRoute.EnkProfile.route -> "Virksomhetsprofil" to "Informasjon om ditt enkeltpersonforetak."
+            NavRoute.Deadlines.route -> "Frister" to "Oversikt over viktige skatte- og MVA-frister."
+            else -> null
+        }
+    }
+
+    private fun setupDeadlineWorker() {
+        val workRequest = PeriodicWorkRequestBuilder<com.enkpilot.app.notifications.DeadlineNotificationWorker>(
+            24, TimeUnit.HOURS
+        ).setConstraints(
+            Constraints.Builder()
+                .setRequiredNetworkType(NetworkType.NOT_REQUIRED)
+                .build()
+        ).build()
+
+        WorkManager.getInstance(this).enqueueUniquePeriodicWork(
+            "deadline_reminders",
+            ExistingPeriodicWorkPolicy.KEEP,
+            workRequest
+        )
     }
 
     @Composable

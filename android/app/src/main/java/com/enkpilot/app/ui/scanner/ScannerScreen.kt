@@ -114,7 +114,7 @@ fun ScannerScreen(
                             modifier = Modifier.fillMaxWidth().padding(32.dp),
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
-                            Text("The Eye har sett dette:", style = MaterialTheme.typography.headlineSmall)
+                            Text("The Eye har sett dette:", style = MaterialTheme.typography.headlineSmall, color = MaterialTheme.colorScheme.onSurface)
                             Spacer(modifier = Modifier.height(32.dp))
                             
                             ResultRow("Butikk", state.data.vendor ?: "Ukjent")
@@ -129,8 +129,8 @@ fun ScannerScreen(
                             ) {
                                 Text("GODKJENN & LAGRE")
                             }
-                            TextButton(onClick = { viewModel.setError("") }) {
-                                Text("SCAN PÅ NYTT")
+                            TextButton(onClick = { viewModel.reset() }) {
+                                Text("SCAN PÅ NYTT", color = MaterialTheme.colorScheme.primary)
                             }
                         }
                     }
@@ -142,7 +142,7 @@ fun ScannerScreen(
                     ) {
                         Text("Feil: ${state.message}", color = MaterialTheme.colorScheme.error)
                         Spacer(modifier = Modifier.height(16.dp))
-                        Button(onClick = { viewModel.setError("") /* Reset to Idle */ }) {
+                        Button(onClick = { viewModel.reset() }) {
                             Text("Prøv igjen")
                         }
                     }
@@ -166,7 +166,7 @@ fun ScannerScreen(
 fun ResultRow(label: String, value: String) {
     Column(modifier = Modifier.fillMaxWidth().padding(vertical = 12.dp)) {
         Text(label, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.primary)
-        Text(value, style = MaterialTheme.typography.headlineSmall)
+        Text(value, style = MaterialTheme.typography.headlineSmall, color = MaterialTheme.colorScheme.onSurface)
         HorizontalDivider(modifier = Modifier.padding(top = 8.dp), color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f))
     }
 }

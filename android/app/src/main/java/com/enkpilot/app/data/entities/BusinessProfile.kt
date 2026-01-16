@@ -15,5 +15,7 @@ data class BusinessProfile(
     val externalSalary: Double = 0.0,
     val advanceTaxPaid: Double = 0.0,
     val baseTaxRate: Double = 0.35,
-    val taxBuffer: Double = 0.05
+    val taxBuffer: Double = 0.05,
+    val isDeadlineNotificationsEnabled: Boolean = true,
+    val deadlineReminderDays: Int = 7
 )

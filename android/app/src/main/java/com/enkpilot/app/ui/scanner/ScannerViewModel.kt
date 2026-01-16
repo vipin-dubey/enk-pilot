@@ -10,6 +10,7 @@ import com.enkpilot.app.data.entities.TransactionType
 import com.enkpilot.app.scanner.ExtractedReceiptData
 import com.enkpilot.app.scanner.ReceiptParser
 import com.google.mlkit.vision.common.InputImage
+import com.google.mlkit.vision.text.Text
 import com.google.mlkit.vision.text.TextRecognition
 import com.google.mlkit.vision.text.latin.TextRecognizerOptions
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -39,8 +40,12 @@ class ScannerViewModel(private val repository: VaultRepository) : ViewModel() {
                 val image = InputImage.fromFilePath(context, uri)
                 recognizer.process(image)
                     .addOnSuccessListener { visionText ->
-                        val extracted = parser.parse(visionText)
-                        _uiState.value = ScannerUiState.Success(extracted, uri)
+                        if (isLocalAISupported(context)) {
+                            processWithLocalAI(visionText, uri)
+                        } else {
+                            val extracted = parser.parse(visionText)
+                            _uiState.value = ScannerUiState.Success(extracted, uri)
+                        }
                     }
                     .addOnFailureListener { e ->
                         _uiState.value = ScannerUiState.Error(e.message ?: "OCR failed")
@@ -51,19 +56,39 @@ class ScannerViewModel(private val repository: VaultRepository) : ViewModel() {
         }
     }
 
+    private fun isLocalAISupported(context: Context): Boolean {
+        // Gemini Nano / AICore check placeholder
+        // On older devices, this will always be false
+        return false
+    }
+
+    private fun processWithLocalAI(text: Text, uri: Uri) {
+        // This is where we would call the Google AI Edge SDK for Gemini Nano
+        // For now, falling back to parser but with a "Simulated AI" tag
+        val extracted = parser.parse(text)
+        _uiState.value = ScannerUiState.Success(extracted, uri)
+    }
+
     fun setError(message: String) {
         _uiState.value = ScannerUiState.Error(message)
     }
 
+    fun reset() {
+        _uiState.value = ScannerUiState.Idle
+    }
+
     fun saveTransaction(data: ExtractedReceiptData, imageUri: Uri) {
         viewModelScope.launch {
+            val amount = data.amount ?: 0.0
+            val mvaAmount = data.mvaAmount ?: (amount * (data.mvaRate ?: 0.25))
+            
             val transaction = TransactionEntry(
                 date = data.date ?: System.currentTimeMillis(),
                 vendor = data.vendor ?: "Ukjent",
-                amount = data.amount ?: 0.0,
+                amount = amount,
                 category = data.category ?: "Ukjent",
                 type = TransactionType.EXPENSE,
-                mvaAmount = (data.amount ?: 0.0) * (data.mvaRate ?: 0.25),
+                mvaAmount = mvaAmount,
                 receiptPath = imageUri.toString()
             )
             repository.insertTransaction(transaction)

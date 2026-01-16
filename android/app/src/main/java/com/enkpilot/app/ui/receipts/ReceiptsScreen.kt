@@ -1,7 +1,10 @@
 package com.enkpilot.app.ui.receipts
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -31,6 +34,9 @@ fun ReceiptsScreen(viewModel: ReceiptsViewModel) {
     val searchQuery by viewModel.searchQuery.collectAsState()
     val categoryFilter by viewModel.categoryFilter.collectAsState()
     
+    var transactionToEdit by remember { mutableStateOf<com.enkpilot.app.data.entities.TransactionEntry?>(null) }
+    var transactionToDelete by remember { mutableStateOf<com.enkpilot.app.data.entities.TransactionEntry?>(null) }
+    
     val categories = listOf("All", "Office", "Travel", "Food", "Equipment", "Marketing", "IT", "Software", "Other")
 
     Column(
@@ -38,32 +44,26 @@ fun ReceiptsScreen(viewModel: ReceiptsViewModel) {
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
     ) {
-        // Search & Filter Header
+        // Search & Filter Section
         Surface(
-            color = MaterialTheme.colorScheme.surface,
+            color = MaterialTheme.colorScheme.background,
             tonalElevation = 0.dp
         ) {
-            Column(modifier = Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
-                Text(
-                    "Kvitteringer",
-                    style = MaterialTheme.typography.headlineMedium,
-                    color = MaterialTheme.colorScheme.onBackground
-                )
+            Column(modifier = Modifier.padding(bottom = 20.dp, start = 20.dp, end = 20.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
 
-                TextField(
+                OutlinedTextField(
                     value = searchQuery,
                     onValueChange = { viewModel.setSearchQuery(it) },
                     modifier = Modifier.fillMaxWidth(),
-                    placeholder = { Text("Søk på butikk eller beløp...", color = Slate500) },
-                    leadingIcon = { Icon(Icons.Default.Search, contentDescription = null, tint = Slate500) },
+                    placeholder = { Text("Søk på butikk eller beløp...", color = MaterialTheme.colorScheme.onSurfaceVariant) },
+                    leadingIcon = { Icon(Icons.Default.Search, contentDescription = null, tint = MaterialTheme.colorScheme.onSurfaceVariant) },
                     singleLine = true,
                     shape = RoundedCornerShape(16.dp),
-                    colors = TextFieldDefaults.colors(
-                        focusedContainerColor = Slate100,
-                        unfocusedContainerColor = Slate100,
-                        disabledContainerColor = Slate100,
-                        focusedIndicatorColor = Color.Transparent,
-                        unfocusedIndicatorColor = Color.Transparent,
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedContainerColor = Color.Transparent,
+                        unfocusedContainerColor = Color.Transparent,
+                        focusedBorderColor = MaterialTheme.colorScheme.primary,
+                        unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)
                     )
                 )
                 
@@ -82,12 +82,17 @@ fun ReceiptsScreen(viewModel: ReceiptsViewModel) {
                             modifier = Modifier.padding(end = 8.dp),
                             shape = RoundedCornerShape(12.dp),
                             colors = FilterChipDefaults.filterChipColors(
-                                selectedContainerColor = Blue600,
-                                selectedLabelColor = Color.White,
-                                containerColor = Slate50,
-                                labelColor = Slate500
+                                selectedContainerColor = MaterialTheme.colorScheme.primary,
+                                selectedLabelColor = MaterialTheme.colorScheme.onPrimary,
+                                containerColor = Color.Transparent,
+                                labelColor = MaterialTheme.colorScheme.onSurfaceVariant
                             ),
-                            border = null
+                            border = FilterChipDefaults.filterChipBorder(
+                                enabled = true,
+                                selected = categoryFilter == category,
+                                borderColor = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f),
+                                selectedBorderColor = Color.Transparent
+                            )
                         )
                     }
                 }
@@ -97,8 +102,8 @@ fun ReceiptsScreen(viewModel: ReceiptsViewModel) {
         if (transactions.isEmpty()) {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                    Icon(Icons.Default.Receipt, "", modifier = Modifier.size(48.dp), tint = Slate200)
-                    Text("Ingen kvitteringer funnet", color = Slate500, style = MaterialTheme.typography.bodyLarge)
+                    Icon(Icons.Default.Receipt, "", modifier = Modifier.size(48.dp), tint = MaterialTheme.colorScheme.outlineVariant)
+                    Text("Ingen kvitteringer funnet", color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.bodyLarge)
                 }
             }
         } else {
@@ -119,11 +124,52 @@ fun ReceiptsScreen(viewModel: ReceiptsViewModel) {
                             MonthHeader(month = month)
                         }
                         items(monthTransactions) { transaction ->
-                            ReceiptItem(transaction = transaction)
+                            ReceiptItem(
+                                transaction = transaction,
+                                onEdit = { transactionToEdit = it },
+                                onDelete = { transactionToDelete = it }
+                            )
                         }
                     }
                 }
             }
+        }
+
+        // Edit Dialog
+        transactionToEdit?.let { transaction ->
+            com.enkpilot.app.ui.shared.EditTransactionDialog(
+                transaction = transaction,
+                onDismiss = { transactionToEdit = null },
+                onSave = { 
+                    viewModel.updateTransaction(it)
+                    transactionToEdit = null
+                }
+            )
+        }
+
+        // Delete Confirmation Dialog
+        transactionToDelete?.let { transaction ->
+            AlertDialog(
+                onDismissRequest = { transactionToDelete = null },
+                title = { Text("Slett kvittering") },
+                text = { Text("Er du sikker på at du vil slette denne kvitteringen fra ${transaction.vendor}?") },
+                confirmButton = {
+                    TextButton(
+                        onClick = {
+                            viewModel.deleteTransaction(transaction)
+                            transactionToDelete = null
+                        },
+                        colors = ButtonDefaults.textButtonColors(contentColor = Color.Red)
+                    ) {
+                        Text("Slett")
+                    }
+                },
+                dismissButton = {
+                    TextButton(onClick = { transactionToDelete = null }) {
+                        Text("Avbryt")
+                    }
+                }
+            )
         }
     }
 }
@@ -134,7 +180,7 @@ fun YearHeader(year: Int) {
         text = year.toString(),
         style = MaterialTheme.typography.titleLarge,
         fontWeight = FontWeight.Black,
-        color = Slate900,
+        color = MaterialTheme.colorScheme.onSurface,
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 20.dp, vertical = 12.dp)
@@ -147,7 +193,7 @@ fun MonthHeader(month: String) {
     Text(
         text = month,
         style = MaterialTheme.typography.labelLarge,
-        color = Blue600,
+        color = MaterialTheme.colorScheme.primary,
         fontWeight = FontWeight.Bold,
         modifier = Modifier
             .fillMaxWidth()
@@ -155,24 +201,37 @@ fun MonthHeader(month: String) {
     )
 }
 
+@OptIn(androidx.compose.foundation.ExperimentalFoundationApi::class)
 @Composable
-fun ReceiptItem(transaction: TransactionEntry) {
+fun ReceiptItem(
+    transaction: TransactionEntry,
+    onEdit: (TransactionEntry) -> Unit,
+    onDelete: (TransactionEntry) -> Unit
+) {
+    var showMenu by remember { mutableStateOf(false) }
+
     Surface(
-        onClick = { /* Detail view? */ },
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 12.dp, vertical = 4.dp),
+            .padding(horizontal = 12.dp, vertical = 4.dp)
+            .combinedClickable(
+                onClick = { /* Could show details */ },
+                onLongClick = { showMenu = true }
+            ),
         shape = RoundedCornerShape(16.dp),
-        color = MaterialTheme.colorScheme.surface
+        color = Color.Transparent,
+        border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f))
     ) {
-        Row(
-            modifier = Modifier.padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
+        Box {
+            Row(
+                modifier = Modifier.padding(16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
             Box(
                 modifier = Modifier
                     .size(44.dp)
-                    .background(Blue50, CircleShape),
+                    .background(Color.Transparent, CircleShape)
+                    .border(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f), CircleShape),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(Icons.Default.Receipt, "", tint = Blue600, modifier = Modifier.size(22.dp))
@@ -185,25 +244,26 @@ fun ReceiptItem(transaction: TransactionEntry) {
                     transaction.vendor, 
                     style = MaterialTheme.typography.bodyLarge, 
                     fontWeight = FontWeight.Bold,
-                    color = Slate900
+                    color = MaterialTheme.colorScheme.onSurface
                 )
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
                         formatUnixDate(transaction.date), 
                         style = MaterialTheme.typography.labelSmall,
-                        color = Slate500
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Box(
                         modifier = Modifier
-                            .background(Slate100, RoundedCornerShape(6.dp))
+                            .background(Color.Transparent, RoundedCornerShape(6.dp))
+                            .border(0.5.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f), RoundedCornerShape(6.dp))
                             .padding(horizontal = 6.dp, vertical = 2.dp)
                     ) {
                         Text(
                             transaction.category, 
                             style = MaterialTheme.typography.labelSmall.copy(fontSize = 10.sp),
                             fontWeight = FontWeight.Bold,
-                            color = Slate700
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
                 }
@@ -214,18 +274,42 @@ fun ReceiptItem(transaction: TransactionEntry) {
                     "${transaction.amount} NOK", 
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Black,
-                    color = Slate900
+                    color = MaterialTheme.colorScheme.onSurface
                 )
                 transaction.mvaAmount?.let { 
                     Text(
                         "${it} MVA", 
                         style = MaterialTheme.typography.labelSmall, 
-                        color = Slate500
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
             }
         }
+
+        DropdownMenu(
+            expanded = showMenu,
+            onDismissRequest = { showMenu = false },
+            modifier = Modifier.background(MaterialTheme.colorScheme.surface)
+        ) {
+            DropdownMenuItem(
+                text = { Text("Rediger") },
+                onClick = {
+                    showMenu = false
+                    onEdit(transaction)
+                },
+                leadingIcon = { Icon(Icons.Default.Edit, contentDescription = null, modifier = Modifier.size(18.dp)) }
+            )
+            DropdownMenuItem(
+                text = { Text("Slett", color = Color.Red) },
+                onClick = {
+                    showMenu = false
+                    onDelete(transaction)
+                },
+                leadingIcon = { Icon(Icons.Default.Delete, contentDescription = null, tint = Color.Red, modifier = Modifier.size(18.dp)) }
+            )
+        }
     }
+}
 }
 
 fun groupTransactions(transactions: List<TransactionEntry>): Map<Int, Map<String, List<TransactionEntry>>> {

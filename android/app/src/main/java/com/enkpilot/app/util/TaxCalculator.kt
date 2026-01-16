@@ -38,6 +38,14 @@ data class TaxCalculationResult(
     val crossesMvaThreshold: Boolean
 )
 
+data class AnnualTaxBreakdown(
+    val ordinaryTax: Double,
+    val nationalInsurance: Double,
+    val trinnskatt: Double,
+    val totalTax: Double,
+    val marginalRate: Double
+)
+
 object TaxCalculator {
 
     /**
@@ -176,5 +184,30 @@ object TaxCalculator {
         val trinnskatt = calculateIncrementalTrinnskatt(0.0, totalProfit)
 
         return ordinaryTax + nationalInsurance + trinnskatt
+    }
+
+    /**
+     * Calculates the detailed annual tax breakdown for a given net profit.
+     */
+    fun calculateAnnualTaxBreakdown(totalProfit: Double): AnnualTaxBreakdown {
+        if (totalProfit <= 0) return AnnualTaxBreakdown(0.0, 0.0, 0.0, 0.0, 0.0)
+
+        val ordinaryTax = calculateIncrementalOrdinaryTax(0.0, totalProfit)
+        val nationalInsurance = totalProfit * TaxConstants2026.NATIONAL_INSURANCE_ENK
+        val trinnskatt = calculateIncrementalTrinnskatt(0.0, totalProfit)
+        
+        // Marginal rate for the next NOK
+        val trygdeavgiftRate = TaxConstants2026.NATIONAL_INSURANCE_ENK
+        val ordinaryRate = if (totalProfit >= TaxConstants2026.PERSONAL_ALLOWANCE) TaxConstants2026.ORDINARY_INCOME_TAX else 0.0
+        val trinnskattRate = TRINNSKATT_BRACKETS_2026.find { totalProfit <= it.limit }?.rate ?: 0.178
+        val marginalRate = trygdeavgiftRate + ordinaryRate + trinnskattRate
+
+        return AnnualTaxBreakdown(
+            ordinaryTax = ordinaryTax,
+            nationalInsurance = nationalInsurance,
+            trinnskatt = trinnskatt,
+            totalTax = ordinaryTax + nationalInsurance + trinnskatt,
+            marginalRate = marginalRate
+        )
     }
 }

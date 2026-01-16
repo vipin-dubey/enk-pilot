@@ -5,7 +5,10 @@ import com.enkpilot.app.data.entities.BusinessProfile
 import com.enkpilot.app.data.entities.TransactionEntry
 import kotlinx.coroutines.flow.Flow
 
-class VaultRepository(private val vaultDao: VaultDao) {
+class VaultRepository(
+    private val vaultDao: VaultDao,
+    private val deadlineDao: com.enkpilot.app.data.dao.DeadlineDao
+) {
 
     val allTransactions: Flow<List<TransactionEntry>> = vaultDao.getAllTransactions()
     val businessProfile: Flow<BusinessProfile?> = vaultDao.getBusinessProfile()
@@ -28,5 +31,12 @@ class VaultRepository(private val vaultDao: VaultDao) {
 
     suspend fun saveBusinessProfile(profile: BusinessProfile) {
         vaultDao.saveBusinessProfile(profile)
+    }
+
+    // Deadlines
+    val allDeadlines: Flow<List<com.enkpilot.app.data.entities.DeadlineEntry>> = deadlineDao.getAllDeadlines()
+
+    suspend fun upsertDeadline(deadline: com.enkpilot.app.data.entities.DeadlineEntry) {
+        deadlineDao.upsertDeadline(deadline)
     }
 }

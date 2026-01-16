@@ -57,6 +57,12 @@ class JournalViewModel(private val repository: VaultRepository) : ViewModel() {
         }
     }
 
+    fun updateTransaction(transaction: TransactionEntry) {
+        viewModelScope.launch {
+            repository.updateTransaction(transaction)
+        }
+    }
+
     fun exportTransactions() {
         // Future: Implement CSV/PDF export logic similar to web
     }
